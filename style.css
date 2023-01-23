@@ -3,9 +3,16 @@
     font-family: Helvetica, sans-serif;
 }
 
-.scoreboard {
+.scoreboard,
+.field {
     display: flex;
     flex-direction: row;
+    justify-content: space-between;
+}
+
+.col {
+    display: flex;
+    flex-direction: column;
     justify-content: space-between;
 }
 

@@ -56,7 +56,14 @@ function update_score() {
             score_increase = 70
         }
 
-        console.log('score increase: ' + score_increase)
+        console.log(
+            'pole ' +
+                i +
+                ' captured by ' +
+                captured_by +
+                ' with a score increase of ' +
+                score_increase
+        )
 
         /* add score to team  */
         if (captured_by == 'red') {

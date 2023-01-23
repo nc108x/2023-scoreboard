@@ -1,52 +1,63 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <title>Scoreboard</title>
-        <link rel="stylesheet" href="style.css" />
-    </head>
-    <body>
-        <h1>Cringe</h1>
-        <div class="scoreboard">
-            <div id="red_info">
-               RED SCORE: 
-                <label id="red_score">0</label>
-            </div>
 
-            <div id="blue_info">
-               BLUE SCORE: 
-                <label id="blue_score">0</label>
-            </div>
+<head>
+    <meta charset="UTF-8" />
+    <title>Scoreboard</title>
+    <link rel="stylesheet" href="style.css" />
+</head>
 
+<body>
+    <h1>Cringe</h1>
+    <div class="scoreboard">
+        <div id="red_info">
+            RED SCORE:
+            <label id="red_score">0</label>
         </div>
-        <div class="field">
-            <p>
-            <h3>Left click: Red</h3>
-            <h3>Right click: Blue</h3>
-                <button class="pole type1 red" type="button">TYPE1 POLE</button>
-                <button class="pole type1 red" type="button">TYPE1 POLE</button>
-                <button class="pole type1 red" type="button">TYPE1 POLE</button>
-                <button class="pole type1 blue" type="button">
-                    TYPE1 POLE
-                </button>
-                <button class="pole type1 blue" type="button">
-                    TYPE1 POLE
-                </button>
-                <button class="pole type1 blue" type="button">
-                    TYPE1 POLE
-                </button>
-            </p>
-            <p>
-                <button class="pole type2" type="button">TYPE2 POLE</button>
-                <button class="pole type2" type="button">TYPE2 POLE</button>
-                <button class="pole type2" type="button">TYPE2 POLE</button>
-                <button class="pole type2" type="button">TYPE2 POLE</button>
-            </p>
 
-            <p>
-                <button class="pole type3" type="button">TYPE3 POLE</button>
-            </p>
+        <div id="blue_info">
+            BLUE SCORE:
+            <label id="blue_score">0</label>
         </div>
-        <script type="module" src="./main.js"></script>
-    </body>
+    </div>
+
+    <p>
+    <h3>Left click: Red, Right click: Blue</h3>
+    </p>
+
+    <div class="field">
+        <p class="col">
+            <button class="pole type1 red" type="button">TYPE1 POLE</button>
+            <button class="pole type1 red" type="button">TYPE1 POLE</button>
+            <button class="pole type1 red" type="button">TYPE1 POLE</button>
+        </p>
+        <p class="col">
+            <button class="pole type2" type="button">TYPE2 POLE</button>
+            <button class="pole type2" type="button">TYPE2 POLE</button>
+        </p>
+
+        <p class="col">
+            <button class="pole type3" type="button">TYPE3 POLE</button>
+        </p>
+
+        <p class="col">
+            <button class="pole type2" type="button">TYPE2 POLE</button>
+            <button class="pole type2" type="button">TYPE2 POLE</button>
+        </p>
+
+        <p class="col">
+            <button class="pole type1 blue" type="button">
+                TYPE1 POLE
+            </button>
+            <button class="pole type1 blue" type="button">
+                TYPE1 POLE
+            </button>
+            <button class="pole type1 blue" type="button">
+                TYPE1 POLE
+            </button>
+        </p>
+    </div>
+    <script type="module" src="./main.js"></script>
+</body>
+
 </html>
