@@ -1,0 +1,12 @@
+/* global formatting settings*/
+* {
+    font-family: Helvetica, sans-serif;
+}
+
+.red {
+    color: red;
+}
+
+.blue {
+    color: blue;
+}
