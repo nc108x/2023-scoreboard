@@ -4,10 +4,21 @@
         <meta charset="UTF-8" />
         <title>Scoreboard</title>
         <link rel="stylesheet" href="style.css" />
-        <script src="main.js" defer></script>
     </head>
     <body>
         <h1>Cringe</h1>
+        <div class="scoreboard">
+            <div id="red_info">
+               RED SCORE: 
+                <label id="red_score">0</label>
+            </div>
+
+            <div id="blue_info">
+               BLUE SCORE: 
+                <label id="blue_score">0</label>
+            </div>
+
+        </div>
         <div class="field">
             <p>
             <h3>Left click: Red</h3>
@@ -36,5 +47,6 @@
                 <button class="pole type3" type="button">TYPE3 POLE</button>
             </p>
         </div>
+        <script type="module" src="./main.js"></script>
     </body>
 </html>

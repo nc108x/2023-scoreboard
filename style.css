@@ -3,6 +3,20 @@
     font-family: Helvetica, sans-serif;
 }
 
+.scoreboard {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+#red_info {
+    background-color: red;
+}
+
+#blue_info {
+    background-color: skyblue;
+}
+
 .red {
     color: red;
 }
