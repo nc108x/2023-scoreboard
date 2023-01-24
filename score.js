@@ -1,4 +1,3 @@
-import { poles } from './gamefield.js'
 /* name: fiery/war dragon (unless we come up with new names lmao) */
 /* score: current score */
 /* there should only be two instances of the Dragon object (red and blue) */
@@ -12,6 +11,19 @@ class Dragon {
 /* define team objects */
 let redDragon = new Dragon('Fiery', 0)
 let blueDragon = new Dragon('War', 0)
+
+/* rings: array containing all the rings thrown onto the pole */
+/* am using it as a stack so the last element is the topmost ring i.e. the ring that is actually counted */
+/* type: contains the type of the pole (type 1/2/3 and which side of the field it is on for type 1) */
+class Pole {
+    rings = []
+    constructor(type) {
+        this.type = type
+    }
+}
+
+/* array containing all the pole objects */
+const poles = []
 
 /* updates score saved in the team objects and the display on the scoreboard */
 /* does so by checking each pole to see who has the topmost ring */
@@ -78,4 +90,35 @@ function update_score() {
     }
 }
 
-export { update_score }
+function pole_button_listener(event, color, pole_no) {
+    /* prevents the right click menu from showing up */
+    event.preventDefault()
+
+    /* console.log(color) */
+
+    /* update specified pole */
+    poles[pole_no].rings.push(color)
+    console.log(pole_no)
+    console.log(poles[pole_no].rings)
+    update_score()
+}
+
+/* basically inits all gamefield stuff */
+function gamefield_init() {
+    const pole_buttons = document.getElementsByClassName('pole')
+
+    for (let i = 0; i < pole_buttons.length; i++) {
+        /* create pole objects */
+        poles[i] = new Pole(pole_buttons[i].className.substring(4))
+
+        /* add pole button listeners for left/right click */
+        pole_buttons[i].addEventListener('click', (event) => {
+            pole_button_listener(event, 'red', i)
+        })
+        pole_buttons[i].addEventListener('contextmenu', (event) => {
+            pole_button_listener(event, 'blue', i)
+        })
+    }
+}
+
+export { gamefield_init }

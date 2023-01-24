@@ -1,4 +1,4 @@
-import { gamefield_init } from './gamefield.js'
+import { gamefield_init } from './score.js'
 
 console.log('hello there')
 
