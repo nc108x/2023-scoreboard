@@ -8,29 +8,28 @@
 </head>
 
 <body>
-    <h1>Cringe</h1>
-    <div class="scoreboard">
-        <div id="red_info">
-            RED SCORE:
-            <label id="red_score">0</label>
+    <div id="scoreboard">
+        <div id="red-info">
+            <div id="red-name">FIERY DRAGON:</div>
+            <div id="red-score">0</div>
         </div>
 
-        <div id="blue_info">
-            BLUE SCORE:
-            <label id="blue_score">0</label>
+        <div id="controlpanel">
+            <div id="timer">
+                <h1>00:00:00</h1>
+            </div>
+
+            <button id="reset" type="button">RESET</button>
+            <button id="swap" type="button">SWAP</button>
+        </div>
+
+        <div id="blue-info">
+            <div id="blue-name">WAR DRAGON:</div>
+            <div id="blue-score">0</div>
         </div>
     </div>
 
-    <div class="control_panel">
-        <button id="reset" type="button">RESET</button>
-        <!-- <button class="toggle_game" type="button">START</button> -->
-    </div>
-
-    <!-- <p> -->
-    <!-- <h3>Left click: Red, Right click: Blue</h3> -->
-    <!-- </p> -->
-
-    <div class="field">
+    <div id="field">
         <p class="col">
             <button class="pole type1 red" type="button">TYPE1 POLE</button>
             <button class="pole type1 red" type="button">TYPE1 POLE</button>

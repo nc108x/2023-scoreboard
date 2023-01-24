@@ -3,31 +3,57 @@
     font-family: Helvetica, sans-serif;
 }
 
-.scoreboard,
-.field {
+body {
+    background-color: rgb(205, 214, 244);
+}
+
+.inline {
+    display: inline;
+}
+
+#scoreboard {
     display: flex;
-    flex-direction: row;
     justify-content: space-between;
+    padding-left: 15%;
+    padding-right: 15%;
+    text-align: center;
+}
+
+#red-info,
+#blue-info {
+    width: 200px;
+    height: 60px;
+    border-radius: 15px;
+    padding-top: 30px;
+    text-align: center;
+}
+
+#red-info {
+    background-color: rgb(245, 194, 231);
+}
+
+#blue-info {
+    background-color: rgb(137, 180, 250);
+}
+
+#controlpanel {
+    padding: 10px;
+}
+
+#field {
+    height: 500px;
+    background-image: url("./assets/gamefield.png");
+    background-repeat: no-repeat;
+    background-position: center top;
+
+    display: flex;
+    /* align-items: center ; */
+    justify-content: center;
 }
 
 .col {
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
-}
-
-#red_info {
-    background-color: red;
-}
-
-#blue_info {
-    background-color: skyblue;
-}
-
-.red {
-    color: red;
-}
-
-.blue {
-    color: blue;
+    justify-content: space-around;
+    /* row-gap: 30%; */
 }

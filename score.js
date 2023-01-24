@@ -9,8 +9,8 @@ class Dragon {
 }
 
 /* define team objects */
-let redDragon = new Dragon('Fiery', 0)
-let blueDragon = new Dragon('War', 0)
+let redDragon = new Dragon("FIERY", 0)
+let blueDragon = new Dragon("WAR", 0)
 
 /* rings: array containing all the rings thrown onto the pole */
 /* am using it as a stack so the last element is the topmost ring i.e. the ring that is actually counted */
@@ -39,7 +39,7 @@ function update_score() {
         if (poles[i].rings.length != 0) {
             let captured_by = poles[i].rings[poles[i].rings.length - 1]
 
-            if (poles[i].type.includes('type1')) {
+            if (poles[i].type.includes("type1")) {
                 /* console.log('type1') */
 
                 /* consider type 1 bonus for opposing pole */
@@ -48,27 +48,27 @@ function update_score() {
                 } else {
                     score_increase = 25
                 }
-            } else if (poles[i].type.includes('type2')) {
+            } else if (poles[i].type.includes("type2")) {
                 /* console.log('type2') */
 
                 score_increase = 30
-            } else if (poles[i].type.includes('type3')) {
+            } else if (poles[i].type.includes("type3")) {
                 /* console.log('type3') */
 
                 score_increase = 70
             }
 
             console.log(
-                'pole ' +
+                "pole " +
                     i +
-                    ' captured by ' +
+                    " captured by " +
                     captured_by +
-                    ' with a score increase of ' +
+                    " with a score increase of " +
                     score_increase
             )
 
             /* add score to team  */
-            if (captured_by == 'red') {
+            if (captured_by == "red") {
                 redDragon.score += score_increase
             } else {
                 blueDragon.score += score_increase
@@ -77,8 +77,8 @@ function update_score() {
     }
 
     /* update score displayed on the scoreboard */
-    document.getElementById('red_score').innerHTML = redDragon.score
-    document.getElementById('blue_score').innerHTML = blueDragon.score
+    document.getElementById("red-score").innerHTML = redDragon.score
+    document.getElementById("blue-score").innerHTML = blueDragon.score
 }
 
 function pole_button_listener(event, color, pole_no) {
@@ -96,20 +96,20 @@ function pole_button_listener(event, color, pole_no) {
 
 /* basically inits all gamefield stuff */
 function gamefield_init() {
-    const pole_buttons = document.getElementsByClassName('pole')
+    const pole_buttons = document.getElementsByClassName("pole")
 
     for (let i = 0; i < pole_buttons.length; i++) {
         /* create pole objects */
         poles[i] = new Pole(pole_buttons[i].className.substring(4))
 
         /* add pole button listeners for left/right click */
-        pole_buttons[i].addEventListener('click', (event) => {
-            pole_button_listener(event, 'red', i)
+        pole_buttons[i].addEventListener("click", (event) => {
+            pole_button_listener(event, "red", i)
         })
-        pole_buttons[i].addEventListener('contextmenu', (event) => {
-            pole_button_listener(event, 'blue', i)
+        pole_buttons[i].addEventListener("contextmenu", (event) => {
+            pole_button_listener(event, "blue", i)
         })
     }
 }
 
-export { gamefield_init, update_score, poles }
+export { redDragon, blueDragon, poles, update_score, gamefield_init }
