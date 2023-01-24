@@ -33,61 +33,52 @@ function update_score() {
     blueDragon.score = 0
 
     for (let i = 0; i < poles.length; i++) {
-        /* skip if the pole is empty */
-        if (poles[i].rings.length == 0) {
-            /* console.log('empty') */
-            continue
-        }
-
-        /* console.log( */
-        /*     'pole number ' + */
-        /*         i + */
-        /*         ': ' + */
-        /*         poles[i].rings[poles[i].rings.length - 1] */
-        /* ) */
-
-        let captured_by = poles[i].rings[poles[i].rings.length - 1]
         let score_increase = 0
 
-        if (poles[i].type.includes('type1')) {
-            /* console.log('type1') */
+        /* skip if the pole is empty */
+        if (poles[i].rings.length != 0) {
+            let captured_by = poles[i].rings[poles[i].rings.length - 1]
 
-            /* consider type 1 bonus for opposing pole */
-            if (poles[i].type.includes(captured_by)) {
-                score_increase = 10
-            } else {
-                score_increase = 25
+            if (poles[i].type.includes('type1')) {
+                /* console.log('type1') */
+
+                /* consider type 1 bonus for opposing pole */
+                if (poles[i].type.includes(captured_by)) {
+                    score_increase = 10
+                } else {
+                    score_increase = 25
+                }
+            } else if (poles[i].type.includes('type2')) {
+                /* console.log('type2') */
+
+                score_increase = 30
+            } else if (poles[i].type.includes('type3')) {
+                /* console.log('type3') */
+
+                score_increase = 70
             }
-        } else if (poles[i].type.includes('type2')) {
-            /* console.log('type2') */
 
-            score_increase = 30
-        } else if (poles[i].type.includes('type3')) {
-            /* console.log('type3') */
+            console.log(
+                'pole ' +
+                    i +
+                    ' captured by ' +
+                    captured_by +
+                    ' with a score increase of ' +
+                    score_increase
+            )
 
-            score_increase = 70
+            /* add score to team  */
+            if (captured_by == 'red') {
+                redDragon.score += score_increase
+            } else {
+                blueDragon.score += score_increase
+            }
         }
-
-        console.log(
-            'pole ' +
-                i +
-                ' captured by ' +
-                captured_by +
-                ' with a score increase of ' +
-                score_increase
-        )
-
-        /* add score to team  */
-        if (captured_by == 'red') {
-            redDragon.score += score_increase
-        } else {
-            blueDragon.score += score_increase
-        }
-
-        /* update score displayed on the scoreboard */
-        document.getElementById('red_score').innerHTML = redDragon.score
-        document.getElementById('blue_score').innerHTML = blueDragon.score
     }
+
+    /* update score displayed on the scoreboard */
+    document.getElementById('red_score').innerHTML = redDragon.score
+    document.getElementById('blue_score').innerHTML = blueDragon.score
 }
 
 function pole_button_listener(event, color, pole_no) {
@@ -121,4 +112,4 @@ function gamefield_init() {
     }
 }
 
-export { gamefield_init }
+export { gamefield_init, update_score, poles }
