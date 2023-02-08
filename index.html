@@ -7,20 +7,67 @@
     <link rel="stylesheet" href="style.css" />
 </head>
 
-<body>
-    <div id="scoreboard">
+<body style="min-height: 100vh; display: flex; flex-direction: column">
+    <div id="controlpanel">
+        <button id="reset" type=" button">RESET</button>
+        <div id="timer" class="inline">00:00:00</div>
+        <button id="timer-toggle" type="button">START</button>
+        <button id="swap" type="button">SWAP</button>
+    </div>
+
+    <div id="main">
         <div id="red-info">
             <div id="red-name">FIERY DRAGON:</div>
             <div id="red-score">0</div>
         </div>
 
-        <div id="controlpanel">
-            <div id="timer">
-                <h1>00:00:00</h1>
-            </div>
+        <div id="field">
+            <p class="col">
+                <button class="pole type1 red" type="button" style="top: 0px">
+                    TYPE1 POLE
+                </button>
+                <button class="pole type1 red" type="button" style="top: 100px">
+                    TYPE1 POLE
+                </button>
+                <button class="pole type1 red" type="button" style="top: 250px">
+                    TYPE1 POLE
+                </button>
+            </p>
+            <p class="col">
+                <button class="pole type2" type="button" style="top: 90px">
+                    TYPE2 POLE
+                </button>
+                <button class="pole type2" type="button" style="top: 200px">
+                    TYPE2 POLE
+                </button>
+            </p>
 
-            <button id="reset" type="button">RESET</button>
-            <button id="swap" type="button">SWAP</button>
+            <p class="col">
+                <button class="pole type3" type="button" style="top: 150px">
+                    TYPE3 POLE
+                </button>
+            </p>
+
+            <p class="col">
+                <button class="pole type2" type="button" style="top: 90px">
+                    TYPE2 POLE
+                </button>
+                <button class="pole type2" type="button" style="top: 200px">
+                    TYPE2 POLE
+                </button>
+            </p>
+
+            <p class="col">
+                <button class="pole type1 blue" type="button" style="top: 0px">
+                    TYPE1 POLE
+                </button>
+                <button class="pole type1 blue" type="button" style="top: 100px">
+                    TYPE1 POLE
+                </button>
+                <button class="pole type1 blue" type="button" style="top: 250px">
+                    TYPE1 POLE
+                </button>
+            </p>
         </div>
 
         <div id="blue-info">
@@ -29,38 +76,6 @@
         </div>
     </div>
 
-    <div id="field">
-        <p class="col">
-            <button class="pole type1 red" type="button">TYPE1 POLE</button>
-            <button class="pole type1 red" type="button">TYPE1 POLE</button>
-            <button class="pole type1 red" type="button">TYPE1 POLE</button>
-        </p>
-        <p class="col">
-            <button class="pole type2" type="button">TYPE2 POLE</button>
-            <button class="pole type2" type="button">TYPE2 POLE</button>
-        </p>
-
-        <p class="col">
-            <button class="pole type3" type="button">TYPE3 POLE</button>
-        </p>
-
-        <p class="col">
-            <button class="pole type2" type="button">TYPE2 POLE</button>
-            <button class="pole type2" type="button">TYPE2 POLE</button>
-        </p>
-
-        <p class="col">
-            <button class="pole type1 blue" type="button">
-                TYPE1 POLE
-            </button>
-            <button class="pole type1 blue" type="button">
-                TYPE1 POLE
-            </button>
-            <button class="pole type1 blue" type="button">
-                TYPE1 POLE
-            </button>
-        </p>
-    </div>
     <script type="module" src="./main.js"></script>
 </body>
 
