@@ -1,5 +1,7 @@
+import Gamefield from "./components/Gamefield.js";
+
 function App() {
-    return <div>test</div>;
+  return <Gamefield />;
 }
 
 export default App;
