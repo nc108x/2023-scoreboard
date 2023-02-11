@@ -1,9 +1,26 @@
-.gamefield {
+body {
+  background-color: rgb(205, 214, 244);
+}
+
+.main {
   display: flex;
-  height: 500px;
+  flex-grow: 1;
+  justify-content: space-between;
+}
+
+.gamefield {
+  background-image: url("../assets/gamefield.png");
+  background-repeat: no-repeat;
+  background-position: center top;
+
+  display: flex;
+  height: 462px;
+  width: 462px;
+  position: relative;
 }
 
 .cols {
   display: flex;
   flex-direction: column;
+  position: absolute;
 }

@@ -1,8 +1,9 @@
 import { useState } from "react";
 import Fab from "@mui/material/Fab";
+import { positions } from "@mui/system";
 
 /* pole button component */
-export default function Pole({ color, type }) {
+export default function Pole({ color, type, pos }) {
   let [rings, setRings] = useState([]);
 
   function redScoreHandler() {
@@ -39,6 +40,7 @@ export default function Pole({ color, type }) {
       onContextMenu={(e) => {
         blueScoreHandler(e);
       }}
+      sx={{ position: "absolute", top: pos }}
     >
       hey
     </Fab>
