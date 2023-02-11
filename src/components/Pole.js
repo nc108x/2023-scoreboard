@@ -24,6 +24,7 @@ export default function Pole({ color, type }) {
   }
 
   /* determine current of pole */
+  /* TODO fix the colors */
   color =
     rings.at(-1) == "red"
       ? "error"
