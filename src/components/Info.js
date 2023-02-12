@@ -1,16 +1,15 @@
 import Paper from "@mui/material/Paper";
 
-export default function Info({}) {
+export default function Info({ score, dragonName }) {
   return (
     <Paper
       elevation={13}
       sx={{
-        left: "1000px",
         width: "150px",
         height: "150px",
       }}
     >
-      WAR DRAGON: 10
+      {dragonName + " DRAGON: \n" + score}
     </Paper>
   );
 }

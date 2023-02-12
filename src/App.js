@@ -4,6 +4,8 @@ import Info from "./components/Info.js";
 
 function App() {
   let [poles, setPoles] = useState(Array(11).fill(Array(0)));
+  let [redDragon, setRedDragon] = useState("FIERY");
+  let [blueDragon, setBlueDragon] = useState("WAR");
 
   function redScoreHandler(pole_no) {
     let temp = [...poles];
@@ -59,15 +61,15 @@ function App() {
     }
 
     console.log([redScore, blueScore]);
+    return [redScore, blueScore];
   }
 
-  checkScore();
+  /* update score */
+  let [redScore, blueScore] = checkScore();
 
-  /* console.log("this is a test"); */
-  /* console.log(poles); */
   return (
     <div className="main">
-      <Info />
+      <Info score={redScore} dragonName={redDragon} />
 
       <Gamefield
         poles={poles}
@@ -75,7 +77,7 @@ function App() {
         blueScoreHandler={blueScoreHandler}
       />
 
-      <Info />
+      <Info score={blueScore} dragonName={blueDragon} />
     </div>
   );
 }
