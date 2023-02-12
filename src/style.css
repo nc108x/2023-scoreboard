@@ -4,8 +4,11 @@ body {
 
 .main {
   display: flex;
-  flex-grow: 1;
-  justify-content: space-between;
+  /* flex-grow: 1; */
+  justify-content: space-around;
+
+  /* margin: auto; */
+  /* height: 462px; */
 }
 
 .gamefield {

@@ -1,4 +1,3 @@
-import { useState } from "react";
 import Fab from "@mui/material/Fab";
 
 export default function Pole({
