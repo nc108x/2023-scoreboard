@@ -1,33 +1,120 @@
 import Pole from "./Pole.js";
+import { useState } from "react";
 
 export default function Gamefield() {
+  let [poles, setPoles] = useState(Array(11).fill(Array(0)));
+  console.log(poles);
+
+  function redScoreHandler(pole_no) {
+    let temp = [...poles];
+    temp[pole_no] = [...poles[pole_no], "red"];
+
+    setPoles(temp);
+    /* console.log(poles); */
+  }
+
+  function blueScoreHandler(e, pole_no) {
+    /* to prevent right click menu from showing up */
+    e.preventDefault();
+    let temp = [...poles];
+    temp[pole_no] = [...poles[pole_no], "blue"];
+
+    setPoles(temp);
+    /* console.log(poles); */
+  }
+
+  /* function blueScoreHandler(e, pole_no) { */
+  /*   /* to prevent right click menu from showing up */
+  /*   e.preventDefault(); */
+  /*   setRings([...rings, "blue"]); */
+  /**/
+  /*   console.log(color); */
+  /*   console.log(type); */
+  /*   console.log(rings); */
+  /* } */
+
   return (
     <>
       <div className="gamefield">
         <div className="cols" style={{ left: "25px" }}>
-          <Pole color={"red"} type={1} pos={10} />
-          <Pole color={"red"} type={1} pos={200} />
-          <Pole color={"red"} type={1} pos={390} />
+          <Pole
+            pos={10}
+            rings={poles[0]}
+            redScoreHandler={() => redScoreHandler(0)}
+            blueScoreHandler={(e) => blueScoreHandler(e, 0)}
+          />
+          <Pole
+            pos={200}
+            rings={poles[1]}
+            redScoreHandler={() => redScoreHandler(1)}
+            blueScoreHandler={(e) => blueScoreHandler(e, 1)}
+          />
+          <Pole
+            pos={390}
+            rings={poles[2]}
+            redScoreHandler={() => redScoreHandler(2)}
+            blueScoreHandler={(e) => blueScoreHandler(e, 2)}
+          />
         </div>
 
         <div className="cols" style={{ left: "130px" }}>
-          <Pole color={"na"} type={2} pos={120} />
-          <Pole color={"na"} type={2} pos={280} />
+          <Pole
+            pos={120}
+            rings={poles[3]}
+            redScoreHandler={() => redScoreHandler(3)}
+            blueScoreHandler={(e) => blueScoreHandler(e, 3)}
+          />
+          <Pole
+            pos={280}
+            rings={poles[4]}
+            redScoreHandler={() => redScoreHandler(4)}
+            blueScoreHandler={(e) => blueScoreHandler(e, 4)}
+          />
         </div>
 
         <div className="cols" style={{ left: "200px" }}>
-          <Pole color={"na"} type={3} pos={200} />
+          <Pole
+            pos={200}
+            rings={poles[5]}
+            redScoreHandler={() => redScoreHandler(5)}
+            blueScoreHandler={(e) => blueScoreHandler(e, 5)}
+          />
         </div>
 
         <div className="cols" style={{ left: "280px" }}>
-          <Pole color={"na"} type={2} pos={120} />
-          <Pole color={"na"} type={2} pos={280} />
+          <Pole
+            pos={120}
+            rings={poles[6]}
+            redScoreHandler={() => redScoreHandler(6)}
+            blueScoreHandler={(e) => blueScoreHandler(e, 6)}
+          />
+          <Pole
+            pos={280}
+            rings={poles[7]}
+            redScoreHandler={() => redScoreHandler(7)}
+            blueScoreHandler={(e) => blueScoreHandler(e, 7)}
+          />
         </div>
 
         <div className="cols" style={{ left: "380px" }}>
-          <Pole color={"red"} type={1} pos={10} />
-          <Pole color={"red"} type={1} pos={200} />
-          <Pole color={"red"} type={1} pos={390} />
+          <Pole
+            pos={10}
+            rings={poles[8]}
+            redScoreHandler={() => redScoreHandler(8)}
+            blueScoreHandler={(e) => blueScoreHandler(e, 8)}
+          />
+          <Pole
+            pos={200}
+            rings={poles[9]}
+            redScoreHandler={() => redScoreHandler(9)}
+            blueScoreHandler={(e) => blueScoreHandler(e, 9)}
+          />
+          <Pole
+            pos={390}
+            rings={poles[10]}
+            redScoreHandler={() => redScoreHandler(10)}
+            blueScoreHandler={(e) => blueScoreHandler(e, 10)}
+          />
         </div>
       </div>
     </>

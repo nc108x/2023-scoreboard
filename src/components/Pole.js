@@ -1,32 +1,35 @@
 import { useState } from "react";
 import Fab from "@mui/material/Fab";
-import { positions } from "@mui/system";
 
-/* pole button component */
-export default function Pole({ color, type, pos }) {
-  let [rings, setRings] = useState([]);
+export default function Pole({
+  pos,
+  rings,
+  redScoreHandler,
+  blueScoreHandler,
+}) {
+  /* let [rings, setRings] = useState([]); */
 
-  function redScoreHandler() {
-    setRings([...rings, "red"]);
+  /* function redScoreHandler() { */
+  /*   setRings([...rings, "red"]); */
 
-    /* console.log(color); */
-    /* console.log(type); */
-    /* console.log(rings); */
-  }
+  /* console.log(color); */
+  /* console.log(type); */
+  /*   console.log(rings); */
+  /* } */
 
-  function blueScoreHandler(e) {
-    /* to prevent right click menu from showing up */
-    e.preventDefault();
-    setRings([...rings, "blue"]);
-
-    /* console.log(color); */
-    /* console.log(type); */
-    /* console.log(rings); */
-  }
+  /* function blueScoreHandler(e) { */
+  /* to prevent right click menu from showing up */
+  /*   e.preventDefault(); */
+  /*   setRings([...rings, "blue"]); */
+  /**/
+  /*   console.log(color); */
+  /*   console.log(type); */
+  /*   console.log(rings); */
+  /* } */
 
   /* determine current of pole */
   /* TODO fix the colors */
-  color =
+  let color =
     rings.at(-1) == "red"
       ? "error"
       : rings.at(-1) == "blue"
@@ -37,12 +40,8 @@ export default function Pole({ color, type, pos }) {
     <Fab
       color={color}
       onClick={redScoreHandler}
-      onContextMenu={(e) => {
-        blueScoreHandler(e);
-      }}
+      onContextMenu={blueScoreHandler}
       sx={{ position: "absolute", top: pos }}
-    >
-      hey
-    </Fab>
+    ></Fab>
   );
 }
