@@ -7,26 +7,6 @@ export default function Pole({
   redScoreHandler,
   blueScoreHandler,
 }) {
-  /* let [rings, setRings] = useState([]); */
-
-  /* function redScoreHandler() { */
-  /*   setRings([...rings, "red"]); */
-
-  /* console.log(color); */
-  /* console.log(type); */
-  /*   console.log(rings); */
-  /* } */
-
-  /* function blueScoreHandler(e) { */
-  /* to prevent right click menu from showing up */
-  /*   e.preventDefault(); */
-  /*   setRings([...rings, "blue"]); */
-  /**/
-  /*   console.log(color); */
-  /*   console.log(type); */
-  /*   console.log(rings); */
-  /* } */
-
   /* determine current of pole */
   /* TODO fix the colors */
   let color =
