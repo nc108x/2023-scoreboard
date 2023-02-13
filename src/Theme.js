@@ -1,6 +1,11 @@
 import { createTheme } from "@mui/material/styles";
 
 const theme = createTheme({
+  typography: {
+    body1: {
+      fontFamily: "Roboto",
+    },
+  },
   palette: {
     redTeam: {
       main: "#f5c2e7",

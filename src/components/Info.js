@@ -1,6 +1,7 @@
 import Paper from "@mui/material/Paper";
 import theme from "../Theme.js";
 import { ThemeProvider } from "@mui/material/styles";
+import { Typography } from "@mui/material";
 
 export default function Info({ score, dragonName, color }) {
   let bgColor;
@@ -19,9 +20,13 @@ export default function Info({ score, dragonName, color }) {
             width: "150px",
             height: "150px",
             backgroundColor: bgColor,
+            borderRadius: 2,
+            typography: "subtitle2",
+            textAlign: "center",
+            fontSize: 20,
           }}
         >
-          {dragonName + " DRAGON: \n" + score}
+          {dragonName + " DRAGON: \n" + score}{" "}
         </Paper>
       </ThemeProvider>
     </>
