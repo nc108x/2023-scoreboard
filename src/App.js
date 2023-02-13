@@ -1,4 +1,7 @@
 import { useState } from "react";
+import Grid from "@mui/material/Grid";
+/* import Box from "@mui/material/Box"; */
+
 import Gamefield from "./components/Gamefield.js";
 import Info from "./components/Info.js";
 
@@ -68,17 +71,30 @@ function App() {
   let [redScore, blueScore] = checkScore();
 
   return (
-    <div className="main">
-      <Info score={redScore} dragonName={redDragon} />
+    <>
+      <Grid
+        container
+        direction="row"
+        justifyContent="space-evenly"
+        sx={{ position: "relative", height: "462px" }}
+      >
+        <Grid item>
+          <Info score={redScore} dragonName={redDragon} color="red" />
+        </Grid>
 
-      <Gamefield
-        poles={poles}
-        redScoreHandler={redScoreHandler}
-        blueScoreHandler={blueScoreHandler}
-      />
+        <Grid item>
+          <Gamefield
+            poles={poles}
+            redScoreHandler={redScoreHandler}
+            blueScoreHandler={blueScoreHandler}
+          />
+        </Grid>
 
-      <Info score={blueScore} dragonName={blueDragon} />
-    </div>
+        <Grid item>
+          <Info score={blueScore} dragonName={blueDragon} color="blue" />
+        </Grid>
+      </Grid>
+    </>
   );
 }
 
