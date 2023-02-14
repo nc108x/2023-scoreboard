@@ -23,7 +23,7 @@ export default function Info({ score, dragonName, color }) {
             borderRadius: 2,
             typography: "subtitle2",
             textAlign: "center",
-            fontSize: 20,
+            fontSize: 32,
           }}
         >
           {dragonName + "\nDRAGON: \n" + score}

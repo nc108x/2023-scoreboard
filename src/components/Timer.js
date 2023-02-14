@@ -1,15 +1,26 @@
 import Countdown from "react-countdown";
 import { zeroPad, calcTimeDelta, formatTimeDelta } from "react-countdown";
 
+import Box from "@mui/material/Box";
+
+import theme from "../Theme.js";
+import { ThemeProvider } from "@mui/material/styles";
+
 export default function Timer({ startTime, countdownAmt }) {
   let renderer = ({ minutes, seconds, milliseconds, completed }) => {
     if (completed) {
-      return "END";
+      return (
+        <ThemeProvider theme={theme}>
+          <Box sx={{ typography: "subtitle2", fontSize: 32 }}>END</Box>
+        </ThemeProvider>
+      );
     } else {
       return (
-        <span>
-          {zeroPad(minutes)}:{zeroPad(seconds)}:{zeroPad(milliseconds, 3)}
-        </span>
+        <ThemeProvider theme={theme}>
+          <Box sx={{ typography: "subtitle2", fontSize: 32 }}>
+            {zeroPad(minutes)}:{zeroPad(seconds)}:{zeroPad(milliseconds, 3)}
+          </Box>
+        </ThemeProvider>
       );
     }
   };
