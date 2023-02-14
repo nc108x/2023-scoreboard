@@ -15,7 +15,7 @@ const THREE_MINS = 180000;
 const INF = 9999999999999999;
 const STOP = 0;
 
-export default function ControlPanel({ resetPoles }) {
+export default function ControlPanel({ resetPoles, swapDragons }) {
   let [timerState, setTimerState] = useState("IDLE");
   let [startTime, setStartTime] = useState(Date.now());
   let [countdownAmt, setCountdownAmt] = useState(ONE_MIN);
@@ -53,9 +53,10 @@ export default function ControlPanel({ resetPoles }) {
           >
             RESET
           </Button>
-          <Button>test</Button>
+          <Button onClick={swapDragons}>SWAP</Button>
           <Button>test</Button>
 
+          {/* prompt to confirm before reset */}
           <Dialog
             open={confirmReset}
             onClose={() => {

@@ -33,6 +33,11 @@ function App() {
     setPoles(Array(11).fill(Array(0)));
   }
 
+  function swapDragons() {
+    setRedDragon(redDragon == "FIERY" ? "WAR" : "FIERY");
+    setBlueDragon(blueDragon == "FIERY" ? "WAR" : "FIERY");
+  }
+
   function checkScore() {
     let type1 = [0, 1, 2, 8, 9, 10];
     let type2 = [3, 4, 6, 7];
@@ -87,7 +92,7 @@ function App() {
           sx={{ textAlign: "center" }}
         >
           <Grid container justifyContent="space-evenly">
-            <ControlPanel resetPoles={resetPoles} />
+            <ControlPanel resetPoles={resetPoles} swapDragons={swapDragons} />
           </Grid>
 
           <Grid
