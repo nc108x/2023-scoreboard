@@ -1,9 +1,9 @@
 import { useState } from "react";
 import Grid from "@mui/material/Grid";
-/* import Box from "@mui/material/Box"; */
 
 import Gamefield from "./components/Gamefield.js";
 import Info from "./components/Info.js";
+import ControlPanel from "./components/Controlpanel.js";
 
 function App() {
   let [poles, setPoles] = useState(Array(11).fill(Array(0)));
@@ -72,26 +72,32 @@ function App() {
 
   return (
     <>
-      <Grid
-        container
-        direction="row"
-        justifyContent="space-evenly"
-        sx={{ position: "relative", height: "462px" }}
-      >
-        <Grid item>
-          <Info score={redScore} dragonName={redDragon} color="red" />
+      <Grid container direction="column" justifyContent="space-evenly">
+        <Grid container justifyContent="space-evenly">
+          <ControlPanel />
         </Grid>
 
-        <Grid item>
-          <Gamefield
-            poles={poles}
-            redScoreHandler={redScoreHandler}
-            blueScoreHandler={blueScoreHandler}
-          />
-        </Grid>
+        <Grid
+          container
+          direction="row"
+          justifyContent="space-evenly"
+          sx={{ position: "relative", height: "462px" }}
+        >
+          <Grid item>
+            <Info score={redScore} dragonName={redDragon} color="red" />
+          </Grid>
 
-        <Grid item>
-          <Info score={blueScore} dragonName={blueDragon} color="blue" />
+          <Grid item>
+            <Gamefield
+              poles={poles}
+              redScoreHandler={redScoreHandler}
+              blueScoreHandler={blueScoreHandler}
+            />
+          </Grid>
+
+          <Grid item>
+            <Info score={blueScore} dragonName={blueDragon} color="blue" />
+          </Grid>
         </Grid>
       </Grid>
     </>
