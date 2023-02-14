@@ -1,8 +1,5 @@
 import Paper from "@mui/material/Paper";
 
-import theme from "../Theme.js";
-import { ThemeProvider } from "@mui/material/styles";
-
 export default function Info({ score, dragonName, color }) {
   let bgColor;
   if (color == "red") {
@@ -13,22 +10,20 @@ export default function Info({ score, dragonName, color }) {
 
   return (
     <>
-      <ThemeProvider theme={theme}>
-        <Paper
-          elevation={13}
-          sx={{
-            width: "150px",
-            height: "150px",
-            backgroundColor: bgColor,
-            borderRadius: 2,
-            typography: "subtitle2",
-            textAlign: "center",
-            fontSize: 32,
-          }}
-        >
-          {dragonName + "\nDRAGON: \n" + score}
-        </Paper>
-      </ThemeProvider>
+      <Paper
+        elevation={13}
+        sx={{
+          width: "150px",
+          height: "150px",
+          backgroundColor: bgColor,
+          borderRadius: 2,
+          typography: "subtitle2",
+          textAlign: "center",
+          fontSize: 32,
+        }}
+      >
+        {dragonName + "\nDRAGON: \n" + score}
+      </Paper>
     </>
   );
 }

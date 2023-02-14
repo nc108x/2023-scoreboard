@@ -1,9 +1,12 @@
 import { useState } from "react";
 import Grid from "@mui/material/Grid";
 
+import theme from "./Theme.js";
+import { ThemeProvider } from "@mui/material/styles";
+
 import Gamefield from "./components/Gamefield.js";
 import Info from "./components/Info.js";
-import ControlPanel from "./components/Controlpanel.js";
+import ControlPanel from "./components/ControlPanel.js";
 
 function App() {
   let [poles, setPoles] = useState(Array(11).fill(Array(0)));
@@ -24,6 +27,10 @@ function App() {
     temp[pole_no] = [...poles[pole_no], "blue"];
 
     setPoles(temp);
+  }
+
+  function resetPoles() {
+    setPoles(Array(11).fill(Array(0)));
   }
 
   function checkScore() {
@@ -72,34 +79,41 @@ function App() {
 
   return (
     <>
-      <Grid container direction="column" justifyContent="space-evenly">
-        <Grid container justifyContent="space-evenly">
-          <ControlPanel />
-        </Grid>
-
+      <ThemeProvider theme={theme}>
         <Grid
           container
-          direction="row"
+          direction="column"
           justifyContent="space-evenly"
-          sx={{ position: "relative", height: "462px" }}
+          sx={{ textAlign: "center" }}
         >
-          <Grid item>
-            <Info score={redScore} dragonName={redDragon} color="red" />
+          <Grid container justifyContent="space-evenly">
+            <ControlPanel resetPoles={resetPoles} />
           </Grid>
 
-          <Grid item>
-            <Gamefield
-              poles={poles}
-              redScoreHandler={redScoreHandler}
-              blueScoreHandler={blueScoreHandler}
-            />
-          </Grid>
+          <Grid
+            container
+            direction="row"
+            justifyContent="space-evenly"
+            sx={{ position: "relative", height: "462px" }}
+          >
+            <Grid item>
+              <Info score={redScore} dragonName={redDragon} color="red" />
+            </Grid>
 
-          <Grid item>
-            <Info score={blueScore} dragonName={blueDragon} color="blue" />
+            <Grid item>
+              <Gamefield
+                poles={poles}
+                redScoreHandler={redScoreHandler}
+                blueScoreHandler={blueScoreHandler}
+              />
+            </Grid>
+
+            <Grid item>
+              <Info score={blueScore} dragonName={blueDragon} color="blue" />
+            </Grid>
           </Grid>
         </Grid>
-      </Grid>
+      </ThemeProvider>
     </>
   );
 }

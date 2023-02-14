@@ -1,8 +1,5 @@
 import Fab from "@mui/material/Fab";
 
-import theme from "../Theme.js";
-import { ThemeProvider } from "@mui/material/styles";
-
 export default function Pole({
   pos,
   rings,
@@ -18,13 +15,11 @@ export default function Pole({
       : "standbyColor";
 
   return (
-    <ThemeProvider theme={theme}>
-      <Fab
-        color={color}
-        onClick={redScoreHandler}
-        onContextMenu={blueScoreHandler}
-        sx={{ position: "absolute", top: pos }}
-      ></Fab>
-    </ThemeProvider>
+    <Fab
+      color={color}
+      onClick={redScoreHandler}
+      onContextMenu={blueScoreHandler}
+      sx={{ position: "absolute", top: pos }}
+    ></Fab>
   );
 }
