@@ -1,36 +1,17 @@
 import Countdown from "react-countdown";
-import { zeroPad, CountdownApi } from "react-countdown";
+import { zeroPad } from "react-countdown";
 
 import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
-
-const ONE_MIN = 60000;
-const THREE_MINS = 180000;
-const INF = 9999999999999999;
-const STOP = 0;
 
 export default function Timer({
   startTime,
   countdownAmt,
   setCountdownAmt,
-  state,
-  stateUpdate,
+  setApi,
+  onComplete,
 }) {
   console.log(setCountdownAmt);
   let renderer = ({ minutes, seconds, milliseconds, api }) => {
-    function toggle() {
-      if (api.isStopped()) {
-        api.start();
-      } else {
-        api.stop();
-      }
-    }
-
-    function btnCallback() {
-      /* stateUpdate(); */
-      toggle();
-    }
-
     return (
       <>
         <Box sx={{ typography: "subtitle2", fontSize: 32 }}>
@@ -39,14 +20,7 @@ export default function Timer({
       </>
     );
   };
-
-  /* function onStop() { */
-  /*   setCountdownAmt(STOP); */
-  /* } */
-  /**/
-  /* function onStart() { */
-  /*   setCountdownAmt(ONE_MIN); */
-  /* } */
+  /* console.log(onComplete); */
 
   return (
     <>
@@ -56,8 +30,8 @@ export default function Timer({
         intervalDelay={0}
         renderer={renderer}
         autoStart={false}
-        /* onStop={onStop} */
-        /* onStart={onStart} */
+        ref={setApi}
+        onComplete={onComplete}
       />
     </>
   );

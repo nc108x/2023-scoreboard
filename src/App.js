@@ -9,7 +9,12 @@ import Info from "./components/Info.js";
 import ControlPanel from "./components/ControlPanel.js";
 
 function App() {
-  let [poles, setPoles] = useState(Array(11).fill(Array(0)));
+  let [poles, setPoles] = useState(Array(11).fill(Array(1).fill("empty")));
+  let [history, setHistory] = useState(
+    Array(1).fill(Array(11).fill(Array(1).fill("empty")))
+  );
+  let [pointInTime, setPointInTime] = useState(-1);
+  /* console.log(history); */
   let [redDragon, setRedDragon] = useState("FIERY");
   let [blueDragon, setBlueDragon] = useState("WAR");
 
@@ -18,6 +23,8 @@ function App() {
     temp[pole_no] = [...poles[pole_no], "red"];
 
     setPoles(temp);
+    setHistory([...history.slice(0, history.length - pointInTime + 1), temp]);
+    setPointInTime(-1);
   }
 
   function blueScoreHandler(e, pole_no) {
@@ -27,15 +34,30 @@ function App() {
     temp[pole_no] = [...poles[pole_no], "blue"];
 
     setPoles(temp);
+    setHistory([...history.slice(0, history.length - pointInTime + 1), temp]);
+    setPointInTime(-1);
   }
 
   function resetPoles() {
-    setPoles(Array(11).fill(Array(0)));
+    setPoles(Array(11).fill(Array(1).fill("empty")));
+    setHistory(Array(1).fill(Array(11).fill(Array(1).fill("empty"))));
+    setPointInTime(-1);
   }
 
   function swapDragons() {
     setRedDragon(redDragon == "FIERY" ? "WAR" : "FIERY");
     setBlueDragon(blueDragon == "FIERY" ? "WAR" : "FIERY");
+  }
+
+  /* present will be denoted by -1 */
+  /* since history.at(-1) corresponds to the newest entry in the stack */
+  function undo() {
+    console.log("test");
+    setPointInTime(pointInTime - 1);
+    console.log(pointInTime - 1);
+    setPoles(history.at(pointInTime - 1));
+    console.log(history.at(pointInTime - 1));
+    console.log("end");
   }
 
   function checkScore() {
@@ -52,7 +74,7 @@ function App() {
       let targetTeam = poles[i].at(-1);
       let scoreIncrease = 0;
 
-      if (targetTeam == null) {
+      if (targetTeam == "empty") {
         continue;
       }
 
@@ -92,7 +114,11 @@ function App() {
           sx={{ textAlign: "center" }}
         >
           <Grid container justifyContent="space-evenly">
-            <ControlPanel resetPoles={resetPoles} swapDragons={swapDragons} />
+            <ControlPanel
+              resetPoles={resetPoles}
+              swapDragons={swapDragons}
+              undo={undo}
+            />
           </Grid>
 
           <Grid
