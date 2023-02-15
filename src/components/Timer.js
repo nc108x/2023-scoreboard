@@ -3,15 +3,8 @@ import { zeroPad } from "react-countdown";
 
 import Box from "@mui/material/Box";
 
-export default function Timer({
-  startTime,
-  countdownAmt,
-  setCountdownAmt,
-  setApi,
-  onComplete,
-}) {
-  console.log(setCountdownAmt);
-  let renderer = ({ minutes, seconds, milliseconds, api }) => {
+export default function Timer({ timerState, setApi, onComplete }) {
+  let renderer = ({ minutes, seconds, milliseconds }) => {
     return (
       <>
         <Box sx={{ typography: "subtitle2", fontSize: 32 }}>
@@ -20,12 +13,11 @@ export default function Timer({
       </>
     );
   };
-  /* console.log(onComplete); */
 
   return (
     <>
       <Countdown
-        date={startTime + countdownAmt}
+        date={timerState.startTime + timerState.countdownAmt}
         precision={3}
         intervalDelay={0}
         renderer={renderer}

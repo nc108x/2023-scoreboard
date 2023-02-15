@@ -18,6 +18,12 @@ function App() {
   let [redDragon, setRedDragon] = useState("FIERY");
   let [blueDragon, setBlueDragon] = useState("WAR");
 
+  let [timerState, setTimerState] = useState({
+    state: "IDLE",
+    startTime: Date.now(),
+    countdownAmt: 0,
+  });
+
   function redScoreHandler(pole_no) {
     let temp = [...poles];
     temp[pole_no] = [...poles[pole_no], "red"];
@@ -118,6 +124,8 @@ function App() {
               resetPoles={resetPoles}
               swapDragons={swapDragons}
               undo={undo}
+              timerState={timerState}
+              setTimerState={setTimerState}
             />
           </Grid>
 

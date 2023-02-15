@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef } from "react";
 import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
 
@@ -12,15 +12,20 @@ import Timer from "./Timer.js";
 
 const ONE_MIN = 60000;
 const THREE_MINS = 180000;
-const INF = 9999999999999999;
+const INF = 999999999999999;
 const STOP = 0;
 
-export default function ControlPanel({ resetPoles, swapDragons, undo, redo }) {
-  let [timerState, setTimerState] = useState("IDLE");
-  let [startTime, setStartTime] = useState(Date.now());
-  let [countdownAmt, setCountdownAmt] = useState(STOP);
+export default function ControlPanel({
+  resetPoles,
+  swapDragons,
+  undo,
+  redo,
+  timerState,
+  setTimerState,
+}) {
   let [confirmReset, setConfirmReset] = useState(false);
 
+  /* to allow us to use the CountdownApi outside of Timer.js */
   const countdownApi = useRef();
   const setApi = (ref) => {
     if (!ref) return;
@@ -29,60 +34,67 @@ export default function ControlPanel({ resetPoles, swapDragons, undo, redo }) {
     countdownApi.current.start();
   };
 
-  function timerToggle() {
-    if (countdownApi.current.isStopped()) {
-      countdownApi.current.start();
-    } else {
-      countdownApi.current.stop();
+  /* triggered when current countdown arrives at zero */
+  /* automatically goes to next state of the game */
+  function nextTimerState() {
+    console.log("ENTER NEXT STATE");
+    switch (timerState.state) {
+      case "PREP":
+        setTimerState({
+          state: "GAME",
+          startTime: Date.now(),
+          countdownAmt: THREE_MINS,
+        });
+
+        console.log("GO TO GAME");
+        break;
+      case "GAME":
+        setTimerState({
+          state: "IDLE",
+          startTime: Date.now(),
+          countdownAmt: STOP,
+        });
+
+        console.log("GO TO IDLE");
+        break;
     }
   }
 
-  function stateBridge() {
-    console.log("ENTER BRIDGE");
-    if (timerState == "PREP") {
-      setTimerState("GAME");
-      setStartTime(Date.now());
-      setCountdownAmt(THREE_MINS);
-      console.log("GO TO GAME");
-    } else if (timerState == "GAME") {
-      setTimerState("IDLE");
-      setCountdownAmt(STOP);
-      console.log("GO TO IDLE");
-    }
-  }
-
+  /* triggered when button is clicked */
+  /* toggles between starting and stopping current countdown */
   function timerBtnHandler() {
     console.log("BUTTON CLICKED");
-    switch (timerState) {
+    switch (timerState.state) {
       case "IDLE":
+        setTimerState({
+          state: "PREP",
+          startTime: Date.now(),
+          countdownAmt: ONE_MIN,
+        });
+
         console.log("GOING FROM IDLE TO PREP");
-        setStartTime(Date.now());
-        setCountdownAmt(ONE_MIN);
-        setTimerState("PREP");
         break;
 
       case "PREP":
       case "GAME":
+        setTimerState({
+          state: "IDLE",
+          startTime: Date.now(),
+          countdownAmt: STOP,
+        });
+
         console.log("GOING FROM PREP/GAME TO IDLE");
-        setCountdownAmt(STOP);
-        setTimerState("IDLE");
         break;
     }
-    timerToggle();
   }
 
   return (
     <>
       <Grid item>
         <Timer
-          startTime={startTime}
-          countdownAmt={countdownAmt}
-          setCountdownAmt={setCountdownAmt}
+          timerState={timerState}
           setApi={setApi}
-          /* onComplete={() => { */
-          /*   console.log("heyyy"); */
-          /* }} */
-          onComplete={stateBridge}
+          onComplete={nextTimerState}
         />
         <Grid item>
           <Button
@@ -96,7 +108,7 @@ export default function ControlPanel({ resetPoles, swapDragons, undo, redo }) {
           <Button onClick={undo}>UNDO</Button>
           <Button onClick={undo}>REDO</Button>
           <Button onClick={timerBtnHandler}>
-            {timerState == "IDLE" ? "START" : "STOP"}
+            {timerState.state == "IDLE" ? "START" : "STOP"}
           </Button>
 
           {/* prompt to confirm before reset */}
