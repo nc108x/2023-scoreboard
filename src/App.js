@@ -34,17 +34,17 @@ function App() {
     setPoles(temp);
     setHistory([...history.slice(0, history.length - pointInTime + 1), temp]);
     setPointInTime(-1);
-    setTimerState({
-      state: "IDLE",
-      startTime: Date.now(),
-      countdownAmt: 0,
-    });
   }
 
   function resetHandler() {
     setPoles(Array(11).fill(Array(1).fill("empty")));
     setHistory(Array(1).fill(Array(11).fill(Array(1).fill("empty"))));
     setPointInTime(-1);
+    setTimerState({
+      state: "IDLE",
+      startTime: Date.now(),
+      countdownAmt: 0,
+    });
   }
 
   function swapDragons() {

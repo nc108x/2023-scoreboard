@@ -39,6 +39,10 @@ export default function ControlPanel({
   function nextTimerState() {
     console.log("ENTER NEXT STATE");
     switch (timerState.state) {
+      case "IDLE":
+        console.log("REMAIN AT IDLE");
+        break;
+
       case "PREP":
         setTimerState({
           state: "GAME",
