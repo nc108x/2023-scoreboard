@@ -24,20 +24,11 @@ function App() {
     countdownAmt: 0,
   });
 
-  function redScoreHandler(pole_no) {
-    let temp = [...poles];
-    temp[pole_no] = [...poles[pole_no], "red"];
-
-    setPoles(temp);
-    setHistory([...history.slice(0, history.length - pointInTime + 1), temp]);
-    setPointInTime(-1);
-  }
-
-  function blueScoreHandler(e, pole_no) {
+  function scoreHandler(e, pole_no, color) {
     /* to prevent right click menu from showing up */
     e.preventDefault();
     let temp = [...poles];
-    temp[pole_no] = [...poles[pole_no], "blue"];
+    temp[pole_no] = [...poles[pole_no], color];
 
     setPoles(temp);
     setHistory([...history.slice(0, history.length - pointInTime + 1), temp]);
@@ -140,11 +131,7 @@ function App() {
             </Grid>
 
             <Grid item>
-              <Gamefield
-                poles={poles}
-                redScoreHandler={redScoreHandler}
-                blueScoreHandler={blueScoreHandler}
-              />
+              <Gamefield poles={poles} scoreHandler={scoreHandler} />
             </Grid>
 
             <Grid item>
