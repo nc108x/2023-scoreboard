@@ -9,16 +9,17 @@ import Info from "./components/Info.js";
 import ControlPanel from "./components/ControlPanel.js";
 
 function App() {
-  let [poles, setPoles] = useState(Array(11).fill(Array(1).fill("empty")));
-  let [history, setHistory] = useState(
+  const [poles, setPoles] = useState(Array(11).fill(Array(1).fill("empty")));
+
+  const [history, setHistory] = useState(
     Array(1).fill(Array(11).fill(Array(1).fill("empty")))
   );
-  let [pointInTime, setPointInTime] = useState(-1);
-  /* console.log(history); */
-  let [redDragon, setRedDragon] = useState("FIERY");
-  let [blueDragon, setBlueDragon] = useState("WAR");
+  const [pointInTime, setPointInTime] = useState(-1);
 
-  let [timerState, setTimerState] = useState({
+  const [redDragon, setRedDragon] = useState("FIERY");
+  const [blueDragon, setBlueDragon] = useState("WAR");
+
+  const [timerState, setTimerState] = useState({
     state: "IDLE",
     startTime: Date.now(),
     countdownAmt: 0,
@@ -33,9 +34,14 @@ function App() {
     setPoles(temp);
     setHistory([...history.slice(0, history.length - pointInTime + 1), temp]);
     setPointInTime(-1);
+    setTimerState({
+      state: "IDLE",
+      startTime: Date.now(),
+      countdownAmt: 0,
+    });
   }
 
-  function resetPoles() {
+  function resetHandler() {
     setPoles(Array(11).fill(Array(1).fill("empty")));
     setHistory(Array(1).fill(Array(11).fill(Array(1).fill("empty"))));
     setPointInTime(-1);
@@ -99,7 +105,7 @@ function App() {
   }
 
   /* update score */
-  let [redScore, blueScore] = checkScore();
+  const [redScore, blueScore] = checkScore();
 
   return (
     <>
@@ -112,7 +118,7 @@ function App() {
         >
           <Grid container justifyContent="space-evenly">
             <ControlPanel
-              resetPoles={resetPoles}
+              resetHandler={resetHandler}
               swapDragons={swapDragons}
               undo={undo}
               timerState={timerState}

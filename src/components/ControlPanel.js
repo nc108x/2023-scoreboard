@@ -16,14 +16,14 @@ const INF = 999999999999999;
 const STOP = 0;
 
 export default function ControlPanel({
-  resetPoles,
+  resetHandler,
   swapDragons,
   undo,
   redo,
   timerState,
   setTimerState,
 }) {
-  let [confirmReset, setConfirmReset] = useState(false);
+  const [confirmReset, setConfirmReset] = useState(false);
 
   /* to allow us to use the CountdownApi outside of Timer.js */
   const countdownApi = useRef();
@@ -133,7 +133,7 @@ export default function ControlPanel({
               <Button
                 onClick={() => {
                   setConfirmReset(false);
-                  resetPoles();
+                  resetHandler();
                 }}
               >
                 繼續開game啦咁多野講
