@@ -30,9 +30,11 @@ function App() {
     e.preventDefault();
     let temp = [...poles];
     temp[pole_no] = [...poles[pole_no], color];
-
     setPoles(temp);
-    setHistory([...history.slice(0, history.length - pointInTime + 1), temp]);
+
+    /* update the timeline so that undo will work as intended */
+    /* when a new ring is added, prune the future and set the current point in time to be the present */
+    setHistory([...history.slice(0, history.length + pointInTime + 1), temp]);
     setPointInTime(-1);
   }
 
@@ -54,13 +56,23 @@ function App() {
 
   /* present will be denoted by -1 */
   /* since history.at(-1) corresponds to the newest entry in the stack */
+  /* pointInTime should never be positive */
   function undo() {
-    console.log("test");
+    if (Math.abs(pointInTime) == history.length) {
+      console.log("CAN'T UNDO ANY FURTHER");
+      return;
+    }
     setPointInTime(pointInTime - 1);
-    console.log(pointInTime - 1);
     setPoles(history.at(pointInTime - 1));
-    console.log(history.at(pointInTime - 1));
-    console.log("end");
+  }
+
+  function redo() {
+    if (pointInTime + 1 == 0) {
+      console.log("CAN'T REDO ANY FURTHER");
+      return;
+    }
+    setPointInTime(pointInTime + 1);
+    setPoles(history.at(pointInTime + 1));
   }
 
   function checkScore() {
@@ -101,6 +113,8 @@ function App() {
     }
 
     console.log([redScore, blueScore]);
+    console.log(history);
+    console.log(pointInTime);
     return [redScore, blueScore];
   }
 
@@ -121,6 +135,7 @@ function App() {
               resetHandler={resetHandler}
               swapDragons={swapDragons}
               undo={undo}
+              redo={redo}
               timerState={timerState}
               setTimerState={setTimerState}
             />

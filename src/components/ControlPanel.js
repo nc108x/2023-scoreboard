@@ -110,7 +110,7 @@ export default function ControlPanel({
           </Button>
           <Button onClick={swapDragons}>SWAP</Button>
           <Button onClick={undo}>UNDO</Button>
-          <Button onClick={undo}>REDO</Button>
+          <Button onClick={redo}>REDO</Button>
           <Button onClick={timerBtnHandler}>
             {timerState.state == "IDLE" ? "START" : "STOP"}
           </Button>
