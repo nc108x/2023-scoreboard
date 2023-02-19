@@ -1,5 +1,6 @@
 import Fab from "@mui/material/Fab";
-import Tooltip, { tooltipClasses } from "@mui/material/Tooltip";
+import Tooltip from "@mui/material/Tooltip";
+import Zoom from "@mui/material/Zoom";
 
 export default function Pole({
   pos,
@@ -22,7 +23,7 @@ export default function Pole({
     rings.filter((element) => element == "blue").length;
 
   return (
-    <Tooltip title={hover}>
+    <Tooltip TransitionComponent={Zoom} title={hover}>
       <Fab
         color={color}
         onClick={redScoreHandler}

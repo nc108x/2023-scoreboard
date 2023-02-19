@@ -7,7 +7,7 @@ export default function Timer({ timerState, setApi, onComplete }) {
   let renderer = ({ minutes, seconds, milliseconds }) => {
     return (
       <>
-        <Box sx={{ typography: "subtitle2", fontSize: 32 }}>
+        <Box sx={{ typography: "subtitle2", fontSize: 48 }}>
           {zeroPad(minutes)}:{zeroPad(seconds)}:{zeroPad(milliseconds, 3)}
         </Box>
       </>
