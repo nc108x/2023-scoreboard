@@ -49,15 +49,50 @@ export default function ControlPanel({
           startTime: Date.now(),
           countdownAmt: THREE_MINS,
         });
+        /* timerState.current = { */
+        /*   state: "GAME", */
+        /*   startTime: Date.now(), */
+        /*   countdownAmt: THREE_MINS, */
+        /* }; */
 
         console.log("GO TO GAME");
         break;
+
       case "GAME":
+        /* setTimerState({ */
+        /*   state: "IDLE", */
+        /*   startTime: Date.now(), */
+        /*   countdownAmt: STOP, */
+        /* }); */
+        /**/
+        /* console.log("GO TO IDLE"); */
+
+        setTimerState({
+          state: "END",
+          startTime: Date.now(),
+          countdownAmt: STOP,
+        });
+        /* timerState.current = { */
+        /*   state: "END", */
+        /*   startTime: Date.now(), */
+        /*   countdownAmt: STOP, */
+        /* }; */
+
+        console.log("GO TO STOP");
+        break;
+
+      case "STOP":
         setTimerState({
           state: "IDLE",
           startTime: Date.now(),
           countdownAmt: STOP,
         });
+
+        /* timerState.current = { */
+        /*   state: "IDLE", */
+        /*   startTime: Date.now(), */
+        /*   countdownAmt: STOP, */
+        /* }; */
 
         console.log("GO TO IDLE");
         break;
@@ -76,6 +111,12 @@ export default function ControlPanel({
           countdownAmt: ONE_MIN,
         });
 
+        /* timerState.current = { */
+        /*   state: "PREP", */
+        /*   startTime: Date.now(), */
+        /*   countdownAmt: ONE_MIN, */
+        /* }; */
+
         console.log("GOING FROM IDLE TO PREP");
         break;
 
@@ -86,6 +127,12 @@ export default function ControlPanel({
           startTime: Date.now(),
           countdownAmt: STOP,
         });
+
+        /* timerState.current = { */
+        /*   state: "IDLE", */
+        /*   startTime: Date.now(), */
+        /*   countdownAmt: STOP, */
+        /* }; */
 
         console.log("GOING FROM PREP/GAME TO IDLE");
         break;

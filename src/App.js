@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import Grid from "@mui/material/Grid";
 
 import theme from "./Theme.js";
@@ -8,22 +8,38 @@ import Gamefield from "./components/Gamefield.js";
 import Info from "./components/Info.js";
 import ControlPanel from "./components/ControlPanel.js";
 
+const empty_poles = Array(11).fill(["empty"]);
+
 function App() {
-  const [poles, setPoles] = useState(Array(11).fill(Array(1).fill("empty")));
+  /* const [poles, setPoles] = useState(default_poles); */
+  /**/
+  /* const [history, setHistory] = useState([default_poles]); */
+  /* const [pointInTime, setPointInTime] = useState(-1); */
+  /**/
+  /* const [redDragon, setRedDragon] = useState("FIERY"); */
+  /* const [blueDragon, setBlueDragon] = useState("WAR"); */
+  /**/
+  /* const redScore = useRef(0); */
+  /* const blueScore = useRef(0); */
+  /**/
+  /* const winner = useRef(null); */
 
-  const [history, setHistory] = useState(
-    Array(1).fill(Array(11).fill(Array(1).fill("empty")))
-  );
-  const [pointInTime, setPointInTime] = useState(-1);
-
-  const [redDragon, setRedDragon] = useState("FIERY");
-  const [blueDragon, setBlueDragon] = useState("WAR");
-
-  const [timerState, setTimerState] = useState({
+  const [gameState, setGameState] = useState({
     state: "IDLE",
     startTime: Date.now(),
     countdownAmt: 0,
   });
+
+  const [poles, setPoles] = useState(empty_poles);
+  const [pointInTime, setPointInTime] = useState(-1);
+  const history = useRef([empty_poles]);
+
+  const [redDragon, setRedDragon] = useState("FIERY");
+  const [blueDragon, setBlueDragon] = useState("WAR");
+
+  const redScore = useRef(0);
+  const blueScore = useRef(0);
+  const winner = useRef(null);
 
   function scoreHandler(e, pole_no, color) {
     /* to prevent right click menu from showing up */
@@ -31,25 +47,39 @@ function App() {
     let temp = [...poles];
     temp[pole_no] = [...poles[pole_no], color];
     setPoles(temp);
+    console.log(temp);
 
     /* update the timeline so that undo will work as intended */
     /* when a new ring is added, prune the future and set the current point in time to be the present */
-    setHistory([...history.slice(0, history.length + pointInTime + 1), temp]);
+    /* setHistory([...history.slice(0, history.length + pointInTime + 1), temp]); */
+    history.current = [
+      ...history.current.slice(0, history.current.length + pointInTime + 1),
+      temp,
+    ];
     setPointInTime(-1);
   }
 
   function resetHandler() {
-    setPoles(Array(11).fill(Array(1).fill("empty")));
-    setHistory(Array(1).fill(Array(11).fill(Array(1).fill("empty"))));
+    setPoles(empty_poles);
+    /* setHistory(Array(1).fill(Array(11).fill(Array(1).fill("empty")))); */
+    history.current = [empty_poles];
     setPointInTime(-1);
-    setTimerState({
+    /* setTimerState({ */
+    /*   state: "IDLE", */
+    /*   startTime: Date.now(), */
+    /*   countdownAmt: 0, */
+    /* }); */
+    setGameState({
       state: "IDLE",
       startTime: Date.now(),
       countdownAmt: 0,
     });
+    winner.current = null;
   }
 
   function swapDragons() {
+    /* setRedDragon(redDragon == "FIERY" ? "WAR" : "FIERY"); */
+    /* setBlueDragon(blueDragon == "FIERY" ? "WAR" : "FIERY"); */
     setRedDragon(redDragon == "FIERY" ? "WAR" : "FIERY");
     setBlueDragon(blueDragon == "FIERY" ? "WAR" : "FIERY");
   }
@@ -58,12 +88,13 @@ function App() {
   /* since history.at(-1) corresponds to the newest entry in the stack */
   /* pointInTime should never be positive */
   function undo() {
-    if (Math.abs(pointInTime) == history.length) {
+    console.log(history.current);
+    if (Math.abs(pointInTime) == history.current.length) {
       console.log("CAN'T UNDO ANY FURTHER");
       return;
     }
     setPointInTime(pointInTime - 1);
-    setPoles(history.at(pointInTime - 1));
+    setPoles(history.current.at(pointInTime - 1));
   }
 
   function redo() {
@@ -72,29 +103,53 @@ function App() {
       return;
     }
     setPointInTime(pointInTime + 1);
-    setPoles(history.at(pointInTime + 1));
+    setPoles(history.current.at(pointInTime + 1));
+  }
+
+  function checkEndgame(topRings) {
+    const redWinCon = topRings.slice(0, 8);
+    const blueWinCon = topRings.slice(3, 11);
+
+    /* console.log(redWinCon); */
+    /* console.log(blueWinCon); */
+
+    if (redWinCon.every((currVal) => currVal == "red")) {
+      console.log("RED GREAT VICTORY");
+      winner.current = redDragon;
+    } else if (blueWinCon.every((currVal) => currVal == "blue")) {
+      console.log("BLUE GREAT VICTORY");
+      winner.current = blueDragon;
+    } else {
+      console.log("KEEP PLAYING NERD");
+      winner.current = null;
+    }
   }
 
   function checkScore() {
-    let type1 = [0, 1, 2, 8, 9, 10];
-    let type2 = [3, 4, 6, 7];
+    const type1 = [0, 1, 2, 8, 9, 10];
+    const type2 = [3, 4, 6, 7];
     /* let type3 = 5; */
 
-    let redScore = 0;
-    let blueScore = 0;
+    let redScore_t = 0;
+    let blueScore_t = 0;
+
+    let topRings = [];
 
     for (let i = 0; i < poles.length; i++) {
-      console.log("Pole " + i + " " + poles[i].at(-1));
+      /* console.log("Pole " + i + " " + poles[i].at(-1)); */
 
-      let targetTeam = poles[i].at(-1);
+      topRings[i] = poles[i].at(-1);
       let scoreIncrease = 0;
 
-      if (targetTeam == "empty") {
+      if (topRings[i] == "empty") {
         continue;
       }
 
       if (type1.includes(i)) {
-        if ((i < 5 && targetTeam == "blue") || (i > 5 && targetTeam == "red")) {
+        if (
+          (i < 5 && topRings[i] == "blue") ||
+          (i > 5 && topRings[i] == "red")
+        ) {
           scoreIncrease = 25;
         } else {
           scoreIncrease = 10;
@@ -105,21 +160,38 @@ function App() {
         scoreIncrease = 70;
       }
 
-      if (targetTeam == "red") {
-        redScore += scoreIncrease;
+      if (topRings[i] == "red") {
+        redScore_t += scoreIncrease;
       } else {
-        blueScore += scoreIncrease;
+        blueScore_t += scoreIncrease;
       }
     }
 
-    console.log([redScore, blueScore]);
-    console.log(history);
-    console.log(pointInTime);
-    return [redScore, blueScore];
+    /* console.log([redScore_t, blueScore_t]); */
+    /* console.log(history); */
+    /* console.log(pointInTime); */
+
+    checkEndgame(topRings);
+
+    return [redScore_t, blueScore_t];
   }
 
   /* update score */
-  const [redScore, blueScore] = checkScore();
+
+  const [temp1, temp2] = checkScore();
+  redScore.current = temp1;
+  blueScore.current = temp2;
+  /* if (winner.current == null) { */
+  /*   const [temp1, temp2] = checkScore(); */
+  /*   redScore.current = temp1; */
+  /*   blueScore.current = temp2; */
+  /* } else if (timerState.state != "END") { */
+  /*   setTimerState({ */
+  /*     state: "END", */
+  /*     startTime: timerState.startTime, */
+  /*     countdownAmt: timerState.countdownAmt, */
+  /*   }); */
+  /* } */
 
   return (
     <>
@@ -136,8 +208,8 @@ function App() {
               swapDragons={swapDragons}
               undo={undo}
               redo={redo}
-              timerState={timerState}
-              setTimerState={setTimerState}
+              timerState={gameState}
+              setTimerState={setGameState}
             />
           </Grid>
 
@@ -148,15 +220,27 @@ function App() {
             sx={{ position: "relative", height: "462px" }}
           >
             <Grid item>
-              <Info score={redScore} dragonName={redDragon} color="red" />
+              <Info
+                score={redScore.current}
+                dragonName={redDragon}
+                color="red"
+              />
             </Grid>
 
             <Grid item>
-              <Gamefield poles={poles} scoreHandler={scoreHandler} />
+              <Gamefield
+                poles={poles}
+                scoreHandler={scoreHandler}
+                disabled={gameState.state != "GAME"}
+              />
             </Grid>
 
             <Grid item>
-              <Info score={blueScore} dragonName={blueDragon} color="blue" />
+              <Info
+                score={blueScore.current}
+                dragonName={blueDragon}
+                color="blue"
+              />
             </Grid>
           </Grid>
         </Grid>

@@ -5,6 +5,7 @@ import Zoom from "@mui/material/Zoom";
 export default function Pole({
   pos,
   rings,
+  disabled,
   redScoreHandler,
   blueScoreHandler,
 }) {
@@ -13,8 +14,8 @@ export default function Pole({
     rings.at(-1) == "red"
       ? "redTeam"
       : rings.at(-1) == "blue"
-        ? "blueTeam"
-        : "standbyColor";
+      ? "blueTeam"
+      : "standbyColor";
 
   const hover =
     "Red: " +
@@ -24,12 +25,15 @@ export default function Pole({
 
   return (
     <Tooltip TransitionComponent={Zoom} title={hover}>
-      <Fab
-        color={color}
-        onClick={redScoreHandler}
-        onContextMenu={blueScoreHandler}
-        sx={{ position: "absolute", top: pos }}
-      ></Fab>
+      <div>
+        <Fab
+          disabled={disabled}
+          color={color}
+          onClick={redScoreHandler}
+          onContextMenu={blueScoreHandler}
+          sx={{ position: "absolute", top: pos }}
+        ></Fab>
+      </div>
     </Tooltip>
   );
 }
