@@ -1,0 +1,21 @@
+{
+  "files": {
+    "main.css": "/2023-scoreboard/static/css/main.e18fb739.css",
+    "main.js": "/2023-scoreboard/static/js/main.44dcd405.js",
+    "static/media/roboto-mono-all-400-normal.woff": "/2023-scoreboard/static/media/roboto-mono-all-400-normal.615f3bbd43698e99d078.woff",
+    "static/media/gamefield.png": "/2023-scoreboard/static/media/gamefield.af4543cf20d29ec294e8.png",
+    "static/media/roboto-mono-cyrillic-ext-400-normal.woff2": "/2023-scoreboard/static/media/roboto-mono-cyrillic-ext-400-normal.13c026e0294440303c69.woff2",
+    "static/media/roboto-mono-latin-400-normal.woff2": "/2023-scoreboard/static/media/roboto-mono-latin-400-normal.d3026ee29728abffa752.woff2",
+    "static/media/roboto-mono-latin-ext-400-normal.woff2": "/2023-scoreboard/static/media/roboto-mono-latin-ext-400-normal.22aea4e27b4b7405853a.woff2",
+    "static/media/roboto-mono-cyrillic-400-normal.woff2": "/2023-scoreboard/static/media/roboto-mono-cyrillic-400-normal.a0d40ee5847af8bed2df.woff2",
+    "static/media/roboto-mono-greek-400-normal.woff2": "/2023-scoreboard/static/media/roboto-mono-greek-400-normal.95e7a382e12921ef32ee.woff2",
+    "static/media/roboto-mono-vietnamese-400-normal.woff2": "/2023-scoreboard/static/media/roboto-mono-vietnamese-400-normal.a9575edb558363648d81.woff2",
+    "index.html": "/2023-scoreboard/index.html",
+    "main.e18fb739.css.map": "/2023-scoreboard/static/css/main.e18fb739.css.map",
+    "main.44dcd405.js.map": "/2023-scoreboard/static/js/main.44dcd405.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.e18fb739.css",
+    "static/js/main.44dcd405.js"
+  ]
+}
