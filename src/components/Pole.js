@@ -25,15 +25,21 @@ export default function Pole({
 
   return (
     <Tooltip TransitionComponent={Zoom} title={hover}>
-      <div>
-        <Fab
-          disabled={disabled}
-          color={color}
-          onClick={redScoreHandler}
-          onContextMenu={blueScoreHandler}
-          sx={{ position: "absolute", top: pos }}
-        ></Fab>
-      </div>
+      {/* <div> */}
+      <Fab
+        disabled={disabled}
+        color={color}
+        onClick={redScoreHandler}
+        onContextMenu={blueScoreHandler}
+        sx={{
+          position: "absolute",
+          top: pos,
+          "&.Mui-disabled": {
+            background: "#bac2de",
+          },
+        }}
+      ></Fab>
+      {/* </div> */}
     </Tooltip>
   );
 }
