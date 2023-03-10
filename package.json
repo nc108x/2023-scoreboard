@@ -6,6 +6,7 @@
   "dependencies": {
     "@emotion/react": "^11.10.5",
     "@emotion/styled": "^11.10.5",
+    "@fontsource/cascadia-code": "^4.2.1",
     "@fontsource/courier-prime": "^4.5.9",
     "@fontsource/fira-mono": "^4.5.10",
     "@fontsource/oxygen-mono": "^4.5.10",

@@ -3,11 +3,12 @@ import { createTheme } from "@mui/material/styles";
 /* import "@fontsource/oxygen-mono"; */
 /* import "@fontsource/courier-prime"; */
 /* import "@fontsource/space-mono"; */
-import "@fontsource/roboto-mono";
+/* import "@fontsource/roboto-mono"; */
+import "@fontsource/cascadia-code";
 
 const theme = createTheme({
   typography: {
-    fontFamily: "Roboto Mono",
+    fontFamily: "Cascadia Code",
   },
 
   palette: {
