@@ -184,18 +184,18 @@ export default function ControlPanel({
               <Button
                 onClick={() => {
                   setConfirmReset(false);
-                  resetHandler();
-                }}
-              >
-                繼續開game啦咁多野講
-              </Button>
-              <Button
-                onClick={() => {
-                  setConfirmReset(false);
                 }}
                 autoFocus
               >
                 等等先不要
+              </Button>
+              <Button
+                onClick={() => {
+                  setConfirmReset(false);
+                  resetHandler();
+                }}
+              >
+                繼續開game啦咁多野講
               </Button>
             </DialogActions>
           </Dialog>
