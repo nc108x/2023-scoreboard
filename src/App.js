@@ -11,23 +11,10 @@ import ControlPanel from "./components/ControlPanel.js";
 const empty_poles = Array(11).fill(["empty"]);
 
 function App() {
-  /* const [poles, setPoles] = useState(default_poles); */
-  /**/
-  /* const [history, setHistory] = useState([default_poles]); */
-  /* const [pointInTime, setPointInTime] = useState(-1); */
-  /**/
-  /* const [redDragon, setRedDragon] = useState("FIERY"); */
-  /* const [blueDragon, setBlueDragon] = useState("WAR"); */
-  /**/
-  /* const redScore = useRef(0); */
-  /* const blueScore = useRef(0); */
-  /**/
-  /* const winner = useRef(null); */
-
   const [gameState, setGameState] = useState({
     state: "IDLE",
     startTime: Date.now(),
-    countdownAmt: 0,
+    countdownAmt: 60000,
   });
 
   const [poles, setPoles] = useState(empty_poles);
@@ -64,15 +51,10 @@ function App() {
     /* setHistory(Array(1).fill(Array(11).fill(Array(1).fill("empty")))); */
     history.current = [empty_poles];
     setPointInTime(-1);
-    /* setTimerState({ */
-    /*   state: "IDLE", */
-    /*   startTime: Date.now(), */
-    /*   countdownAmt: 0, */
-    /* }); */
     setGameState({
       state: "IDLE",
       startTime: Date.now(),
-      countdownAmt: 0,
+      countdownAmt: 60000,
     });
     winner.current = null;
   }
