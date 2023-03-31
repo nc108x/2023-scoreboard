@@ -19,8 +19,9 @@ export default function ControlPanel({
   swapDragons,
   undo,
   redo,
-  timerState,
-  setTimerState,
+  gameState,
+  setGameState,
+  setAboveApi,
 }) {
   const [confirmReset, setConfirmReset] = useState(false);
 
@@ -30,29 +31,32 @@ export default function ControlPanel({
     if (!ref) return;
 
     countdownApi.current = ref.getApi();
+    setAboveApi.current = ref.getApi();
   };
 
   /* triggered when current countdown arrives at zero */
   /* automatically goes to next state of the game */
   function nextTimerState() {
     console.log("ENTER NEXT STATE");
-    switch (timerState.state) {
+    switch (gameState.state) {
       case "IDLE":
         console.log("REMAIN AT IDLE");
         break;
 
       case "PREP":
-        setTimerState({
+        setGameState({
           state: "GAME",
           startTime: Date.now(),
           countdownAmt: THREE_MINS,
         });
 
+        countdownApi.current.start();
+
         console.log("GO TO GAME");
         break;
 
       case "GAME":
-        setTimerState({
+        setGameState({
           state: "END",
           startTime: Date.now(),
           countdownAmt: 0,
@@ -67,30 +71,42 @@ export default function ControlPanel({
     }
   }
 
+  // TODO FIX THIS THIS IS CURSED
+  let [tempBtnBandaid, setBtnBandaid] = useState(0);
   /* triggered when button is clicked */
-  /* toggles between starting and stopping current countdown */
+  /* toggles between starting and pausing current countdown */
   function timerBtnHandler() {
     console.log("BUTTON CLICKED");
     if (countdownApi.current.isPaused() || countdownApi.current.isStopped()) {
+      setBtnBandaid(1);
       countdownApi.current.start();
 
-      if (timerState.state == "IDLE") {
-        setTimerState({
+      if (gameState.state == "IDLE") {
+        setGameState({
           state: "PREP",
           startTime: Date.now(),
           countdownAmt: ONE_MIN,
         });
       }
     } else {
+      setBtnBandaid(0);
       countdownApi.current.pause();
     }
   }
+  console.log("DDDDDDDDDD");
+  console.log(countdownApi);
+  console.log(countdownApi.current);
+  console.log(countdownApi.current == undefined);
+  console.log(countdownApi === null);
+  console.log(countdownApi.current?.isPaused());
+  console.log(countdownApi.current?.isStopped());
+  console.log(countdownApi.current?.isCompleted());
 
   return (
     <>
       <Grid item>
         <Timer
-          timerState={timerState}
+          timerState={gameState}
           setApi={setApi}
           onComplete={nextTimerState}
         />
@@ -106,7 +122,15 @@ export default function ControlPanel({
           <Button onClick={undo}>UNDO</Button>
           <Button onClick={redo}>REDO</Button>
           <Button onClick={timerBtnHandler}>
-            {timerState.state == "IDLE" ? "START" : "STOP"}
+            {gameState.state == "END"
+              ? "---"
+              : countdownApi.current == undefined ||
+                !(
+                  countdownApi.current?.isPaused() ||
+                  countdownApi.current?.isStopped()
+                )
+              ? "START"
+              : "PAUSE"}
           </Button>
 
           {/* prompt to confirm before reset */}

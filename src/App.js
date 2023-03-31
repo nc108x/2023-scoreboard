@@ -24,31 +24,34 @@ function App() {
   const [redDragon, setRedDragon] = useState("FIERY");
   const [blueDragon, setBlueDragon] = useState("WAR");
 
-  const redScore = useRef(0);
-  const blueScore = useRef(0);
+  /* const redScore = useRef(0); */
+  /* const blueScore = useRef(0); */
   const winner = useRef(null);
+
+  const countdownApi = useRef(null);
 
   function scoreHandler(e, pole_no, color) {
     /* to prevent right click menu from showing up */
     e.preventDefault();
-    let temp = [...poles];
-    temp[pole_no] = [...poles[pole_no], color];
-    setPoles(temp);
-    console.log(temp);
+    if (gameState.state == "GAME") {
+      let temp = [...poles];
+      temp[pole_no] = [...poles[pole_no], color];
+      setPoles(temp);
+      console.log(temp);
 
-    /* update the timeline so that undo will work as intended */
-    /* when a new ring is added, prune the future and set the current point in time to be the present */
-    /* setHistory([...history.slice(0, history.length + pointInTime + 1), temp]); */
-    history.current = [
-      ...history.current.slice(0, history.current.length + pointInTime + 1),
-      temp,
-    ];
-    setPointInTime(-1);
+      /* update the timeline so that undo will work as intended */
+      /* when a new ring is added, prune the future and set the current point in time to be the present */
+      /* setHistory([...history.slice(0, history.length + pointInTime + 1), temp]); */
+      history.current = [
+        ...history.current.slice(0, history.current.length + pointInTime + 1),
+        temp,
+      ];
+      setPointInTime(-1);
+    }
   }
 
   function resetHandler() {
     setPoles(empty_poles);
-    /* setHistory(Array(1).fill(Array(11).fill(Array(1).fill("empty")))); */
     history.current = [empty_poles];
     setPointInTime(-1);
     setGameState({
@@ -56,12 +59,11 @@ function App() {
       startTime: Date.now(),
       countdownAmt: 60000,
     });
+    countdownApi.current.stop();
     winner.current = null;
   }
 
   function swapDragons() {
-    /* setRedDragon(redDragon == "FIERY" ? "WAR" : "FIERY"); */
-    /* setBlueDragon(blueDragon == "FIERY" ? "WAR" : "FIERY"); */
     setRedDragon(redDragon == "FIERY" ? "WAR" : "FIERY");
     setBlueDragon(blueDragon == "FIERY" ? "WAR" : "FIERY");
   }
@@ -112,8 +114,8 @@ function App() {
     const type2 = [3, 4, 6, 7];
     /* let type3 = 5; */
 
-    let redScore_t = 0;
-    let blueScore_t = 0;
+    let redScore = 0;
+    let blueScore = 0;
 
     let topRings = [];
 
@@ -143,9 +145,9 @@ function App() {
       }
 
       if (topRings[i] == "red") {
-        redScore_t += scoreIncrease;
+        redScore += scoreIncrease;
       } else {
-        blueScore_t += scoreIncrease;
+        blueScore += scoreIncrease;
       }
     }
 
@@ -155,25 +157,11 @@ function App() {
 
     checkEndgame(topRings);
 
-    return [redScore_t, blueScore_t];
+    return [redScore, blueScore];
   }
 
   /* update score */
-
-  const [temp1, temp2] = checkScore();
-  redScore.current = temp1;
-  blueScore.current = temp2;
-  /* if (winner.current == null) { */
-  /*   const [temp1, temp2] = checkScore(); */
-  /*   redScore.current = temp1; */
-  /*   blueScore.current = temp2; */
-  /* } else if (timerState.state != "END") { */
-  /*   setTimerState({ */
-  /*     state: "END", */
-  /*     startTime: timerState.startTime, */
-  /*     countdownAmt: timerState.countdownAmt, */
-  /*   }); */
-  /* } */
+  const [redScore, blueScore] = checkScore();
 
   return (
     <>
@@ -190,8 +178,9 @@ function App() {
               swapDragons={swapDragons}
               undo={undo}
               redo={redo}
-              timerState={gameState}
-              setTimerState={setGameState}
+              gameState={gameState}
+              setGameState={setGameState}
+              setAboveApi={countdownApi}
             />
           </Grid>
 
@@ -202,27 +191,15 @@ function App() {
             sx={{ position: "relative", height: "462px" }}
           >
             <Grid item>
-              <Info
-                score={redScore.current}
-                dragonName={redDragon}
-                color="red"
-              />
+              <Info score={redScore} dragonName={redDragon} color="red" />
             </Grid>
 
             <Grid item>
-              <Gamefield
-                poles={poles}
-                scoreHandler={scoreHandler}
-                disabled={gameState.state != "GAME"}
-              />
+              <Gamefield poles={poles} scoreHandler={scoreHandler} />
             </Grid>
 
             <Grid item>
-              <Info
-                score={blueScore.current}
-                dragonName={blueDragon}
-                color="blue"
-              />
+              <Info score={blueScore} dragonName={blueDragon} color="blue" />
             </Grid>
           </Grid>
         </Grid>
