@@ -21,9 +21,10 @@ export default function ControlPanel({
   redo,
   gameState,
   setGameState,
-  setAboveApi,
 }) {
   const [confirmReset, setConfirmReset] = useState(false);
+  // TODO maybe consider refactoring this?
+  const [timerRun, setTimerRun] = useState(false);
 
   /* to allow us to use the CountdownApi outside of Timer.js */
   const countdownApi = useRef();
@@ -31,7 +32,6 @@ export default function ControlPanel({
     if (!ref) return;
 
     countdownApi.current = ref.getApi();
-    setAboveApi.current = ref.getApi();
   };
 
   /* triggered when current countdown arrives at zero */
@@ -71,15 +71,14 @@ export default function ControlPanel({
     }
   }
 
-  // TODO FIX THIS THIS IS CURSED
-  let [tempBtnBandaid, setBtnBandaid] = useState(0);
   /* triggered when button is clicked */
   /* toggles between starting and pausing current countdown */
   function timerBtnHandler() {
     console.log("BUTTON CLICKED");
-    if (countdownApi.current.isPaused() || countdownApi.current.isStopped()) {
-      setBtnBandaid(1);
+
+    if (countdownApi.current?.isPaused() || countdownApi.current?.isStopped()) {
       countdownApi.current.start();
+      setTimerRun(true);
 
       if (gameState.state == "IDLE") {
         setGameState({
@@ -89,18 +88,10 @@ export default function ControlPanel({
         });
       }
     } else {
-      setBtnBandaid(0);
       countdownApi.current.pause();
+      setTimerRun(false);
     }
   }
-  console.log("DDDDDDDDDD");
-  console.log(countdownApi);
-  console.log(countdownApi.current);
-  console.log(countdownApi.current == undefined);
-  console.log(countdownApi === null);
-  console.log(countdownApi.current?.isPaused());
-  console.log(countdownApi.current?.isStopped());
-  console.log(countdownApi.current?.isCompleted());
 
   return (
     <>
@@ -124,11 +115,7 @@ export default function ControlPanel({
           <Button onClick={timerBtnHandler}>
             {gameState.state == "END"
               ? "---"
-              : countdownApi.current == undefined ||
-                !(
-                  countdownApi.current?.isPaused() ||
-                  countdownApi.current?.isStopped()
-                )
+              : timerRun == false
               ? "START"
               : "PAUSE"}
           </Button>
@@ -165,6 +152,9 @@ export default function ControlPanel({
                 onClick={() => {
                   setConfirmReset(false);
                   resetHandler();
+
+                  setTimerRun(false);
+                  countdownApi.current.pause();
                 }}
               >
                 {"繼續開game啦咁多野講"}

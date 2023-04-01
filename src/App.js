@@ -24,11 +24,7 @@ function App() {
   const [redDragon, setRedDragon] = useState("FIERY");
   const [blueDragon, setBlueDragon] = useState("WAR");
 
-  /* const redScore = useRef(0); */
-  /* const blueScore = useRef(0); */
   const winner = useRef(null);
-
-  const countdownApi = useRef(null);
 
   function scoreHandler(e, pole_no, color) {
     /* to prevent right click menu from showing up */
@@ -59,7 +55,6 @@ function App() {
       startTime: Date.now(),
       countdownAmt: 60000,
     });
-    countdownApi.current.stop();
     winner.current = null;
   }
 
@@ -180,7 +175,6 @@ function App() {
               redo={redo}
               gameState={gameState}
               setGameState={setGameState}
-              setAboveApi={countdownApi}
             />
           </Grid>
 
