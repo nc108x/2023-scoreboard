@@ -47,7 +47,13 @@ function App() {
       setPointInTime(-1);
 
       /* update delta for the log */
-      historyDelta.current = [...historyDelta.current, [color, pole_no]];
+      historyDelta.current = [
+        ...historyDelta.current.slice(
+          0,
+          historyDelta.current.length + pointInTime + 1
+        ),
+        [color, pole_no],
+      ];
     }
   }
 
