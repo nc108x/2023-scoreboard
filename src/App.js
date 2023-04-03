@@ -7,6 +7,7 @@ import { ThemeProvider } from "@mui/material/styles";
 import Gamefield from "./components/Gamefield.js";
 import Info from "./components/Info.js";
 import ControlPanel from "./components/ControlPanel.js";
+import Log from "./components/Log.js";
 
 const empty_poles = Array(11).fill(["empty"]);
 
@@ -19,6 +20,7 @@ function App() {
 
   const [poles, setPoles] = useState(empty_poles);
   const [pointInTime, setPointInTime] = useState(-1);
+  /* a 3d array representing the timeline */
   const history = useRef([empty_poles]);
 
   const [redDragon, setRedDragon] = useState("FIERY");
@@ -158,6 +160,9 @@ function App() {
 
   /* update score */
   const [redScore, blueScore] = checkScore();
+  /* console.log(winner.current); */
+  /* console.log(history.current); */
+  /* console.log(history.current.at(0)); */
 
   return (
     <>
@@ -191,6 +196,10 @@ function App() {
             >
               <Grid item>
                 <Info score={redScore} dragonName={redDragon} color="red" />
+              </Grid>
+
+              <Grid item>
+                <Log history={history.current} />
               </Grid>
 
               {/* <Grid item> */}
