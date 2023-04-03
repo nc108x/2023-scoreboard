@@ -9,7 +9,6 @@ export default function Pole({
   redScoreHandler,
   blueScoreHandler,
 }) {
-  /* determine current of pole */
   const color =
     rings.at(-1) == "red"
       ? "redTeam"

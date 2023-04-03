@@ -37,7 +37,6 @@ function App() {
 
       /* update the timeline so that undo will work as intended */
       /* when a new ring is added, prune the future and set the current point in time to be the present */
-      /* setHistory([...history.slice(0, history.length + pointInTime + 1), temp]); */
       history.current = [
         ...history.current.slice(0, history.current.length + pointInTime + 1),
         temp,
@@ -85,6 +84,7 @@ function App() {
     setPoles(history.current.at(pointInTime + 1));
   }
 
+  /* called by checkScore */
   function checkEndgame(topRings) {
     const redWinCon = topRings.slice(0, 8);
     const blueWinCon = topRings.slice(3, 11);
@@ -104,6 +104,7 @@ function App() {
     }
   }
 
+  /* runs every time on rerender */
   function checkScore() {
     const type1 = [0, 1, 2, 8, 9, 10];
     const type2 = [3, 4, 6, 7];
@@ -180,12 +181,7 @@ function App() {
             />
           </Grid>
 
-          <Grid
-            container
-            direction="row"
-            justifyContent="space-evenly"
-            /* sx={{ position: "relative", height: "462px" ,}} */
-          >
+          <Grid container direction="row" justifyContent="space-evenly">
             <Grid item>
               <Info score={redScore} dragonName={redDragon} color="red" />
             </Grid>
