@@ -3,7 +3,8 @@ import Tooltip from "@mui/material/Tooltip";
 import Zoom from "@mui/material/Zoom";
 
 export default function Pole({
-  pos,
+  x,
+  y,
   rings,
   redScoreHandler,
   blueScoreHandler,
@@ -24,20 +25,16 @@ export default function Pole({
 
   return (
     <Tooltip TransitionComponent={Zoom} title={hover}>
-      {/* <div> */}
       <Fab
         color={color}
         onClick={redScoreHandler}
         onContextMenu={blueScoreHandler}
         sx={{
           position: "absolute",
-          top: pos,
-          "&.Mui-disabled": {
-            background: "#bac2de",
-          },
+          top: y,
+          left: x,
         }}
       ></Fab>
-      {/* </div> */}
     </Tooltip>
   );
 }

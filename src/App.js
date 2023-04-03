@@ -165,7 +165,9 @@ function App() {
           container
           direction="column"
           justifyContent="space-evenly"
-          sx={{ textAlign: "center" }}
+          sx={{
+            textAlign: "center",
+          }}
         >
           <Grid container justifyContent="space-evenly">
             <ControlPanel
@@ -182,7 +184,7 @@ function App() {
             container
             direction="row"
             justifyContent="space-evenly"
-            sx={{ position: "relative", height: "462px" }}
+            /* sx={{ position: "relative", height: "462px" ,}} */
           >
             <Grid item>
               <Info score={redScore} dragonName={redDragon} color="red" />
