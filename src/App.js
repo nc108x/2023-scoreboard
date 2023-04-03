@@ -53,11 +53,7 @@ function App() {
         [
           color,
           pole_no,
-          elapsedTime.minutes.toString() +
-            ":" +
-            elapsedTime.seconds.toString() +
-            ":" +
-            elapsedTime.milliseconds.toString(),
+          elapsedTime.min + ":" + elapsedTime.sec + ":" + elapsedTime.ms,
         ],
 
         ...historyDelta.current.slice((pointInTime + 1) * -1),

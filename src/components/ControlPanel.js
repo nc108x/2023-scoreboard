@@ -23,7 +23,7 @@ export default function ControlPanel({
   setGameState,
 }) {
   const [confirmReset, setConfirmReset] = useState(false);
-  // TODO maybe consider refactoring this?
+  /* TODO maybe consider refactoring this? */
   const [timerRun, setTimerRun] = useState(false);
 
   /* to allow us to use the CountdownApi outside of Timer.js */
