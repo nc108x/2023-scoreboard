@@ -170,7 +170,7 @@ function App() {
             textAlign: "center",
           }}
         >
-          <Grid container justifyContent="space-evenly">
+          <Grid container item justifyContent="space-evenly">
             <ControlPanel
               resetHandler={resetHandler}
               swapDragons={swapDragons}
@@ -181,16 +181,28 @@ function App() {
             />
           </Grid>
 
-          <Grid container direction="row" justifyContent="space-evenly">
-            <Grid item>
-              <Info score={redScore} dragonName={redDragon} color="red" />
+          <Grid container item direction="row">
+            <Grid
+              container
+              direction="column"
+              alignItems="center"
+              xs={4}
+              justifyContent="space-between"
+            >
+              <Grid item>
+                <Info score={redScore} dragonName={redDragon} color="red" />
+              </Grid>
+
+              {/* <Grid item> */}
+              {/*   <Info score={redScore} dragonName={redDragon} color="red" /> */}
+              {/* </Grid> */}
             </Grid>
 
-            <Grid item>
+            <Grid container direction="column" alignItems="center" xs={4}>
               <Gamefield poles={poles} scoreHandler={scoreHandler} />
             </Grid>
 
-            <Grid item>
+            <Grid container direction="column" alignItems="center" xs={4}>
               <Info score={blueScore} dragonName={blueDragon} color="blue" />
             </Grid>
           </Grid>
