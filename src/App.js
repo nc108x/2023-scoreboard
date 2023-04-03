@@ -206,18 +206,26 @@ function App() {
               <Grid item>
                 <Log historyDelta={historyDelta.current} color="red" />
               </Grid>
-
-              {/* <Grid item> */}
-              {/*   <Info score={redScore} dragonName={redDragon} color="red" /> */}
-              {/* </Grid> */}
             </Grid>
 
             <Grid container direction="column" alignItems="center" xs={4}>
               <Gamefield poles={poles} scoreHandler={scoreHandler} />
             </Grid>
 
-            <Grid container direction="column" alignItems="center" xs={4}>
-              <Info score={blueScore} dragonName={blueDragon} color="blue" />
+            <Grid
+              container
+              direction="column"
+              alignItems="center"
+              xs={4}
+              justifyContent="space-between"
+            >
+              <Grid item>
+                <Info score={blueScore} dragonName={blueDragon} color="blue" />
+              </Grid>
+
+              <Grid item>
+                <Log historyDelta={historyDelta.current} color="blue" />
+              </Grid>
             </Grid>
           </Grid>
         </Grid>

@@ -26,7 +26,7 @@ export default function Log({ historyDelta, color }) {
       <Table>
         <TableHead>
           <TableRow>
-            <TableCell>Test</TableCell>
+            <TableCell>{color}</TableCell>
           </TableRow>
         </TableHead>
         {logTable}
