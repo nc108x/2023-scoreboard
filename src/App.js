@@ -22,6 +22,7 @@ function App() {
   const [pointInTime, setPointInTime] = useState(-1);
   /* a 3d array representing the timeline */
   const history = useRef([empty_poles]);
+  const historyDelta = useRef(["empty"]);
 
   const [redDragon, setRedDragon] = useState("FIERY");
   const [blueDragon, setBlueDragon] = useState("WAR");
@@ -44,6 +45,9 @@ function App() {
         temp,
       ];
       setPointInTime(-1);
+
+      /* update delta for the log */
+      historyDelta.current = [...historyDelta.current, [color, pole_no]];
     }
   }
 
@@ -51,6 +55,7 @@ function App() {
     setPoles(empty_poles);
     history.current = [empty_poles];
     setPointInTime(-1);
+    historyDelta.current = ["empty"];
     setGameState({
       state: "IDLE",
       startTime: Date.now(),
@@ -199,7 +204,7 @@ function App() {
               </Grid>
 
               <Grid item>
-                <Log history={history.current} />
+                <Log historyDelta={historyDelta.current} color="red" />
               </Grid>
 
               {/* <Grid item> */}
