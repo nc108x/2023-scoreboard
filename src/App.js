@@ -11,12 +11,13 @@ import Log from "./components/Log.js";
 import { elapsedTime } from "./components/Timer.js";
 
 const empty_poles = Array(11).fill(["empty"]);
+const ONE_MIN = 60000;
 
 function App() {
   const [gameState, setGameState] = useState({
     state: "IDLE",
     startTime: Date.now(),
-    countdownAmt: 60000,
+    countdownAmt: ONE_MIN,
   });
 
   const [poles, setPoles] = useState(empty_poles);
@@ -29,8 +30,6 @@ function App() {
   const [blueDragon, setBlueDragon] = useState("WAR");
 
   const winner = useRef(null);
-
-  const countdownApi = useRef();
 
   function scoreHandler(e, pole_no, color) {
     /* to prevent right click menu from showing up */
@@ -51,10 +50,6 @@ function App() {
 
       /* update delta for the log */
       historyDelta.current = [
-        ...historyDelta.current.slice(
-          0,
-          historyDelta.current.length + pointInTime + 1
-        ),
         [
           color,
           pole_no,
@@ -64,6 +59,8 @@ function App() {
             ":" +
             elapsedTime.milliseconds.toString(),
         ],
+
+        ...historyDelta.current.slice((pointInTime + 1) * -1),
       ];
     }
   }
@@ -76,7 +73,7 @@ function App() {
     setGameState({
       state: "IDLE",
       startTime: Date.now(),
-      countdownAmt: 60000,
+      countdownAmt: ONE_MIN,
     });
     winner.current = null;
   }
