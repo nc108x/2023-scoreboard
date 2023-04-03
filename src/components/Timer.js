@@ -3,7 +3,18 @@ import { zeroPad } from "react-countdown";
 
 import Box from "@mui/material/Box";
 
+export let elapsedTime = 0;
+
+/* TODO consider moving Timer.js up? or find a more elegant method of transporting elapsedTime */
 export default function Timer({ timerState, setApi, onComplete }) {
+  function onTick(time) {
+    const minutes = time.minutes;
+    const seconds = time.seconds;
+    const milliseconds = time.milliseconds;
+    elapsedTime = { minutes, seconds, milliseconds };
+    /* console.log(elapsedTime); */
+  }
+
   let renderer = ({ minutes, seconds, milliseconds }) => {
     return (
       <>
@@ -24,6 +35,7 @@ export default function Timer({ timerState, setApi, onComplete }) {
         autoStart={false}
         ref={setApi}
         onComplete={onComplete}
+        onTick={onTick}
       />
     </>
   );

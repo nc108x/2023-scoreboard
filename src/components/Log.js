@@ -7,12 +7,12 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 
 export default function Log({ historyDelta, color }) {
-  console.log(historyDelta);
-  const logTable = historyDelta.map((action) => {
+  const logTable = historyDelta.map((action, index) => {
     if (action != "empty" && action[0] == color) {
       return (
-        <TableBody>
+        <TableBody key={index}>
           <TableCell>{"Scored pole " + (action[1] + 1)}</TableCell>
+          <TableCell>{action[2]}</TableCell>
         </TableBody>
       );
     }
@@ -26,7 +26,8 @@ export default function Log({ historyDelta, color }) {
       <Table>
         <TableHead>
           <TableRow>
-            <TableCell>{color}</TableCell>
+            <TableCell>{"ACTION"}</TableCell>
+            <TableCell>{"TIME"}</TableCell>
           </TableRow>
         </TableHead>
         {logTable}

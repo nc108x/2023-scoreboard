@@ -8,6 +8,7 @@ import Gamefield from "./components/Gamefield.js";
 import Info from "./components/Info.js";
 import ControlPanel from "./components/ControlPanel.js";
 import Log from "./components/Log.js";
+import { elapsedTime } from "./components/Timer.js";
 
 const empty_poles = Array(11).fill(["empty"]);
 
@@ -28,6 +29,8 @@ function App() {
   const [blueDragon, setBlueDragon] = useState("WAR");
 
   const winner = useRef(null);
+
+  const countdownApi = useRef();
 
   function scoreHandler(e, pole_no, color) {
     /* to prevent right click menu from showing up */
@@ -52,7 +55,15 @@ function App() {
           0,
           historyDelta.current.length + pointInTime + 1
         ),
-        [color, pole_no],
+        [
+          color,
+          pole_no,
+          elapsedTime.minutes.toString() +
+            ":" +
+            elapsedTime.seconds.toString() +
+            ":" +
+            elapsedTime.milliseconds.toString(),
+        ],
       ];
     }
   }
