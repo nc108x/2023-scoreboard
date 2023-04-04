@@ -214,7 +214,11 @@ function App() {
               </Grid>
 
               <Grid item>
-                <Log historyDelta={historyDelta.current} color="red" />
+                <Log
+                  historyDelta={historyDelta.current}
+                  color="red"
+                  pointInTime={pointInTime}
+                />
               </Grid>
             </Grid>
 
@@ -234,7 +238,11 @@ function App() {
               </Grid>
 
               <Grid item>
-                <Log historyDelta={historyDelta.current} color="blue" />
+                <Log
+                  historyDelta={historyDelta.current}
+                  color="blue"
+                  pointInTime={pointInTime}
+                />
               </Grid>
             </Grid>
           </Grid>
