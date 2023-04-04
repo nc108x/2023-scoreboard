@@ -119,6 +119,7 @@ export default function ControlPanel({
               ? "START"
               : "PAUSE"}
           </Button>
+          <Button onClick={nextTimerState}>>></Button>
 
           {/* prompt to confirm before reset */}
           <Dialog
