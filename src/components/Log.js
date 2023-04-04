@@ -7,6 +7,13 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 
 export default function Log({ historyDelta, color, pointInTime }) {
+  let bgColor;
+  if (color == "red") {
+    bgColor = "redTeam.main";
+  } else {
+    bgColor = "blueTeam.main";
+  }
+
   const logTable = historyDelta.map((action, index) => {
     if (
       action != "empty" &&
@@ -14,7 +21,7 @@ export default function Log({ historyDelta, color, pointInTime }) {
       index >= -(pointInTime + 1)
     ) {
       return (
-        <TableRow key={index} sx={{ bgColor: "redTeam.main" }}>
+        <TableRow key={index}>
           <TableCell>{"Scored pole " + (action[1] + 1)}</TableCell>
           <TableCell>{action[2]}</TableCell>
         </TableRow>
@@ -25,7 +32,17 @@ export default function Log({ historyDelta, color, pointInTime }) {
   return (
     <TableContainer
       component={Paper}
-      sx={{ maxHeight: 200, minHeight: 200, maxWidth: 300, minWidth: 300 }}
+      sx={{
+        height: 200,
+        width: 300,
+
+        /* "& th: nth-of-type(n)": { */
+        /*   backgroundColor: "#6c7086", */
+        /* }, */
+        /* "& tr: nth-of-type(n)": { */
+        /*   backgroundColor: bgColor, */
+        /* }, */
+      }}
     >
       <Table stickyHeader>
         <TableHead>
