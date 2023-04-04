@@ -23,7 +23,7 @@ export default function ControlPanel({
   setGameState,
 }) {
   const [confirmReset, setConfirmReset] = useState(false);
-  // TODO maybe consider refactoring this?
+  /* TODO maybe consider refactoring this? */
   const [timerRun, setTimerRun] = useState(false);
 
   /* to allow us to use the CountdownApi outside of Timer.js */
@@ -119,6 +119,7 @@ export default function ControlPanel({
               ? "START"
               : "PAUSE"}
           </Button>
+          <Button onClick={nextTimerState}>>></Button>
 
           {/* prompt to confirm before reset */}
           <Dialog

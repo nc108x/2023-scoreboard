@@ -7,19 +7,24 @@ import { ThemeProvider } from "@mui/material/styles";
 import Gamefield from "./components/Gamefield.js";
 import Info from "./components/Info.js";
 import ControlPanel from "./components/ControlPanel.js";
+import Log from "./components/Log.js";
+import { elapsedTime } from "./components/Timer.js";
 
 const empty_poles = Array(11).fill(["empty"]);
+const ONE_MIN = 60000;
 
 function App() {
   const [gameState, setGameState] = useState({
     state: "IDLE",
     startTime: Date.now(),
-    countdownAmt: 60000,
+    countdownAmt: ONE_MIN,
   });
 
   const [poles, setPoles] = useState(empty_poles);
   const [pointInTime, setPointInTime] = useState(-1);
+  /* a 3d array representing the timeline */
   const history = useRef([empty_poles]);
+  const historyDelta = useRef(["empty"]);
 
   const [redDragon, setRedDragon] = useState("FIERY");
   const [blueDragon, setBlueDragon] = useState("WAR");
@@ -42,6 +47,17 @@ function App() {
         temp,
       ];
       setPointInTime(-1);
+
+      /* update delta for the log */
+      historyDelta.current = [
+        [
+          color,
+          pole_no,
+          elapsedTime.min + ":" + elapsedTime.sec + ":" + elapsedTime.ms,
+        ],
+
+        ...historyDelta.current.slice((pointInTime + 1) * -1),
+      ];
     }
   }
 
@@ -49,10 +65,11 @@ function App() {
     setPoles(empty_poles);
     history.current = [empty_poles];
     setPointInTime(-1);
+    historyDelta.current = ["empty"];
     setGameState({
       state: "IDLE",
       startTime: Date.now(),
-      countdownAmt: 60000,
+      countdownAmt: ONE_MIN,
     });
     winner.current = null;
   }
@@ -158,6 +175,9 @@ function App() {
 
   /* update score */
   const [redScore, blueScore] = checkScore();
+  /* console.log(winner.current); */
+  /* console.log(history.current); */
+  /* console.log(history.current.at(0)); */
 
   return (
     <>
@@ -193,17 +213,37 @@ function App() {
                 <Info score={redScore} dragonName={redDragon} color="red" />
               </Grid>
 
-              {/* <Grid item> */}
-              {/*   <Info score={redScore} dragonName={redDragon} color="red" /> */}
-              {/* </Grid> */}
+              <Grid item>
+                <Log
+                  historyDelta={historyDelta.current}
+                  color="red"
+                  pointInTime={pointInTime}
+                />
+              </Grid>
             </Grid>
 
             <Grid container direction="column" alignItems="center" xs={4}>
               <Gamefield poles={poles} scoreHandler={scoreHandler} />
             </Grid>
 
-            <Grid container direction="column" alignItems="center" xs={4}>
-              <Info score={blueScore} dragonName={blueDragon} color="blue" />
+            <Grid
+              container
+              direction="column"
+              alignItems="center"
+              xs={4}
+              justifyContent="space-between"
+            >
+              <Grid item>
+                <Info score={blueScore} dragonName={blueDragon} color="blue" />
+              </Grid>
+
+              <Grid item>
+                <Log
+                  historyDelta={historyDelta.current}
+                  color="blue"
+                  pointInTime={pointInTime}
+                />
+              </Grid>
             </Grid>
           </Grid>
         </Grid>
