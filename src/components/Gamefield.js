@@ -1,7 +1,6 @@
 import Box from "@mui/material/Box";
 
 import Pole from "./Pole.js";
-
 import gamefield from "../assets/gamefield_clean.png";
 
 /* coords for each pole */

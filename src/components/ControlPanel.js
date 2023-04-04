@@ -8,6 +8,9 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 
+import Alert from "@mui/material/Alert";
+import Stack from "@mui/material/Stack";
+
 import Timer from "./Timer.js";
 
 const ONE_MIN = 60000;
@@ -36,6 +39,7 @@ export default function ControlPanel({
 
   /* triggered when current countdown arrives at zero */
   /* automatically goes to next state of the game */
+  /* can also be triggered manually */
   function nextTimerState() {
     console.log("ENTER NEXT STATE");
     switch (gameState.state) {
@@ -63,6 +67,42 @@ export default function ControlPanel({
         });
 
         console.log("GO TO STOP");
+        break;
+
+      case "STOP":
+        console.log("REMAIN AT STOP");
+        break;
+    }
+  }
+
+  function prevTimerState() {
+    console.log("ENTER PREV STATE");
+    switch (gameState.state) {
+      case "IDLE":
+        console.log("REMAIN AT IDLE");
+        break;
+
+      case "PREP":
+        setGameState({
+          state: "IDLE",
+          startTime: Date.now(),
+          countdownAmt: ONE_MIN,
+        });
+
+        setTimerRun(false);
+        countdownApi.current.pause();
+
+        console.log("GO TO IDLE");
+        break;
+
+      case "GAME":
+        setGameState({
+          state: "PREP",
+          startTime: Date.now(),
+          countdownAmt: ONE_MIN,
+        });
+
+        console.log("GO TO PREP");
         break;
 
       case "STOP":
@@ -102,6 +142,7 @@ export default function ControlPanel({
           onComplete={nextTimerState}
         />
         <Grid item>
+          <Button onClick={prevTimerState}>{"<<"}</Button>
           <Button
             onClick={() => {
               setConfirmReset(true);
@@ -119,7 +160,7 @@ export default function ControlPanel({
               ? "START"
               : "PAUSE"}
           </Button>
-          <Button onClick={nextTimerState}>>></Button>
+          <Button onClick={nextTimerState}>{">>"}</Button>
 
           {/* prompt to confirm before reset */}
           <Dialog
