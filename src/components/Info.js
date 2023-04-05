@@ -1,7 +1,14 @@
+import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 
-export default function Info({ score, dragonName, color, historyDelta }) {
+export default function Info({
+  score,
+  dragonName,
+  color,
+  historyDelta,
+  winner,
+}) {
   let bgColor;
   if (color == "red") {
     bgColor = "redTeam.main";
@@ -16,7 +23,7 @@ export default function Info({ score, dragonName, color, historyDelta }) {
   return (
     <>
       <Paper
-        elevation={13}
+        elevation={10}
         sx={{
           width: "330px",
           backgroundColor: bgColor,
@@ -29,6 +36,11 @@ export default function Info({ score, dragonName, color, historyDelta }) {
         <Typography variant="h6">{"Rings scored: " + ringsScored}</Typography>
         <Typography variant="h6">
           {"Rings remaining: " + (40 - ringsScored)}
+        </Typography>
+        <Typography variant="h6">
+          <Box sx={{ backgroundColor: "#a6e3a1", borderRadius: 2 }}>
+            {winner == dragonName ? "GREAT VICTORY" : " "}
+          </Box>
         </Typography>
       </Paper>
     </>

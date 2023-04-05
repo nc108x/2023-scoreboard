@@ -280,6 +280,7 @@ function App() {
                     dragonName={redDragon}
                     color="red"
                     historyDelta={historyDelta.current}
+                    winner={winner.current}
                   />
                 </Grid>
 
@@ -309,6 +310,7 @@ function App() {
                     dragonName={blueDragon}
                     color="blue"
                     historyDelta={historyDelta.current}
+                    winner={winner.current}
                   />
                 </Grid>
 
