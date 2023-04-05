@@ -9,6 +9,9 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 
+import Tooltip from "@mui/material/Tooltip";
+import Zoom from "@mui/material/Zoom";
+
 import Timer from "./Timer.js";
 
 const ONE_MIN = 60000;
@@ -46,7 +49,7 @@ export default function ControlPanel({
         console.log("REMAIN AT IDLE");
 
         if (force) {
-          enqueueSnackbar("Start the timer before trying to fast forward.", {
+          enqueueSnackbar("Start the game before trying to fast forward.", {
             variant: "warning",
           });
         }
@@ -54,36 +57,55 @@ export default function ControlPanel({
 
       case "PREP":
         console.log("GO TO GAME");
+
         setGameState({
           state: "GAME",
           startTime: Date.now(),
           countdownAmt: THREE_MINS,
         });
-        countdownApi.current.start();
 
-        enqueueSnackbar("Game has started.", {
-          variant: "info",
-        });
+        if (force) {
+          countdownApi.current.pause();
+          setTimerRun(false);
+          enqueueSnackbar("Fast forward to game.", {
+            variant: "info",
+          });
+        } else {
+          countdownApi.current.start();
+          setTimerRun(true);
+          enqueueSnackbar("Game time has started.", {
+            variant: "info",
+          });
+        }
         break;
 
       case "GAME":
         console.log("GO TO END");
+
         setGameState({
           state: "END",
           startTime: Date.now(),
           countdownAmt: 0,
         });
+        countdownApi.current.pause();
+        setTimerRun(false);
 
-        enqueueSnackbar("Game has ended.", {
-          variant: "info",
-        });
+        if (force) {
+          enqueueSnackbar("Fast forward to end.", {
+            variant: "info",
+          });
+        } else {
+          enqueueSnackbar("Game has ended.", {
+            variant: "info",
+          });
+        }
         break;
 
       case "END":
         console.log("REMAIN AT END");
 
         if (force) {
-          enqueueSnackbar("Please reset the timer to start a new game.", {
+          enqueueSnackbar("Please reset the scoreboard to start a new game.", {
             variant: "warning",
           });
         }
@@ -93,6 +115,7 @@ export default function ControlPanel({
 
   function prevTimerState() {
     console.log("ENTER PREV STATE");
+
     switch (gameState.state) {
       case "IDLE":
         console.log("REMAIN AT IDLE");
@@ -104,38 +127,45 @@ export default function ControlPanel({
 
       case "PREP":
         console.log("GO TO IDLE");
-        setGameState({
-          state: "IDLE",
-          startTime: Date.now(),
-          countdownAmt: ONE_MIN,
-        });
 
-        setTimerRun(false);
+        resetHandler();
         countdownApi.current.pause();
+        setTimerRun(false);
 
-        enqueueSnackbar("Going back to idle.", {
+        enqueueSnackbar("Rewind to idle.", {
           variant: "info",
         });
         break;
 
       case "GAME":
         console.log("GO TO PREP");
+
         setGameState({
           state: "PREP",
           startTime: Date.now(),
           countdownAmt: ONE_MIN,
         });
+        countdownApi.current.pause();
+        setTimerRun(false);
 
-        enqueueSnackbar("Going back to prep.", {
+        enqueueSnackbar("Rewind to prep.", {
           variant: "info",
         });
         break;
 
       case "END":
-        console.log("REMAIN AT END");
+        console.log("GO TO GAME");
 
-        enqueueSnackbar("Cannot rewind after game has ended.", {
-          variant: "warning",
+        setGameState({
+          state: "GAME",
+          startTime: Date.now(),
+          countdownAmt: THREE_MINS,
+        });
+        countdownApi.current.pause();
+        setTimerRun(false);
+
+        enqueueSnackbar("Rewind to game.", {
+          variant: "info",
         });
         break;
     }
@@ -145,6 +175,11 @@ export default function ControlPanel({
   /* toggles between starting and pausing current countdown */
   function timerBtnHandler() {
     console.log("BUTTON CLICKED");
+
+    if (gameState.state == "END") {
+      enqueueSnackbar("To be implemented...", { variant: "info" });
+      return;
+    }
 
     if (countdownApi.current?.isPaused() || countdownApi.current?.isStopped()) {
       countdownApi.current.start();
@@ -184,7 +219,12 @@ export default function ControlPanel({
           onComplete={() => nextTimerState(false)}
         />
         <Grid item>
-          <Button onClick={prevTimerState}>{"<<"}</Button>
+          <Tooltip
+            TransitionComponent={Zoom}
+            title={"Rewind to previous state"}
+          >
+            <Button onClick={prevTimerState}>{"<<"}</Button>
+          </Tooltip>
           <Button
             onClick={() => {
               setConfirmReset(true);
@@ -202,7 +242,12 @@ export default function ControlPanel({
               ? "START"
               : "PAUSE"}
           </Button>
-          <Button onClick={() => nextTimerState(true)}>{">>"}</Button>
+          <Tooltip
+            TransitionComponent={Zoom}
+            title={"Fast forward to next state"}
+          >
+            <Button onClick={() => nextTimerState(true)}>{">>"}</Button>
+          </Tooltip>
 
           {/* prompt to confirm before reset */}
           <Dialog
