@@ -38,6 +38,21 @@ function App() {
   function scoreHandler(e, pole_no, color) {
     /* to prevent right click menu from showing up */
     e.preventDefault();
+
+    const ringsScored = historyDelta.current.filter(
+      (element) => element[0] == color
+    ).length;
+    if (ringsScored == 40) {
+      enqueueSnackbar(
+        (color == "red" ? redDragon : blueDragon) +
+          " Dragon has used up their rings!",
+        {
+          variant: "error",
+        }
+      );
+      return;
+    }
+
     if (gameState.state == "GAME" || gameState.state == "END") {
       let temp = [...poles];
       temp[pole_no] = [...poles[pole_no], color];
