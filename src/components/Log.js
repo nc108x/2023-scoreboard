@@ -36,9 +36,9 @@ export default function Log({ historyDelta, color, pointInTime }) {
         height: 200,
         width: 300,
 
-        /* "& th: nth-of-type(n)": { */
-        /*   backgroundColor: "#6c7086", */
-        /* }, */
+        "& th: nth-of-type(n)": {
+          backgroundColor: "#ffffff",
+        },
         /* "& tr: nth-of-type(n)": { */
         /*   backgroundColor: bgColor, */
         /* }, */

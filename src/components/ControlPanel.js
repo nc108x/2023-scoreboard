@@ -8,9 +8,6 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 
-import Alert from "@mui/material/Alert";
-import Stack from "@mui/material/Stack";
-
 import Timer from "./Timer.js";
 
 const ONE_MIN = 60000;

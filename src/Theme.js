@@ -7,7 +7,9 @@ const theme = createTheme({
   },
 
   palette: {
-    /* mode: "dark", */
+    background: {
+      default: "#cdd6f4",
+    },
     redTeam: {
       main: "#f5c2e7",
       dark: "#f4b8e4",

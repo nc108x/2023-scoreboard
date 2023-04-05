@@ -3,12 +3,15 @@ import Grid from "@mui/material/Grid";
 
 import theme from "./Theme.js";
 import { ThemeProvider } from "@mui/material/styles";
+import CssBaseline from "@mui/material/CssBaseline";
 
 import Gamefield from "./components/Gamefield.js";
 import Info from "./components/Info.js";
 import ControlPanel from "./components/ControlPanel.js";
 import Log from "./components/Log.js";
 import { elapsedTime } from "./components/Timer.js";
+
+import { SnackbarProvider, enqueueSnackbar } from "notistack";
 
 const empty_poles = Array(11).fill(["empty"]);
 const ONE_MIN = 60000;
@@ -28,8 +31,9 @@ function App() {
 
   const [redDragon, setRedDragon] = useState("FIERY");
   const [blueDragon, setBlueDragon] = useState("WAR");
-
   const winner = useRef(null);
+
+  /* const [showNotifs, setShowNotifs] = useState(["nope", "nope", "nope"]); */
 
   function scoreHandler(e, pole_no, color) {
     /* to prevent right click menu from showing up */
@@ -58,6 +62,16 @@ function App() {
 
         ...historyDelta.current.slice((pointInTime + 1) * -1),
       ];
+    } else {
+      enqueueSnackbar(
+        "Cannot interact with poles in " +
+          gameState.state.toLowerCase() +
+          " state!",
+        {
+          variant: "warning",
+          preventDuplicate: true,
+        }
+      );
     }
   }
 
@@ -86,6 +100,11 @@ function App() {
     console.log(history.current);
     if (Math.abs(pointInTime) == history.current.length) {
       console.log("CAN'T UNDO ANY FURTHER");
+
+      enqueueSnackbar("Cannot undo any further", {
+        variant: "warning",
+        preventDuplicate: true,
+      });
       return;
     }
     setPointInTime(pointInTime - 1);
@@ -95,6 +114,11 @@ function App() {
   function redo() {
     if (pointInTime + 1 == 0) {
       console.log("CAN'T REDO ANY FURTHER");
+
+      enqueueSnackbar("Cannot redo any further", {
+        variant: "warning",
+        preventDuplicate: true,
+      });
       return;
     }
     setPointInTime(pointInTime + 1);
@@ -111,9 +135,20 @@ function App() {
 
     if (redWinCon.every((currVal) => currVal == "red")) {
       console.log("RED GREAT VICTORY");
+
+      enqueueSnackbar(redDragon + " Dragon has ended the game!", {
+        variant: "success",
+        preventDuplicate: true,
+      });
+
       winner.current = redDragon;
     } else if (blueWinCon.every((currVal) => currVal == "blue")) {
       console.log("BLUE GREAT VICTORY");
+
+      enqueueSnackbar(blueDragon + " Dragon has ended the game!", {
+        variant: "success",
+        preventDuplicate: true,
+      });
       winner.current = blueDragon;
     } else {
       console.log("KEEP PLAYING NERD");
@@ -182,71 +217,80 @@ function App() {
   return (
     <>
       <ThemeProvider theme={theme}>
-        <Grid
-          container
-          direction="column"
-          justifyContent="space-evenly"
-          sx={{
-            textAlign: "center",
-          }}
-        >
-          <Grid container item justifyContent="space-evenly">
-            <ControlPanel
-              resetHandler={resetHandler}
-              swapDragons={swapDragons}
-              undo={undo}
-              redo={redo}
-              gameState={gameState}
-              setGameState={setGameState}
-            />
+        <CssBaseline />
+        <SnackbarProvider maxSnack={3}>
+          <Grid
+            container
+            direction="column"
+            justifyContent="space-evenly"
+            spacing={3}
+            sx={{
+              textAlign: "center",
+            }}
+          >
+            <Grid container item justifyContent="space-evenly">
+              <ControlPanel
+                resetHandler={resetHandler}
+                swapDragons={swapDragons}
+                undo={undo}
+                redo={redo}
+                gameState={gameState}
+                setGameState={setGameState}
+              />
+            </Grid>
+
+            <Grid container item direction="row">
+              <Grid
+                container
+                direction="column"
+                alignItems="center"
+                xs={4}
+                justifyContent="space-between"
+              >
+                <Grid item>
+                  <Info score={redScore} dragonName={redDragon} color="red" />
+                </Grid>
+
+                <Grid item>
+                  <Log
+                    historyDelta={historyDelta.current}
+                    color="red"
+                    pointInTime={pointInTime}
+                  />
+                </Grid>
+              </Grid>
+
+              <Grid container direction="column" alignItems="center" xs={4}>
+                <Gamefield poles={poles} scoreHandler={scoreHandler} />
+              </Grid>
+
+              <Grid
+                container
+                direction="column"
+                alignItems="center"
+                xs={4}
+                justifyContent="space-between"
+              >
+                <Grid item>
+                  <Info
+                    score={blueScore}
+                    dragonName={blueDragon}
+                    color="blue"
+                  />
+                </Grid>
+
+                <Grid item>
+                  <Log
+                    historyDelta={historyDelta.current}
+                    color="blue"
+                    pointInTime={pointInTime}
+                  />
+                </Grid>
+              </Grid>
+            </Grid>
           </Grid>
-
-          <Grid container item direction="row">
-            <Grid
-              container
-              direction="column"
-              alignItems="center"
-              xs={4}
-              justifyContent="space-between"
-            >
-              <Grid item>
-                <Info score={redScore} dragonName={redDragon} color="red" />
-              </Grid>
-
-              <Grid item>
-                <Log
-                  historyDelta={historyDelta.current}
-                  color="red"
-                  pointInTime={pointInTime}
-                />
-              </Grid>
-            </Grid>
-
-            <Grid container direction="column" alignItems="center" xs={4}>
-              <Gamefield poles={poles} scoreHandler={scoreHandler} />
-            </Grid>
-
-            <Grid
-              container
-              direction="column"
-              alignItems="center"
-              xs={4}
-              justifyContent="space-between"
-            >
-              <Grid item>
-                <Info score={blueScore} dragonName={blueDragon} color="blue" />
-              </Grid>
-
-              <Grid item>
-                <Log
-                  historyDelta={historyDelta.current}
-                  color="blue"
-                  pointInTime={pointInTime}
-                />
-              </Grid>
-            </Grid>
-          </Grid>
-        </Grid>
+          {/* <Notifs showNotifs={showNotifs} /> */}
+        </SnackbarProvider>
       </ThemeProvider>
     </>
   );
