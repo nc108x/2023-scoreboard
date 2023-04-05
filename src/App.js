@@ -251,7 +251,6 @@ function App() {
                 setGameState={setGameState}
               />
             </Grid>
-
             <Grid container item direction="row">
               <Grid
                 container

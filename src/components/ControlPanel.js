@@ -218,6 +218,7 @@ export default function ControlPanel({
           setApi={setApi}
           onComplete={() => nextTimerState(false)}
         />
+        <Grid item>{"Current state: " + gameState.state}</Grid>
         <Grid item>
           <Tooltip
             TransitionComponent={Zoom}
