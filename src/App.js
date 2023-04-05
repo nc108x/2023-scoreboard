@@ -38,7 +38,7 @@ function App() {
   function scoreHandler(e, pole_no, color) {
     /* to prevent right click menu from showing up */
     e.preventDefault();
-    if (gameState.state == "GAME") {
+    if (gameState.state == "GAME" || gameState.state == "END") {
       let temp = [...poles];
       temp[pole_no] = [...poles[pole_no], color];
       setPoles(temp);
@@ -53,15 +53,23 @@ function App() {
       setPointInTime(-1);
 
       /* update delta for the log */
-      historyDelta.current = [
-        [
-          color,
-          pole_no,
-          elapsedTime.min + ":" + elapsedTime.sec + ":" + elapsedTime.ms,
-        ],
+      if (gameState.state == "GAME") {
+        historyDelta.current = [
+          [
+            color,
+            pole_no,
+            elapsedTime.min + ":" + elapsedTime.sec + ":" + elapsedTime.ms,
+          ],
 
-        ...historyDelta.current.slice((pointInTime + 1) * -1),
-      ];
+          ...historyDelta.current.slice((pointInTime + 1) * -1),
+        ];
+      } else {
+        historyDelta.current = [
+          [color, pole_no, "03:00:00"],
+
+          ...historyDelta.current.slice((pointInTime + 1) * -1),
+        ];
+      }
     } else {
       enqueueSnackbar(
         "Cannot interact with poles in " +
