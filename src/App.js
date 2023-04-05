@@ -102,6 +102,10 @@ function App() {
   function swapDragons() {
     setRedDragon(redDragon == "FIERY" ? "WAR" : "FIERY");
     setBlueDragon(blueDragon == "FIERY" ? "WAR" : "FIERY");
+
+    enqueueSnackbar("Dragons have been swapped.", {
+      variant: "success",
+    });
   }
 
   /* present will be denoted by -1 */
@@ -227,7 +231,7 @@ function App() {
     <>
       <ThemeProvider theme={theme}>
         <CssBaseline />
-        <SnackbarProvider maxSnack={3}>
+        <SnackbarProvider maxSnack={3} autoHideDuration={1500}>
           <Grid
             container
             direction="column"
