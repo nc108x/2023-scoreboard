@@ -33,15 +33,13 @@ function App() {
   const [blueDragon, setBlueDragon] = useState("WAR");
   const winner = useRef(null);
 
-  /* const [showNotifs, setShowNotifs] = useState(["nope", "nope", "nope"]); */
-
   function scoreHandler(e, pole_no, color) {
     /* to prevent right click menu from showing up */
     e.preventDefault();
 
-    const ringsScored = historyDelta.current.filter(
-      (element) => element[0] == color
-    ).length;
+    const ringsScored = historyDelta.current
+      .slice((pointInTime + 1) * -1)
+      .filter((element) => element[0] == color).length;
     if (ringsScored == 40) {
       enqueueSnackbar(
         (color == "red" ? redDragon : blueDragon) +
@@ -279,7 +277,9 @@ function App() {
                     score={redScore}
                     dragonName={redDragon}
                     color="red"
-                    historyDelta={historyDelta.current}
+                    historyDelta={historyDelta.current.slice(
+                      (pointInTime + 1) * -1
+                    )}
                     winner={winner.current}
                   />
                 </Grid>
@@ -309,7 +309,9 @@ function App() {
                     score={blueScore}
                     dragonName={blueDragon}
                     color="blue"
-                    historyDelta={historyDelta.current}
+                    historyDelta={historyDelta.current.slice(
+                      (pointInTime + 1) * -1
+                    )}
                     winner={winner.current}
                   />
                 </Grid>
