@@ -69,7 +69,6 @@ function App() {
           " state!",
         {
           variant: "warning",
-          preventDuplicate: true,
         }
       );
     }
@@ -86,6 +85,10 @@ function App() {
       countdownAmt: ONE_MIN,
     });
     winner.current = null;
+
+    enqueueSnackbar("Game field has been reset.", {
+      variant: "success",
+    });
   }
 
   function swapDragons() {
@@ -101,9 +104,8 @@ function App() {
     if (Math.abs(pointInTime) == history.current.length) {
       console.log("CAN'T UNDO ANY FURTHER");
 
-      enqueueSnackbar("Cannot undo any further", {
+      enqueueSnackbar("Cannot undo any further!", {
         variant: "warning",
-        preventDuplicate: true,
       });
       return;
     }
@@ -115,9 +117,8 @@ function App() {
     if (pointInTime + 1 == 0) {
       console.log("CAN'T REDO ANY FURTHER");
 
-      enqueueSnackbar("Cannot redo any further", {
+      enqueueSnackbar("Cannot redo any further!", {
         variant: "warning",
-        preventDuplicate: true,
       });
       return;
     }
@@ -289,7 +290,6 @@ function App() {
               </Grid>
             </Grid>
           </Grid>
-          {/* <Notifs showNotifs={showNotifs} /> */}
         </SnackbarProvider>
       </ThemeProvider>
     </>

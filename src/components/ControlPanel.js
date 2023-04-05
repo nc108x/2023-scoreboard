@@ -1,6 +1,7 @@
 import { useState, useRef } from "react";
 import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
+import { SnackbarProvider, enqueueSnackbar } from "notistack";
 
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
@@ -37,37 +38,55 @@ export default function ControlPanel({
   /* triggered when current countdown arrives at zero */
   /* automatically goes to next state of the game */
   /* can also be triggered manually */
-  function nextTimerState() {
+  function nextTimerState(force) {
     console.log("ENTER NEXT STATE");
+
     switch (gameState.state) {
       case "IDLE":
         console.log("REMAIN AT IDLE");
+
+        if (force) {
+          enqueueSnackbar("Start the timer before trying to fast forward.", {
+            variant: "warning",
+          });
+        }
         break;
 
       case "PREP":
+        console.log("GO TO GAME");
         setGameState({
           state: "GAME",
           startTime: Date.now(),
           countdownAmt: THREE_MINS,
         });
-
         countdownApi.current.start();
 
-        console.log("GO TO GAME");
+        enqueueSnackbar("Game has started.", {
+          variant: "info",
+        });
         break;
 
       case "GAME":
+        console.log("GO TO END");
         setGameState({
           state: "END",
           startTime: Date.now(),
           countdownAmt: 0,
         });
 
-        console.log("GO TO STOP");
+        enqueueSnackbar("Game has ended.", {
+          variant: "info",
+        });
         break;
 
-      case "STOP":
-        console.log("REMAIN AT STOP");
+      case "END":
+        console.log("REMAIN AT END");
+
+        if (force) {
+          enqueueSnackbar("Please reset the timer to start a new game.", {
+            variant: "warning",
+          });
+        }
         break;
     }
   }
@@ -77,9 +96,14 @@ export default function ControlPanel({
     switch (gameState.state) {
       case "IDLE":
         console.log("REMAIN AT IDLE");
+
+        enqueueSnackbar("Nothing to rewind.", {
+          variant: "warning",
+        });
         break;
 
       case "PREP":
+        console.log("GO TO IDLE");
         setGameState({
           state: "IDLE",
           startTime: Date.now(),
@@ -89,21 +113,30 @@ export default function ControlPanel({
         setTimerRun(false);
         countdownApi.current.pause();
 
-        console.log("GO TO IDLE");
+        enqueueSnackbar("Going back to idle.", {
+          variant: "info",
+        });
         break;
 
       case "GAME":
+        console.log("GO TO PREP");
         setGameState({
           state: "PREP",
           startTime: Date.now(),
           countdownAmt: ONE_MIN,
         });
 
-        console.log("GO TO PREP");
+        enqueueSnackbar("Going back to prep.", {
+          variant: "info",
+        });
         break;
 
-      case "STOP":
-        console.log("REMAIN AT STOP");
+      case "END":
+        console.log("REMAIN AT END");
+
+        enqueueSnackbar("Cannot rewind after game has ended.", {
+          variant: "warning",
+        });
         break;
     }
   }
@@ -117,16 +150,28 @@ export default function ControlPanel({
       countdownApi.current.start();
       setTimerRun(true);
 
+      enqueueSnackbar("Timer started.", {
+        variant: "info",
+      });
+
       if (gameState.state == "IDLE") {
         setGameState({
           state: "PREP",
           startTime: Date.now(),
           countdownAmt: ONE_MIN,
         });
+
+        enqueueSnackbar("Prep time has started.", {
+          variant: "info",
+        });
       }
     } else {
       countdownApi.current.pause();
       setTimerRun(false);
+
+      enqueueSnackbar("Timer paused.", {
+        variant: "info",
+      });
     }
   }
 
@@ -136,7 +181,7 @@ export default function ControlPanel({
         <Timer
           timerState={gameState}
           setApi={setApi}
-          onComplete={nextTimerState}
+          onComplete={() => nextTimerState(false)}
         />
         <Grid item>
           <Button onClick={prevTimerState}>{"<<"}</Button>
@@ -157,7 +202,7 @@ export default function ControlPanel({
               ? "START"
               : "PAUSE"}
           </Button>
-          <Button onClick={nextTimerState}>{">>"}</Button>
+          <Button onClick={() => nextTimerState(true)}>{">>"}</Button>
 
           {/* prompt to confirm before reset */}
           <Dialog
