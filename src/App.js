@@ -260,7 +260,12 @@ function App() {
                 justifyContent="space-between"
               >
                 <Grid item>
-                  <Info score={redScore} dragonName={redDragon} color="red" />
+                  <Info
+                    score={redScore}
+                    dragonName={redDragon}
+                    color="red"
+                    historyDelta={historyDelta.current}
+                  />
                 </Grid>
 
                 <Grid item>
@@ -288,6 +293,7 @@ function App() {
                     score={blueScore}
                     dragonName={blueDragon}
                     color="blue"
+                    historyDelta={historyDelta.current}
                   />
                 </Grid>
 
