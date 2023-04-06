@@ -286,9 +286,10 @@ function App() {
 
                 <Grid item>
                   <Log
-                    historyDelta={historyDelta.current}
+                    historyDelta={historyDelta.current.slice(
+                      (pointInTime + 1) * -1
+                    )}
                     color="red"
-                    pointInTime={pointInTime}
                   />
                 </Grid>
               </Grid>
@@ -318,9 +319,10 @@ function App() {
 
                 <Grid item>
                   <Log
-                    historyDelta={historyDelta.current}
+                    historyDelta={historyDelta.current.slice(
+                      (pointInTime + 1) * -1
+                    )}
                     color="blue"
-                    pointInTime={pointInTime}
                   />
                 </Grid>
               </Grid>
