@@ -43,8 +43,8 @@ export default function Log({ historyDelta, color }) {
       <Table stickyHeader>
         <TableHead>
           <TableRow>
-            <TableCell>{"ACTION"}</TableCell>
-            <TableCell>{"TIME"}</TableCell>
+            <TableCell>ACTION</TableCell>
+            <TableCell>TIME</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>{logTable}</TableBody>

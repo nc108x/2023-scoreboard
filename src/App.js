@@ -15,9 +15,11 @@ import { SnackbarProvider, enqueueSnackbar } from "notistack";
 
 const empty_poles = Array(11).fill(["empty"]);
 const ONE_MIN = 60000;
+const THREE_MINS = 180000;
 
 function App() {
-  const [gameState, setGameState] = useState({
+  /* don't call setGameState_real just use setGameState (defined below) */
+  const [gameState, setGameState_real] = useState({
     state: "IDLE",
     startTime: Date.now(),
     countdownAmt: ONE_MIN,
@@ -32,6 +34,41 @@ function App() {
   const [redDragon, setRedDragon] = useState("FIERY");
   const [blueDragon, setBlueDragon] = useState("WAR");
   const winner = useRef(null);
+
+  function setGameState(state) {
+    switch (state) {
+      case "IDLE":
+        setGameState_real({
+          state: "IDLE",
+          startTime: Date.now(),
+          countdownAmt: ONE_MIN,
+        });
+        break;
+      case "PREP":
+        setGameState_real({
+          state: "PREP",
+          startTime: Date.now(),
+          countdownAmt: ONE_MIN,
+        });
+        break;
+      case "GAME":
+        setGameState_real({
+          state: "GAME",
+          startTime: Date.now(),
+          countdownAmt: THREE_MINS,
+        });
+        break;
+      case "END":
+        setGameState_real({
+          state: "END",
+          startTime: Date.now(),
+          countdownAmt: 0,
+        });
+        break;
+      default:
+        setGameState_real(state);
+    }
+  }
 
   function scoreHandler(e, pole_no, color) {
     /* to prevent right click menu from showing up */
@@ -65,8 +102,8 @@ function App() {
       ];
       setPointInTime(-1);
 
-      /* update delta for the log */
       if (gameState.state == "GAME") {
+        /* update delta for the log */
         historyDelta.current = [
           [
             color,
@@ -77,6 +114,8 @@ function App() {
           ...historyDelta.current.slice((pointInTime + 1) * -1),
         ];
       } else {
+        /* game has ended */
+        /* same thing as above but fix timestamp and ping user with a warning */
         enqueueSnackbar("Currently modifying rings after game has ended.", {
           variant: "warning",
         });
@@ -100,15 +139,11 @@ function App() {
   }
 
   function resetHandler() {
+    setGameState("IDLE");
     setPoles(empty_poles);
     history.current = [empty_poles];
     setPointInTime(-1);
     historyDelta.current = ["empty"];
-    setGameState({
-      state: "IDLE",
-      startTime: Date.now(),
-      countdownAmt: ONE_MIN,
-    });
     winner.current = null;
 
     enqueueSnackbar("Game field has been reset.", {
@@ -131,8 +166,6 @@ function App() {
   function undo() {
     console.log(history.current);
     if (Math.abs(pointInTime) == history.current.length) {
-      console.log("CAN'T UNDO ANY FURTHER");
-
       enqueueSnackbar("Cannot undo any further!", {
         variant: "error",
       });
@@ -150,8 +183,6 @@ function App() {
 
   function redo() {
     if (pointInTime + 1 == 0) {
-      console.log("CAN'T REDO ANY FURTHER");
-
       enqueueSnackbar("Cannot redo any further!", {
         variant: "error",
       });
@@ -172,12 +203,7 @@ function App() {
     const redWinCon = topRings.slice(0, 8);
     const blueWinCon = topRings.slice(3, 11);
 
-    /* console.log(redWinCon); */
-    /* console.log(blueWinCon); */
-
     if (redWinCon.every((currVal) => currVal == "red")) {
-      console.log("RED GREAT VICTORY");
-
       enqueueSnackbar(redDragon + " Dragon has ended the game!", {
         variant: "success",
         preventDuplicate: true,
@@ -185,15 +211,13 @@ function App() {
 
       winner.current = redDragon;
     } else if (blueWinCon.every((currVal) => currVal == "blue")) {
-      console.log("BLUE GREAT VICTORY");
-
       enqueueSnackbar(blueDragon + " Dragon has ended the game!", {
         variant: "success",
         preventDuplicate: true,
       });
+
       winner.current = blueDragon;
     } else {
-      console.log("KEEP PLAYING NERD");
       winner.current = null;
     }
   }
@@ -202,7 +226,6 @@ function App() {
   function checkScore() {
     const type1 = [0, 1, 2, 8, 9, 10];
     const type2 = [3, 4, 6, 7];
-    /* let type3 = 5; */
 
     let redScore = 0;
     let blueScore = 0;
@@ -210,8 +233,6 @@ function App() {
     let topRings = [];
 
     for (let i = 0; i < poles.length; i++) {
-      /* console.log("Pole " + i + " " + poles[i].at(-1)); */
-
       topRings[i] = poles[i].at(-1);
       let scoreIncrease = 0;
 
@@ -241,10 +262,6 @@ function App() {
       }
     }
 
-    /* console.log([redScore_t, blueScore_t]); */
-    /* console.log(history); */
-    /* console.log(pointInTime); */
-
     checkEndgame(topRings);
 
     return [redScore, blueScore];
@@ -252,9 +269,6 @@ function App() {
 
   /* update score */
   const [redScore, blueScore] = checkScore();
-  /* console.log(winner.current); */
-  /* console.log(history.current); */
-  /* console.log(history.current.at(0)); */
 
   return (
     <>

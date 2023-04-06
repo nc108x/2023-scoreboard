@@ -25,9 +25,6 @@ export default function Timer({ timerState, setApi, onComplete }) {
 
     remainingTime = msToTime(min * 60000 + sec * 1000 + ms);
     elapsedTime = msToTime(180000 - (min * 60000 + sec * 1000 + ms));
-
-    /* console.log(remainingTime); */
-    /* console.log(elapsedTime); */
   }
 
   let renderer = ({ minutes, seconds, milliseconds }) => {
