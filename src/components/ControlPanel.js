@@ -38,6 +38,16 @@ export default function ControlPanel({
     countdownApi.current = ref.getApi();
   };
 
+  function timerStart() {
+    countdownApi.current.start();
+    setTimerRun(true);
+  }
+
+  function timerPause() {
+    countdownApi.current.pause();
+    setTimerRun(false);
+  }
+
   /* triggered when current countdown arrives at zero */
   /* automatically goes to next state of the game */
   /* can also be triggered manually */
@@ -65,14 +75,16 @@ export default function ControlPanel({
         });
 
         if (force) {
-          countdownApi.current.pause();
-          setTimerRun(false);
+          /* countdownApi.current.pause(); */
+          /* setTimerRun(false); */
+          timerPause();
           enqueueSnackbar("Fast forward to game.", {
             variant: "success",
           });
         } else {
-          countdownApi.current.start();
-          setTimerRun(true);
+          /* countdownApi.current.start(); */
+          /* setTimerRun(true); */
+          timerStart();
           enqueueSnackbar("Game time has started.", {
             variant: "info",
           });
@@ -87,8 +99,9 @@ export default function ControlPanel({
           startTime: Date.now(),
           countdownAmt: 0,
         });
-        countdownApi.current.pause();
-        setTimerRun(false);
+        /* countdownApi.current.pause(); */
+        /* setTimerRun(false); */
+        timerPause();
 
         if (force) {
           enqueueSnackbar("Fast forward to end.", {
@@ -116,8 +129,9 @@ export default function ControlPanel({
   function prevTimerState() {
     /* if timer is running alr just go to beginning of the state */
     if (timerRun) {
-      countdownApi.current.pause();
-      setTimerRun(false);
+      /* countdownApi.current.pause(); */
+      /* setTimerRun(false); */
+      timerPause();
 
       setGameState({
         state: gameState.state == "PREP" ? "IDLE" : gameState.state,
@@ -155,8 +169,9 @@ export default function ControlPanel({
             startTime: Date.now(),
             countdownAmt: ONE_MIN,
           });
-          countdownApi.current.pause();
-          setTimerRun(false);
+          /* countdownApi.current.pause(); */
+          /* setTimerRun(false); */
+          timerPause();
 
           enqueueSnackbar("Rewind to idle.", {
             variant: "success",
@@ -193,8 +208,9 @@ export default function ControlPanel({
     }
 
     if (countdownApi.current?.isPaused() || countdownApi.current?.isStopped()) {
-      countdownApi.current.start();
-      setTimerRun(true);
+      /* countdownApi.current.start(); */
+      /* setTimerRun(true); */
+      timerStart();
 
       enqueueSnackbar("Timer started.", {
         variant: "success",
@@ -212,8 +228,9 @@ export default function ControlPanel({
         });
       }
     } else {
-      countdownApi.current.pause();
-      setTimerRun(false);
+      /* countdownApi.current.pause(); */
+      /* setTimerRun(false); */
+      timerPause();
 
       enqueueSnackbar("Timer paused.", {
         variant: "success",
