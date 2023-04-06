@@ -7,23 +7,19 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 
 export default function Log({ historyDelta, color }) {
-  let bgColor;
-  if (color == "red") {
-    bgColor = "redTeam.main";
-  } else {
-    bgColor = "blueTeam.main";
-  }
-
-  const logTable = historyDelta.map((action, index) => {
-    if (action != "empty" && action[0] == color) {
-      return (
-        <TableRow key={index}>
-          <TableCell>{"Scored pole " + (action[1] + 1)}</TableCell>
-          <TableCell>{action[2]}</TableCell>
-        </TableRow>
-      );
-    }
-  });
+  const logTable = historyDelta
+    .slice(0)
+    .reverse()
+    .map((action, index) => {
+      if (action != "empty" && action[0] == color) {
+        return (
+          <TableRow key={index}>
+            <TableCell>{"Scored pole " + (action[1] + 1)}</TableCell>
+            <TableCell>{action[2]}</TableCell>
+          </TableRow>
+        );
+      }
+    });
 
   return (
     <TableContainer

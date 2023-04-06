@@ -77,6 +77,7 @@ function App() {
     const ringsScored = historyDelta.current
       .slice((pointInTime + 1) * -1)
       .filter((element) => element[0] == color).length;
+
     if (ringsScored == 40) {
       enqueueSnackbar(
         (color == "red" ? redDragon : blueDragon) +
@@ -92,10 +93,9 @@ function App() {
       let temp = [...poles];
       temp[pole_no] = [...poles[pole_no], color];
       setPoles(temp);
-      console.log(temp);
 
-      /* update the timeline so that undo will work as intended */
-      /* when a new ring is added, prune the future and set the current point in time to be the present */
+      /* update the timeline so that undo/redo will work as intended */
+      /* when a new ring is added, prune the (undone) future and set the current point in time to be the present */
       history.current = [
         ...history.current.slice(0, history.current.length + pointInTime + 1),
         temp,
@@ -105,13 +105,15 @@ function App() {
       if (gameState.state == "GAME") {
         /* update delta for the log */
         historyDelta.current = [
+          ...historyDelta.current.slice(
+            0,
+            historyDelta.current.length + pointInTime + 1
+          ),
           [
             color,
             pole_no,
             elapsedTime.min + ":" + elapsedTime.sec + ":" + elapsedTime.ms,
           ],
-
-          ...historyDelta.current.slice((pointInTime + 1) * -1),
         ];
       } else {
         /* game has ended */
@@ -121,9 +123,11 @@ function App() {
         });
 
         historyDelta.current = [
+          ...historyDelta.current.slice(
+            0,
+            historyDelta.current.length + pointInTime + 1
+          ),
           [color, pole_no, "03:00:00"],
-
-          ...historyDelta.current.slice((pointInTime + 1) * -1),
         ];
       }
     } else {
@@ -163,9 +167,9 @@ function App() {
   /* present will be denoted by -1 */
   /* since history.at(-1) corresponds to the newest entry in the stack */
   /* pointInTime should never be positive */
+  /* undo/redo works by manipulating pointInTime */
   function undo() {
-    console.log(history.current);
-    if (Math.abs(pointInTime) == history.current.length) {
+    if (-pointInTime == history.current.length) {
       enqueueSnackbar("Cannot undo any further!", {
         variant: "error",
       });
@@ -182,7 +186,7 @@ function App() {
   }
 
   function redo() {
-    if (pointInTime + 1 == 0) {
+    if (pointInTime == -1) {
       enqueueSnackbar("Cannot redo any further!", {
         variant: "error",
       });
@@ -308,7 +312,8 @@ function App() {
                     dragonName={redDragon}
                     color="red"
                     historyDelta={historyDelta.current.slice(
-                      (pointInTime + 1) * -1
+                      0,
+                      historyDelta.current.length + pointInTime + 1
                     )}
                     winner={winner.current}
                   />
@@ -317,7 +322,8 @@ function App() {
                 <Grid item>
                   <Log
                     historyDelta={historyDelta.current.slice(
-                      (pointInTime + 1) * -1
+                      0,
+                      historyDelta.current.length + pointInTime + 1
                     )}
                     color="red"
                   />
@@ -341,7 +347,8 @@ function App() {
                     dragonName={blueDragon}
                     color="blue"
                     historyDelta={historyDelta.current.slice(
-                      (pointInTime + 1) * -1
+                      0,
+                      historyDelta.current.length + pointInTime + 1
                     )}
                     winner={winner.current}
                   />
@@ -350,7 +357,8 @@ function App() {
                 <Grid item>
                   <Log
                     historyDelta={historyDelta.current.slice(
-                      (pointInTime + 1) * -1
+                      0,
+                      historyDelta.current.length + pointInTime + 1
                     )}
                     color="blue"
                   />

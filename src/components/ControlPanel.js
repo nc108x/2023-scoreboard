@@ -51,8 +51,10 @@ export default function ControlPanel({
     switch (gameState.state) {
       case "IDLE":
         if (force) {
-          enqueueSnackbar("Start the game before trying to fast forward.", {
-            variant: "warning",
+          setGameState("GAME");
+          timerPause();
+          enqueueSnackbar("Fast forward to game.", {
+            variant: "success",
           });
         }
         break;
