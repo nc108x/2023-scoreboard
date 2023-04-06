@@ -1,7 +1,7 @@
 import { useState, useRef } from "react";
 import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
-import { SnackbarProvider, enqueueSnackbar } from "notistack";
+import { enqueueSnackbar } from "notistack";
 
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
@@ -68,7 +68,7 @@ export default function ControlPanel({
           countdownApi.current.pause();
           setTimerRun(false);
           enqueueSnackbar("Fast forward to game.", {
-            variant: "info",
+            variant: "success",
           });
         } else {
           countdownApi.current.start();
@@ -92,7 +92,7 @@ export default function ControlPanel({
 
         if (force) {
           enqueueSnackbar("Fast forward to end.", {
-            variant: "info",
+            variant: "success",
           });
         } else {
           enqueueSnackbar("Game has ended.", {
@@ -106,7 +106,7 @@ export default function ControlPanel({
 
         if (force) {
           enqueueSnackbar("Please reset the scoreboard to start a new game.", {
-            variant: "warning",
+            variant: "error",
           });
         }
         break;
@@ -114,60 +114,71 @@ export default function ControlPanel({
   }
 
   function prevTimerState() {
-    console.log("ENTER PREV STATE");
+    /* if timer is running alr just go to beginning of the state */
+    if (timerRun) {
+      countdownApi.current.pause();
+      setTimerRun(false);
 
-    switch (gameState.state) {
-      case "IDLE":
-        console.log("REMAIN AT IDLE");
+      setGameState({
+        state: gameState.state == "PREP" ? "IDLE" : gameState.state,
+        startTime: Date.now(),
+        countdownAmt: gameState.countdownAmt,
+      });
 
-        enqueueSnackbar("Nothing to rewind.", {
-          variant: "warning",
-        });
-        break;
+      enqueueSnackbar(
+        "Rewind to beginning of " +
+          (gameState.state == "PREP"
+            ? "idle."
+            : gameState.state.toLowerCase() + "."),
+        {
+          variant: "success",
+        }
+      );
+    } else {
+      /* go to previous state */
+      console.log("ENTER PREV STATE");
+      switch (gameState.state) {
+        case "IDLE":
+          console.log("REMAIN AT IDLE");
 
-      case "PREP":
-        console.log("GO TO IDLE");
+          enqueueSnackbar("Nothing to rewind.", {
+            variant: "error",
+          });
+          break;
 
-        resetHandler();
-        countdownApi.current.pause();
-        setTimerRun(false);
+        case "PREP":
+        case "GAME":
+          console.log("GO TO IDLE");
 
-        enqueueSnackbar("Rewind to idle.", {
-          variant: "info",
-        });
-        break;
+          setGameState({
+            state: "IDLE",
+            startTime: Date.now(),
+            countdownAmt: ONE_MIN,
+          });
+          countdownApi.current.pause();
+          setTimerRun(false);
 
-      case "GAME":
-        console.log("GO TO PREP");
+          enqueueSnackbar("Rewind to idle.", {
+            variant: "success",
+          });
+          break;
 
-        setGameState({
-          state: "PREP",
-          startTime: Date.now(),
-          countdownAmt: ONE_MIN,
-        });
-        countdownApi.current.pause();
-        setTimerRun(false);
+        case "END":
+          console.log("GO TO GAME");
 
-        enqueueSnackbar("Rewind to prep.", {
-          variant: "info",
-        });
-        break;
+          setGameState({
+            state: "GAME",
+            startTime: Date.now(),
+            countdownAmt: THREE_MINS,
+          });
+          countdownApi.current.pause();
+          setTimerRun(false);
 
-      case "END":
-        console.log("GO TO GAME");
-
-        setGameState({
-          state: "GAME",
-          startTime: Date.now(),
-          countdownAmt: THREE_MINS,
-        });
-        countdownApi.current.pause();
-        setTimerRun(false);
-
-        enqueueSnackbar("Rewind to game.", {
-          variant: "info",
-        });
-        break;
+          enqueueSnackbar("Rewind to game.", {
+            variant: "success",
+          });
+          break;
+      }
     }
   }
 
@@ -186,7 +197,7 @@ export default function ControlPanel({
       setTimerRun(true);
 
       enqueueSnackbar("Timer started.", {
-        variant: "info",
+        variant: "success",
       });
 
       if (gameState.state == "IDLE") {
@@ -205,7 +216,7 @@ export default function ControlPanel({
       setTimerRun(false);
 
       enqueueSnackbar("Timer paused.", {
-        variant: "info",
+        variant: "success",
       });
     }
   }
