@@ -30,7 +30,7 @@ export default function Log({ historyDelta, color }) {
       component={Paper}
       sx={{
         height: 200,
-        width: 300,
+        width: 330,
 
         "& th: nth-of-type(n)": {
           backgroundColor: "#ffffff",

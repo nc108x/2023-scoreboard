@@ -77,6 +77,10 @@ function App() {
           ...historyDelta.current.slice((pointInTime + 1) * -1),
         ];
       } else {
+        enqueueSnackbar("Currently modifying rings after game has ended.", {
+          variant: "warning",
+        });
+
         historyDelta.current = [
           [color, pole_no, "03:00:00"],
 
@@ -89,7 +93,7 @@ function App() {
           gameState.state.toLowerCase() +
           " state!",
         {
-          variant: "warning",
+          variant: "error",
         }
       );
     }
@@ -130,9 +134,15 @@ function App() {
       console.log("CAN'T UNDO ANY FURTHER");
 
       enqueueSnackbar("Cannot undo any further!", {
-        variant: "warning",
+        variant: "error",
       });
       return;
+    }
+
+    if (gameState.state == "END") {
+      enqueueSnackbar("Currently modifying rings after game has ended.", {
+        variant: "warning",
+      });
     }
     setPointInTime(pointInTime - 1);
     setPoles(history.current.at(pointInTime - 1));
@@ -143,9 +153,15 @@ function App() {
       console.log("CAN'T REDO ANY FURTHER");
 
       enqueueSnackbar("Cannot redo any further!", {
-        variant: "warning",
+        variant: "error",
       });
       return;
+    }
+
+    if (gameState.state == "END") {
+      enqueueSnackbar("Currently modifying rings after game has ended.", {
+        variant: "warning",
+      });
     }
     setPointInTime(pointInTime + 1);
     setPoles(history.current.at(pointInTime + 1));
