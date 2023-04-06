@@ -33,7 +33,7 @@ function App() {
 
   const [redDragon, setRedDragon] = useState("FIERY");
   const [blueDragon, setBlueDragon] = useState("WAR");
-  const winner = useRef(null);
+  const winner = useRef({ winner: false, time: -1 });
 
   function setGameState(state) {
     switch (state) {
@@ -148,7 +148,7 @@ function App() {
     history.current = [empty_poles];
     setPointInTime(-1);
     historyDelta.current = ["empty"];
-    winner.current = null;
+    winner.current = { winner: false, time: -1 };
 
     enqueueSnackbar("Game field has been reset.", {
       variant: "success",
@@ -213,16 +213,24 @@ function App() {
         preventDuplicate: true,
       });
 
-      winner.current = redDragon;
+      winner.current.winner = "red";
+      if (winner.current.time == -1) {
+        console.log("RED UPDATE");
+        winner.current.time = historyDelta.current.length;
+      }
     } else if (blueWinCon.every((currVal) => currVal == "blue")) {
       enqueueSnackbar(blueDragon + " Dragon has ended the game!", {
         variant: "success",
         preventDuplicate: true,
       });
 
-      winner.current = blueDragon;
+      winner.current.winner = "blue";
+      if (winner.current.time == -1) {
+        winner.current.time = historyDelta.current.length;
+      }
     } else {
-      winner.current = null;
+      winner.current.winner = false;
+      winner.current.time = -1;
     }
   }
 
@@ -326,6 +334,7 @@ function App() {
                       historyDelta.current.length + pointInTime + 1
                     )}
                     color="red"
+                    winner={winner.current}
                   />
                 </Grid>
               </Grid>
@@ -361,6 +370,7 @@ function App() {
                       historyDelta.current.length + pointInTime + 1
                     )}
                     color="blue"
+                    winner={winner.current}
                   />
                 </Grid>
               </Grid>
