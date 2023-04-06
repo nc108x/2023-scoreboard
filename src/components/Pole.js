@@ -5,6 +5,7 @@ import Zoom from "@mui/material/Zoom";
 export default function Pole({
   x,
   y,
+  index,
   rings,
   redScoreHandler,
   blueScoreHandler,
@@ -32,8 +33,11 @@ export default function Pole({
           position: "absolute",
           top: y,
           left: x,
+          fontSize: 28,
         }}
-      ></Fab>
+      >
+        {index + 1}
+      </Fab>
     </Tooltip>
   );
 }

@@ -12,6 +12,7 @@ export default function Gamefield({ poles, scoreHandler }) {
     return (
       <Pole
         key={index}
+        index={index}
         x={pos_x[index]}
         y={pos_y[index]}
         rings={pole}
