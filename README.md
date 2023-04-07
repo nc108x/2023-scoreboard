@@ -3,14 +3,14 @@
 <img src="./preview.png" width="800"/>
 
 [Link](https://nc108x.github.io/2023-scoreboard/) \
-Designed for the internal use of the HKUST Robotics Team
+Designed for the internal use of the HKUST Robotics Team.
 
 First time using Javascript and ReactJS so code is very bad I am trying my best orz \
 WIP so stuff may be broken use at your own risk.
 
 ### Usage
 
-- Left click on a pole to add a red ring and right click to add a blue ring
+- Left click on a pole to add a red ring and right click to add a blue ring.
 - Other controls are pretty self-explanatory.
 
 ### Known Issues
