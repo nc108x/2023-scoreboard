@@ -20,7 +20,7 @@ const THREE_MINS = 180000;
 function App() {
   /* don't call setGameState_real just use setGameState (defined below) */
   const [gameState, setGameState_real] = useState({
-    state: "IDLE",
+    state: "PREP",
     startTime: Date.now(),
     countdownAmt: ONE_MIN,
   });
@@ -37,13 +37,6 @@ function App() {
 
   function setGameState(state) {
     switch (state) {
-      case "IDLE":
-        setGameState_real({
-          state: "IDLE",
-          startTime: Date.now(),
-          countdownAmt: ONE_MIN,
-        });
-        break;
       case "PREP":
         setGameState_real({
           state: "PREP",
@@ -150,7 +143,7 @@ function App() {
     historyDelta.current = ["empty"];
     winner.current = { winner: false, time: -1 };
 
-    enqueueSnackbar("Game field has been reset.", {
+    enqueueSnackbar("Scoreboard has been reset.", {
       variant: "success",
     });
   }

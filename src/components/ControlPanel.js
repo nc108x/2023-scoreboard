@@ -49,22 +49,12 @@ export default function ControlPanel({
   /* can also be triggered manually */
   function nextTimerState(force) {
     switch (gameState.state) {
-      case "IDLE":
-        if (force) {
-          setGameState("GAME");
-          timerPause();
-          enqueueSnackbar("Fast forward to game.", {
-            variant: "success",
-          });
-        }
-        break;
-
       case "PREP":
         setGameState("GAME");
 
         if (force) {
           timerPause();
-          enqueueSnackbar("Fast forward to game.", {
+          enqueueSnackbar("Fast forward to game time.", {
             variant: "success",
           });
         } else {
@@ -103,36 +93,34 @@ export default function ControlPanel({
   function prevTimerState() {
     /* if timer is running alr just go to beginning of the CURRENT state */
     if (timerRun) {
-      setGameState({
-        state: gameState.state == "PREP" ? "IDLE" : gameState.state,
-        startTime: Date.now(),
-        countdownAmt: gameState.countdownAmt,
-      });
+      setGameState(gameState.state);
       timerPause();
 
-      enqueueSnackbar(
-        "Rewind to beginning of " +
-          (gameState.state == "PREP"
-            ? "idle."
-            : gameState.state.toLowerCase() + "."),
-        {
-          variant: "success",
-        }
-      );
+      switch (gameState.state) {
+        case "PREP":
+          enqueueSnackbar("Rewind to beginning of preparation time.", {
+            variant: "success",
+          });
+          break;
+        case "GAME":
+          enqueueSnackbar("Rewind to beginning of game time.", {
+            variant: "success",
+          });
+          break;
+      }
     } else {
       /* go to previous state */
       switch (gameState.state) {
-        case "IDLE":
+        case "PREP":
           enqueueSnackbar("Nothing to rewind.", {
             variant: "error",
           });
           break;
 
-        case "PREP":
         case "GAME":
-          setGameState("IDLE");
+          setGameState("PREP");
           timerPause();
-          enqueueSnackbar("Rewind to idle.", {
+          enqueueSnackbar("Rewind to preparation time.", {
             variant: "success",
           });
           break;
@@ -140,7 +128,7 @@ export default function ControlPanel({
         case "END":
           setGameState("GAME");
           timerPause();
-          enqueueSnackbar("Rewind to game.", {
+          enqueueSnackbar("Rewind to game start.", {
             variant: "success",
           });
           break;
@@ -162,9 +150,8 @@ export default function ControlPanel({
         variant: "success",
       });
 
-      if (gameState.state == "IDLE") {
-        setGameState("PREP");
-        enqueueSnackbar("Prep time has started.", {
+      if (gameState.state == "PREP") {
+        enqueueSnackbar("Preparation time has started.", {
           variant: "info",
         });
       }
