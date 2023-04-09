@@ -131,7 +131,7 @@ function App() {
   }
 
   function resetHandler() {
-    setGameState("IDLE");
+    setGameState("PREP");
     setPoles(empty_poles);
     history.current = [empty_poles];
     setPointInTime(-1);
