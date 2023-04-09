@@ -124,14 +124,9 @@ function App() {
         ];
       }
     } else {
-      enqueueSnackbar(
-        "Cannot interact with poles in " +
-          gameState.state.toLowerCase() +
-          " state!",
-        {
-          variant: "error",
-        }
-      );
+      enqueueSnackbar("Cannot interact with poles in preparation time!", {
+        variant: "error",
+      });
     }
   }
 
