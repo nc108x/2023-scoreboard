@@ -40,6 +40,7 @@ export default function Timer({ timerState, setApi, onComplete }) {
   return (
     <>
       <Countdown
+        key={timerState.startTime.toString()}
         date={timerState.startTime + timerState.countdownAmt}
         precision={3}
         intervalDelay={0}

@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
 import { enqueueSnackbar } from "notistack";
@@ -34,13 +34,21 @@ export default function ControlPanel({
     countdownApi.current = ref.getApi();
   };
 
+  useEffect(() => {
+    console.log("hello");
+    console.log(timerRun);
+    timerRun == true
+      ? countdownApi.current.start()
+      : countdownApi.current.pause();
+  }, [timerRun]);
+
   function timerStart() {
-    countdownApi.current.start();
+    /* countdownApi.current.start(); */
     setTimerRun(true);
   }
 
   function timerPause() {
-    countdownApi.current.pause();
+    /* countdownApi.current.pause(); */
     setTimerRun(false);
   }
 
@@ -61,12 +69,12 @@ export default function ControlPanel({
             variant: "info",
           });
         }
+
         setGameState("GAME");
         break;
 
       case "GAME":
         timerPause();
-
         if (force) {
           enqueueSnackbar("Fast forward to end.", {
             variant: "success",
@@ -91,10 +99,10 @@ export default function ControlPanel({
   }
 
   function prevTimerState() {
+    timerPause();
     /* if timer is running alr just go to beginning of the CURRENT state */
     if (timerRun) {
       setGameState(gameState.state);
-      timerPause();
 
       switch (gameState.state) {
         case "PREP":
@@ -119,7 +127,6 @@ export default function ControlPanel({
 
         case "GAME":
           setGameState("PREP");
-          timerPause();
           enqueueSnackbar("Rewind to preparation time.", {
             variant: "success",
           });
@@ -127,8 +134,7 @@ export default function ControlPanel({
 
         case "END":
           setGameState("GAME");
-          timerPause();
-          enqueueSnackbar("Rewind to game start.", {
+          enqueueSnackbar("Rewind to game time.", {
             variant: "success",
           });
           break;
