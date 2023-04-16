@@ -25,7 +25,7 @@ export default function Log({ historyDelta, color, winner, orientation }) {
               <TableRow key={index}>
                 <TableCell>
                   {"Scored pole " +
-                    (orientation == "red" ? action[1] : 11 - action[1])}
+                    (orientation == "red" ? action[1] + 1 : 11 - action[1])}
                 </TableCell>
                 <TableCell>{action[2]}</TableCell>
               </TableRow>
@@ -36,7 +36,7 @@ export default function Log({ historyDelta, color, winner, orientation }) {
           <TableRow key={index}>
             <TableCell>
               {"Scored pole " +
-                (orientation == "red" ? action[1] : 11 - action[1])}
+                (orientation == "red" ? action[1] + 1 : 11 - action[1])}
             </TableCell>
             <TableCell>{action[2]}</TableCell>
           </TableRow>
