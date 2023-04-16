@@ -9,6 +9,7 @@ export default function Pole({
   rings,
   redScoreHandler,
   blueScoreHandler,
+  orientation,
 }) {
   const color =
     rings.at(-1) == "red"
@@ -36,7 +37,7 @@ export default function Pole({
           fontSize: 28,
         }}
       >
-        {index + 1}
+        {orientation == "red" ? index + 1 : 11 - index}
       </Fab>
     </Tooltip>
   );

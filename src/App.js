@@ -10,6 +10,7 @@ import Info from "./components/Info.js";
 import ControlPanel from "./components/ControlPanel.js";
 import Log from "./components/Log.js";
 import { elapsedTime } from "./components/Timer.js";
+import Options from "./components/Options.js";
 
 import { SnackbarProvider, enqueueSnackbar } from "notistack";
 
@@ -34,6 +35,16 @@ function App() {
   const [redDragon, setRedDragon] = useState("FIERY");
   const [blueDragon, setBlueDragon] = useState("WAR");
   const winner = useRef({ winner: false, time: -1 });
+
+  const [orientation, setOrientation] = useState("red");
+
+  function toggleOrientation() {
+    if (orientation == "red") {
+      setOrientation("blue");
+    } else {
+      setOrientation("red");
+    }
+  }
 
   function setGameState(state) {
     switch (state) {
@@ -275,6 +286,7 @@ function App() {
       <ThemeProvider theme={theme}>
         <CssBaseline />
         <SnackbarProvider maxSnack={3} autoHideDuration={1500}>
+          <Options toggleOrientation={toggleOrientation} />
           <Grid
             container
             direction="column"
@@ -328,7 +340,11 @@ function App() {
               </Grid>
 
               <Grid container direction="column" alignItems="center" xs={4}>
-                <Gamefield poles={poles} scoreHandler={scoreHandler} />
+                <Gamefield
+                  poles={poles}
+                  scoreHandler={scoreHandler}
+                  orientation={orientation}
+                />
               </Grid>
 
               <Grid

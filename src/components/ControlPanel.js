@@ -50,8 +50,6 @@ export default function ControlPanel({
   function nextTimerState(force) {
     switch (gameState.state) {
       case "PREP":
-        setGameState("GAME");
-
         if (force) {
           timerPause();
           enqueueSnackbar("Fast forward to game time.", {
@@ -63,10 +61,10 @@ export default function ControlPanel({
             variant: "info",
           });
         }
+        setGameState("GAME");
         break;
 
       case "GAME":
-        setGameState("END");
         timerPause();
 
         if (force) {
@@ -78,6 +76,8 @@ export default function ControlPanel({
             variant: "info",
           });
         }
+
+        setGameState("END");
         break;
 
       case "END":
