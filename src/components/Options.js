@@ -23,6 +23,7 @@ export default function Options({ toggleOrientation }) {
         onClose={() => setShowOptions(false)}
       >
         <Box sx={{ margin: 2 }}>
+          <Box>Options:</Box>
           <FormControlLabel
             control={<Switch onChange={toggleOrientation} />}
             label="Use blue perspective"
