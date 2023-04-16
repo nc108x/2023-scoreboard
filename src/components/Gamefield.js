@@ -5,13 +5,10 @@ import gamefield_red from "../assets/gamefield_clean_red.png";
 import gamefield_blue from "../assets/gamefield_clean_blue.png";
 
 /* coords for each pole */
-/* const pos_x = [25, 25, 25, 130, 130, 200, 280, 280, 380, 380, 380]; */
-/* const pos_y = [10, 200, 390, 120, 280, 200, 120, 280, 10, 200, 390]; */
-
 const pos_x_red = [25, 200, 380, 130, 280, 200, 130, 280, 25, 200, 380];
 const pos_y_red = [390, 390, 390, 280, 280, 200, 120, 120, 10, 10, 10];
 
-const pos_x_blue = [25, 200, 380, 130, 280, 200, 130, 280, 25, 200, 380];
+const pos_x_blue = [380, 200, 25, 280, 130, 200, 280, 130, 380, 200, 25];
 const pos_y_blue = [10, 10, 10, 120, 120, 200, 280, 280, 390, 390, 390];
 
 export default function Gamefield({ poles, scoreHandler, orientation }) {
