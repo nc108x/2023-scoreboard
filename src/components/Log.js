@@ -6,7 +6,7 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 
-export default function Log({ historyDelta, color, winner }) {
+export default function Log({ historyDelta, color, winner, orientation }) {
   const logTable = historyDelta
     .slice(0)
     .reverse()
@@ -23,7 +23,10 @@ export default function Log({ historyDelta, color, winner }) {
                 <TableCell>{action[2]}</TableCell>
               </TableRow>
               <TableRow key={index}>
-                <TableCell>{"Scored pole " + (action[1] + 1)}</TableCell>
+                <TableCell>
+                  {"Scored pole " +
+                    (orientation == "red" ? action[1] : 11 - action[1])}
+                </TableCell>
                 <TableCell>{action[2]}</TableCell>
               </TableRow>
             </>
@@ -31,7 +34,10 @@ export default function Log({ historyDelta, color, winner }) {
         }
         return (
           <TableRow key={index}>
-            <TableCell>{"Scored pole " + (action[1] + 1)}</TableCell>
+            <TableCell>
+              {"Scored pole " +
+                (orientation == "red" ? action[1] : 11 - action[1])}
+            </TableCell>
             <TableCell>{action[2]}</TableCell>
           </TableRow>
         );

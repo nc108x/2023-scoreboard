@@ -38,6 +38,7 @@ function App() {
 
   const [orientation, setOrientation] = useState("red");
 
+  /* passed to options menu */
   function toggleOrientation() {
     if (orientation == "red") {
       setOrientation("blue");
@@ -335,6 +336,7 @@ function App() {
                     )}
                     color="red"
                     winner={winner.current}
+                    orientation={orientation}
                   />
                 </Grid>
               </Grid>
@@ -375,6 +377,7 @@ function App() {
                     )}
                     color="blue"
                     winner={winner.current}
+                    orientation={orientation}
                   />
                 </Grid>
               </Grid>
