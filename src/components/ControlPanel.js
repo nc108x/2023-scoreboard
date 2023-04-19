@@ -86,6 +86,7 @@ export default function ControlPanel({
   }
 
   function prevTimerState() {
+    fallthrough.current = false;
     setTimerRun(false);
     /* if timer is running alr just go to beginning of the CURRENT state */
     if (timerRun) {

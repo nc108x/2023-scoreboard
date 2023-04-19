@@ -45,7 +45,7 @@ export default function Timer({ timerState, setApi, onComplete, fallthrough }) {
         precision={3}
         intervalDelay={0}
         renderer={renderer}
-        autoStart={fallthrough}
+        autoStart={fallthrough && timerState.state == "GAME" ? true : false}
         ref={setApi}
         onComplete={onComplete}
         onTick={onTick}
