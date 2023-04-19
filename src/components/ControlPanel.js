@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
 import { enqueueSnackbar } from "notistack";
@@ -34,37 +34,24 @@ export default function ControlPanel({
     countdownApi.current = ref.getApi();
   };
 
-  useEffect(() => {
-    console.log("hello");
-    console.log(timerRun);
-    timerRun == true
-      ? countdownApi.current.start()
-      : countdownApi.current.pause();
-  }, [timerRun]);
-
-  function timerStart() {
-    /* countdownApi.current.start(); */
-    setTimerRun(true);
-  }
-
-  function timerPause() {
-    /* countdownApi.current.pause(); */
-    setTimerRun(false);
-  }
+  /* used to trigger autostart when going from prep to game */
+  const fallthrough = useRef(false);
 
   /* triggered when current countdown arrives at zero */
   /* automatically goes to next state of the game */
   /* can also be triggered manually */
   function nextTimerState(force) {
+    fallthrough.current = false;
     switch (gameState.state) {
       case "PREP":
         if (force) {
-          timerPause();
+          setTimerRun(false);
           enqueueSnackbar("Fast forward to game time.", {
             variant: "success",
           });
         } else {
-          timerStart();
+          fallthrough.current = true;
+          setTimerRun(true);
           enqueueSnackbar("Game time has started.", {
             variant: "info",
           });
@@ -74,7 +61,7 @@ export default function ControlPanel({
         break;
 
       case "GAME":
-        timerPause();
+        setTimerRun(false);
         if (force) {
           enqueueSnackbar("Fast forward to end.", {
             variant: "success",
@@ -99,7 +86,7 @@ export default function ControlPanel({
   }
 
   function prevTimerState() {
-    timerPause();
+    setTimerRun(false);
     /* if timer is running alr just go to beginning of the CURRENT state */
     if (timerRun) {
       setGameState(gameState.state);
@@ -145,13 +132,16 @@ export default function ControlPanel({
   /* triggered when button is clicked */
   /* toggles between starting and pausing current countdown */
   function timerBtnHandler() {
+    fallthrough.current = false;
     if (gameState.state == "END") {
       enqueueSnackbar("To be implemented...", { variant: "info" });
       return;
     }
 
     if (countdownApi.current?.isPaused() || countdownApi.current?.isStopped()) {
-      timerStart();
+      setTimerRun(true);
+
+      countdownApi.current.start();
       enqueueSnackbar("Timer started.", {
         variant: "success",
       });
@@ -162,7 +152,8 @@ export default function ControlPanel({
         });
       }
     } else {
-      timerPause();
+      setTimerRun(false);
+      countdownApi.current.pause();
       enqueueSnackbar("Timer paused.", {
         variant: "success",
       });
@@ -176,6 +167,7 @@ export default function ControlPanel({
           timerState={gameState}
           setApi={setApi}
           onComplete={() => nextTimerState(false)}
+          fallthrough={fallthrough.current}
         />
         <Grid item>{"Current state: " + gameState.state}</Grid>
         <Grid item>
