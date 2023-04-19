@@ -16,7 +16,7 @@ function msToTime(og_ms) {
 }
 
 /* TODO consider moving Timer.js up? or find a more elegant method of transporting elapsedTime */
-export default function Timer({ timerState, setApi, onComplete }) {
+export default function Timer({ timerState, setApi, onComplete, fallthrough }) {
   function onTick(time) {
     const min = time.minutes;
     const sec = time.seconds;
@@ -40,11 +40,12 @@ export default function Timer({ timerState, setApi, onComplete }) {
   return (
     <>
       <Countdown
+        key={timerState.startTime}
         date={timerState.startTime + timerState.countdownAmt}
         precision={3}
         intervalDelay={0}
         renderer={renderer}
-        autoStart={false}
+        autoStart={fallthrough && timerState.state == "GAME" ? true : false}
         ref={setApi}
         onComplete={onComplete}
         onTick={onTick}
