@@ -35,7 +35,8 @@ export default function Timer({ timerState, setApi, onComplete }) {
     );
 
     if (
-      remainingTime.sec == 3 &&
+      remainingTime.sec == 2 &&
+      remainingTime.ms == 97 &&
       !playingCountdown.current &&
       timerState.state == "PREP"
     ) {
