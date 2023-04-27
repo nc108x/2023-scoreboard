@@ -35,8 +35,8 @@ export default function Timer({ timerState, setApi, onComplete, fallthrough }) {
     );
 
     if (
-      remainingTime.sec == 2 &&
-      remainingTime.ms == 97 &&
+      remainingTime.sec == 3 &&
+      remainingTime.ms == 10 &&
       !playingCountdown.current &&
       timerState.state == "PREP"
     ) {
@@ -50,7 +50,7 @@ export default function Timer({ timerState, setApi, onComplete, fallthrough }) {
   let renderer = ({ minutes, seconds, milliseconds }) => {
     return (
       <>
-        <Box sx={{ typography: "subtitle2", fontSize: 48 }}>
+        <Box sx={{ typography: "subtitle2", fontSize: 84 }}>
           {zeroPad(minutes)}:{zeroPad(seconds)}:{zeroPad(milliseconds, 3)}
         </Box>
       </>
