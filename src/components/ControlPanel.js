@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, useCallback } from "react";
+import { useState, useRef } from "react";
 import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
 import { enqueueSnackbar } from "notistack";
@@ -21,6 +21,7 @@ export default function ControlPanel({
   redo,
   gameState,
   setGameState,
+  exportData,
 }) {
   const [confirmReset, setConfirmReset] = useState(false);
   /* TODO maybe consider refactoring this? */
@@ -135,7 +136,6 @@ export default function ControlPanel({
   function timerBtnHandler() {
     fallthrough.current = false;
     if (gameState.state == "END") {
-      enqueueSnackbar("To be implemented...", { variant: "info" });
       return;
     }
 
@@ -188,9 +188,11 @@ export default function ControlPanel({
           <Button onClick={swapDragons}>SWAP</Button>
           <Button onClick={undo}>UNDO</Button>
           <Button onClick={redo}>REDO</Button>
-          <Button onClick={timerBtnHandler}>
+          <Button
+            onClick={gameState.state == "END" ? exportData : timerBtnHandler}
+          >
             {gameState.state == "END"
-              ? "---"
+              ? "EXPORT"
               : timerRun == false
               ? "START"
               : "PAUSE"}

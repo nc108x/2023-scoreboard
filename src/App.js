@@ -5,6 +5,12 @@ import theme from "./Theme.js";
 import { ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
+
 import Gamefield from "./components/Gamefield.js";
 import Info from "./components/Info.js";
 import ControlPanel from "./components/ControlPanel.js";
@@ -279,6 +285,62 @@ function App() {
     return [redScore, blueScore];
   }
 
+  function exportData() {
+    let exportStr = "";
+
+    let timestamp = new Date();
+    timestamp.toISOString();
+    exportStr = exportStr.concat(timestamp);
+    exportStr = exportStr.concat(";");
+
+    /* const redStr = redDragon == "FIERY" ? "1" : "2"; */
+    /* const blueStr = redDragon == "FIERY" ? "2" : "1"; */
+    /**/
+    /* let polesExport = []; */
+    /* for (let i = 0; i < 11; i++) { */
+    /*   let temp = ""; */
+    /*   history.current */
+    /*     .at(-1) */
+    /*     .at(i) */
+    /*     .forEach((element) => { */
+    /*       if (element == "red") { */
+    /*         temp = temp.concat(redStr); */
+    /*       } else if (element == "blue") { */
+    /*         temp = temp.concat(blueStr); */
+    /*       } else { */
+    /*         temp = temp.concat("0"); */
+    /*       } */
+    /*     }); */
+    /*   polesExport.push(temp); */
+    /* } */
+
+    exportStr = exportStr.concat(redDragon == "FIERY" ? redScore : blueScore);
+    exportStr = exportStr.concat(";");
+
+    exportStr = exportStr.concat(redDragon == "FIERY" ? blueScore : redScore);
+    exportStr = exportStr.concat(";");
+
+    exportStr = exportStr.concat(
+      winner.current.winner != "FALSE" ? "TRUE" : "FALSE"
+    );
+    exportStr = exportStr.concat(";");
+
+    exportStr = exportStr.concat(
+      winner.current.winner
+        ? winner.current.winner == "red"
+          ? redDragon
+          : blueDragon
+        : redScore > blueScore
+        ? redDragon
+        : blueScore > redScore
+        ? blueDragon
+        : "TIE"
+    );
+    exportStr = exportStr.concat(";");
+
+    console.log(exportStr);
+  }
+
   /* update score */
   const [redScore, blueScore] = checkScore();
 
@@ -305,6 +367,7 @@ function App() {
                 redo={redo}
                 gameState={gameState}
                 setGameState={setGameState}
+                exportData={exportData}
               />
             </Grid>
             <Grid container item direction="row">
