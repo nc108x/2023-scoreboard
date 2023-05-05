@@ -11,16 +11,16 @@ const theme = createTheme({
       default: "#cdd6f4",
     },
     redTeam: {
-      main: "#f5c2e7",
-      dark: "#f4b8e4",
+      main: "#ff6161",
+      dark: "#e64949",
     },
     blueTeam: {
       main: "#89b4fa",
       dark: "#8caaee",
     },
     standbyColor: {
-      main: "#fab387",
-      dark: "#ef9f76",
+      main: "#959595",
+      dark: "#808080",
     },
   },
 });
