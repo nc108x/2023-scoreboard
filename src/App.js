@@ -339,6 +339,7 @@ function App() {
     exportStr = exportStr.concat(";");
 
     console.log(exportStr);
+    return exportStr;
   }
 
   /* update score */
