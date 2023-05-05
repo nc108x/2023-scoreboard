@@ -19,8 +19,8 @@ const theme = createTheme({
       dark: "#8caaee",
     },
     standbyColor: {
-      main: "#959595",
-      dark: "#808080",
+      main: "#ffffff",
+      dark: "#e0e0e0",
     },
   },
 });
