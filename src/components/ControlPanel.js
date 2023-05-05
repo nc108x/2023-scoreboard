@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, useCallback } from "react";
+import { useState, useRef } from "react";
 import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
 import { enqueueSnackbar } from "notistack";
@@ -8,6 +8,9 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
+import Typography from "@mui/material/Typography";
+import Link from "@mui/material/Link";
+import emptyExcel from "../2023_game_export_blank.xlsx";
 
 import Tooltip from "@mui/material/Tooltip";
 import Zoom from "@mui/material/Zoom";
@@ -21,8 +24,10 @@ export default function ControlPanel({
   redo,
   gameState,
   setGameState,
+  exportData,
 }) {
   const [confirmReset, setConfirmReset] = useState(false);
+  const [showExport, setShowExport] = useState(false);
   /* TODO maybe consider refactoring this? */
   const [timerRun, setTimerRun] = useState(false);
 
@@ -135,7 +140,6 @@ export default function ControlPanel({
   function timerBtnHandler() {
     fallthrough.current = false;
     if (gameState.state == "END") {
-      enqueueSnackbar("To be implemented...", { variant: "info" });
       return;
     }
 
@@ -188,9 +192,15 @@ export default function ControlPanel({
           <Button onClick={swapDragons}>SWAP</Button>
           <Button onClick={undo}>UNDO</Button>
           <Button onClick={redo}>REDO</Button>
-          <Button onClick={timerBtnHandler}>
+          <Button
+            onClick={
+              gameState.state == "END"
+                ? () => setShowExport(true)
+                : timerBtnHandler
+            }
+          >
             {gameState.state == "END"
-              ? "---"
+              ? "EXPORT"
               : timerRun == false
               ? "START"
               : "PAUSE"}
@@ -240,6 +250,46 @@ export default function ControlPanel({
                 }}
               >
                 {"繼續開game啦咁多野講"}
+              </Button>
+            </DialogActions>
+          </Dialog>
+
+          {/* export */}
+          <Dialog
+            open={showExport}
+            onClose={() => {
+              setShowExport(false);
+            }}
+            aria-labelledby="alert-dialog-title"
+            aria-describedby="alert-dialog-description"
+          >
+            <DialogTitle id="alert-dialog-title">{"Export data"}</DialogTitle>
+            <DialogContent>
+              <DialogContentText id="alert-dialog-description">
+                <Typography>
+                  {"Copy the following to the Excel spreadsheet:\n\n"}
+                </Typography>
+                <Typography>{exportData()}</Typography>
+                <Typography>
+                  {"("}
+                  <Link
+                    href={emptyExcel}
+                    download="2023_game_export_blank.xlsx"
+                  >
+                    {"Blank spreadsheet download here"}
+                  </Link>
+                  {")"}
+                </Typography>
+              </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+              <Button
+                onClick={() => {
+                  setShowExport(false);
+                }}
+                autoFocus
+              >
+                {"Done"}
               </Button>
             </DialogActions>
           </Dialog>
