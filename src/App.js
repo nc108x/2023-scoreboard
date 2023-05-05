@@ -5,12 +5,6 @@ import theme from "./Theme.js";
 import { ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 
-import Dialog from "@mui/material/Dialog";
-import DialogActions from "@mui/material/DialogActions";
-import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
-import DialogTitle from "@mui/material/DialogTitle";
-
 import Gamefield from "./components/Gamefield.js";
 import Info from "./components/Info.js";
 import ControlPanel from "./components/ControlPanel.js";
@@ -313,6 +307,11 @@ function App() {
     /*     }); */
     /*   polesExport.push(temp); */
     /* } */
+    exportStr = exportStr.concat(redDragon == "FIERY" ? "RED" : "BLUE");
+    exportStr = exportStr.concat(";");
+
+    exportStr = exportStr.concat(redDragon == "FIERY" ? "BLUE" : "RED");
+    exportStr = exportStr.concat(";");
 
     exportStr = exportStr.concat(redDragon == "FIERY" ? redScore : blueScore);
     exportStr = exportStr.concat(";");
@@ -320,7 +319,21 @@ function App() {
     exportStr = exportStr.concat(redDragon == "FIERY" ? blueScore : redScore);
     exportStr = exportStr.concat(";");
 
-    console.log(winner.current.winner);
+    const fieryColor = redDragon == "FIERY" ? "red" : "blue";
+
+    exportStr = exportStr.concat(
+      historyDelta.current.filter((element) => element[0] == fieryColor).length
+    );
+    exportStr = exportStr.concat(";");
+
+    exportStr = exportStr.concat(
+      historyDelta.current.filter(
+        (element) => element[0] != fieryColor && element != "empty"
+      ).length
+    );
+    exportStr = exportStr.concat(";");
+    console.log(historyDelta);
+
     exportStr = exportStr.concat(
       winner.current.winner != false ? "TRUE" : "FALSE"
     );
