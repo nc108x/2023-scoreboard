@@ -9,6 +9,8 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import Typography from "@mui/material/Typography";
+import Link from "@mui/material/Link";
+import emptyExcel from "../2023_game_export_blank.xlsx";
 
 import Tooltip from "@mui/material/Tooltip";
 import Zoom from "@mui/material/Zoom";
@@ -268,6 +270,16 @@ export default function ControlPanel({
                   {"Copy the following to the Excel spreadsheet:\n\n"}
                 </Typography>
                 <Typography>{exportData()}</Typography>
+                <Typography>
+                  {"("}
+                  <Link
+                    href={emptyExcel}
+                    download="2023_game_export_blank.xlsx"
+                  >
+                    {"Blank spreadsheet download here"}
+                  </Link>
+                  {")"}
+                </Typography>
               </DialogContentText>
             </DialogContent>
             <DialogActions>
