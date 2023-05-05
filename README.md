@@ -13,6 +13,9 @@ WIP so stuff may be broken use at your own risk.
 - Left click on a pole to add a red ring and right click to add a blue ring.
 - Other controls are pretty self-explanatory.
 
+ - __Exporting data__
+    - After copying the generated string to the Excel spreadsheet, make use of the "Text to columns" feature to split the data into their corresponding cells. Make sure to use the "semicolon" delimiter option and NOT the "space" delimiter.
+
 ### Known Issues
 
 - Currently does not support both sides achieving endgame. I kind of want to support this (in case a team wants to continue on their own after the other side has already achieved endgame for training purposes), but also cannot be bothered to completely redo how score calculation/endgame detection is done. Might(?) try in the future but no promises.
