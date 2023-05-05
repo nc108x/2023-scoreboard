@@ -320,8 +320,9 @@ function App() {
     exportStr = exportStr.concat(redDragon == "FIERY" ? blueScore : redScore);
     exportStr = exportStr.concat(";");
 
+    console.log(winner.current.winner);
     exportStr = exportStr.concat(
-      winner.current.winner != "FALSE" ? "TRUE" : "FALSE"
+      winner.current.winner != false ? "TRUE" : "FALSE"
     );
     exportStr = exportStr.concat(";");
 
