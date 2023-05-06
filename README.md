@@ -11,10 +11,17 @@ WIP so stuff may be broken use at your own risk.
 ### Usage
 
 - Left click on a pole to add a red ring and right click to add a blue ring.
-- Other controls are pretty self-explanatory.
+- **Exporting data**
 
- - __Exporting data__
-    - After copying the generated string to the Excel spreadsheet, make use of the "Text to columns" feature to split the data into their corresponding cells. Make sure to use the "semicolon" delimiter option and NOT the "space" delimiter.
+  - After copying the generated string to the Excel spreadsheet, make use of the "Text to columns" feature to split the data into their corresponding cells. Make sure to use the "semicolon" delimiter option and NOT the "space" delimiter. <br><br>
+    <img src="./how2export_1.png" width="600"/>\
+    _Data -> Text to Columns_
+
+    <img src="./how2export_2.png" width="400"/>\
+    _Choose "semicolon" and only "semicolon" for the delimiter_
+    <br>
+
+- Other controls are pretty self-explanatory.
 
 ### Known Issues
 
