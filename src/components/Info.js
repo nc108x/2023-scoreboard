@@ -39,7 +39,7 @@ export default function Info({
         </Typography>
         <Typography variant="h6">
           <Box sx={{ backgroundColor: "#a6e3a1", borderRadius: 2 }}>
-            {winner.winner == color ? "GREAT VICTORY" : " "}
+            {winner.winner == color ? "CHEY-YO" : " "}
           </Box>
         </Typography>
       </Paper>

@@ -19,7 +19,7 @@ export default function Log({ historyDelta, color, winner, orientation }) {
           return (
             <>
               <TableRow key={index + 100}>
-                <TableCell>{"GREAT VICTORY"}</TableCell>
+                <TableCell>{"CHEY-YO"}</TableCell>
                 <TableCell>{action[2]}</TableCell>
               </TableRow>
               <TableRow key={index}>
