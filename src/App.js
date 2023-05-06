@@ -332,7 +332,6 @@ function App() {
       ).length
     );
     exportStr = exportStr.concat(";");
-    console.log(historyDelta);
 
     exportStr = exportStr.concat(
       winner.current.winner != false ? "TRUE" : "FALSE"
@@ -349,6 +348,13 @@ function App() {
         : blueScore > redScore
         ? blueDragon
         : "TIE"
+    );
+    exportStr = exportStr.concat(";");
+
+    exportStr = exportStr.concat(
+      winner.current.winner != false
+        ? historyDelta.current.at(-1)[2]
+        : "03:00:00"
     );
     exportStr = exportStr.concat(";");
 
