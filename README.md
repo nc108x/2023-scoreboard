@@ -1,6 +1,6 @@
 # 2023-scoreboard (WIP)
 
-<img src="./preview.png" width="800"/>
+<img src="./img/preview.png" width="800"/>
 
 [Link](https://nc108x.github.io/2023-scoreboard/) \
 Designed for the internal use of the HKUST Robotics Team.
@@ -14,10 +14,10 @@ WIP so stuff may be broken use at your own risk.
 - **Exporting data**
 
   - After copying the generated string to the Excel spreadsheet, make use of the "Text to columns" feature to split the data into their corresponding cells. Make sure to use the "semicolon" delimiter option and NOT the "space" delimiter. <br><br>
-    <img src="./how2export_1.png" width="600"/>\
+    <img src="./img/how2export_1.png" width="600"/>\
     _Data -> Text to Columns_
 
-    <img src="./how2export_2.png" width="400"/>\
+    <img src="./img/how2export_2.png" width="400"/>\
     _Choose "semicolon" and only "semicolon" for the delimiter_
     <br>
 
