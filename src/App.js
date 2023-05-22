@@ -339,12 +339,24 @@ function App() {
     return exportStr;
   }
 
-  const undoShortcut = useCallback((event) => {
-    if (event.key == "z" && event.ctrlKey == true) {
-      event.preventDefault();
-      undo();
-    }
-  }, [pointInTime]);
+  const undoShortcut = useCallback(
+    (event) => {
+      const platform = navigator.platform;
+      console.log(platform)
+      if (platform.startsWith("Mac")) {
+        if (event.key == "z" && event.metaKey == true) {
+          event.preventDefault();
+          undo();
+        }
+      } else {
+        if (event.key == "z" && event.ctrlKey == true) {
+          event.preventDefault();
+          undo();
+        }
+      }
+    },
+    [pointInTime]
+  );
 
   useEffect(() => {
     // attach the event listener
