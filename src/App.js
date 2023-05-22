@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useCallback, useEffect } from "react";
 import Grid from "@mui/material/Grid";
 
 import theme from "./Theme.js";
@@ -215,7 +215,6 @@ function App() {
 
       winner.current.winner = "red";
       if (winner.current.time == -1) {
-        console.log("RED UPDATE");
         winner.current.time = historyDelta.current.length;
       }
     } else if (blueWinCon.every((currVal) => currVal == "blue")) {
@@ -287,26 +286,6 @@ function App() {
     exportStr = exportStr.concat(timestamp);
     exportStr = exportStr.concat(";");
 
-    /* const redStr = redDragon == "FIERY" ? "1" : "2"; */
-    /* const blueStr = redDragon == "FIERY" ? "2" : "1"; */
-    /**/
-    /* let polesExport = []; */
-    /* for (let i = 0; i < 11; i++) { */
-    /*   let temp = ""; */
-    /*   history.current */
-    /*     .at(-1) */
-    /*     .at(i) */
-    /*     .forEach((element) => { */
-    /*       if (element == "red") { */
-    /*         temp = temp.concat(redStr); */
-    /*       } else if (element == "blue") { */
-    /*         temp = temp.concat(blueStr); */
-    /*       } else { */
-    /*         temp = temp.concat("0"); */
-    /*       } */
-    /*     }); */
-    /*   polesExport.push(temp); */
-    /* } */
     exportStr = exportStr.concat(redDragon == "FIERY" ? "RED" : "BLUE");
     exportStr = exportStr.concat(";");
 
@@ -357,10 +336,25 @@ function App() {
         : "03:00:00"
     );
     exportStr = exportStr.concat(";");
-
-    console.log(exportStr);
     return exportStr;
   }
+
+  const undoShortcut = useCallback((event) => {
+    if (event.key == "z" && event.ctrlKey == true) {
+      event.preventDefault();
+      undo();
+    }
+  }, [pointInTime]);
+
+  useEffect(() => {
+    // attach the event listener
+    document.addEventListener("keydown", undoShortcut);
+
+    // remove the event listener
+    return () => {
+      document.removeEventListener("keydown", undoShortcut);
+    };
+  }, [undoShortcut]);
 
   /* update score */
   const [redScore, blueScore] = checkScore();
