@@ -1,31 +1,54 @@
-import { useState, useRef, useCallback, useEffect } from "react";
 import Grid from "@mui/material/Grid";
+import { useCallback, useEffect, useRef, useState } from "react";
 
-import theme from "./Theme.js";
-import { ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
+import { ThemeProvider } from "@mui/material/styles";
+import theme from "./Theme.js";
 
+import ControlPanel from "./components/ControlPanel.js";
 import Gamefield from "./components/Gamefield.js";
 import Info from "./components/Info.js";
-import ControlPanel from "./components/ControlPanel.js";
 import Log from "./components/Log.js";
-import { elapsedTime } from "./components/Timer.js";
 import Options from "./components/Options.js";
+import { elapsedTime } from "./components/Timer.js";
 
 import { SnackbarProvider, enqueueSnackbar } from "notistack";
+import { useFirebase } from "./components/FirebaseProvider.js";
+import { ref } from "firebase/database";
+import { useObjectVal } from "react-firebase-hooks/database";
 
 const empty_poles = Array(11).fill(["empty"]);
 const ONE_MIN = 60000;
 const THREE_MINS = 180000;
 
+const initialState = {
+  state: "PREP",
+  startTime: Date.now(),
+  countdownAmt: ONE_MIN,
+  fieldOrientation: "red",
+  field: {
+    red: "FIERY",
+    blue: "WAR",
+  },
+  poles: empty_poles,
+  pointInTime: -1,
+  history: [empty_poles],
+};
+
 function App() {
+  const { db } = useFirebase();
+  const [value, loading, error] = useObjectVal(ref(db, "2023"), {
+    keyField: "id",
+  });
+
+  console.log(value, error);
+
   /* don't call setGameState_real just use setGameState (defined below) */
   const [gameState, setGameState_real] = useState({
     state: "PREP",
     startTime: Date.now(),
     countdownAmt: ONE_MIN,
   });
-
   const [poles, setPoles] = useState(empty_poles);
   const [pointInTime, setPointInTime] = useState(-1);
   /* a 3d array representing the timeline */
@@ -85,8 +108,7 @@ function App() {
 
     if (ringsScored == 40) {
       enqueueSnackbar(
-        (color == "red" ? redDragon : blueDragon) +
-          " Dragon has used up their rings!",
+        (color == "red" ? redDragon : blueDragon) + " Dragon has used up their rings!",
         {
           variant: "error",
         }
@@ -110,15 +132,8 @@ function App() {
       if (gameState.state == "GAME") {
         /* update delta for the log */
         historyDelta.current = [
-          ...historyDelta.current.slice(
-            0,
-            historyDelta.current.length + pointInTime + 1
-          ),
-          [
-            color,
-            pole_no,
-            elapsedTime.min + ":" + elapsedTime.sec + ":" + elapsedTime.ms,
-          ],
+          ...historyDelta.current.slice(0, historyDelta.current.length + pointInTime + 1),
+          [color, pole_no, elapsedTime.min + ":" + elapsedTime.sec + ":" + elapsedTime.ms],
         ];
       } else {
         /* game has ended */
@@ -128,10 +143,7 @@ function App() {
         });
 
         historyDelta.current = [
-          ...historyDelta.current.slice(
-            0,
-            historyDelta.current.length + pointInTime + 1
-          ),
+          ...historyDelta.current.slice(0, historyDelta.current.length + pointInTime + 1),
           [color, pole_no, "03:00:00"],
         ];
       }
@@ -252,10 +264,7 @@ function App() {
       }
 
       if (type1.includes(i)) {
-        if (
-          (i < 5 && topRings[i] == "blue") ||
-          (i > 5 && topRings[i] == "red")
-        ) {
+        if ((i < 5 && topRings[i] == "blue") || (i > 5 && topRings[i] == "red")) {
           scoreIncrease = 25;
         } else {
           scoreIncrease = 10;
@@ -306,15 +315,12 @@ function App() {
     exportStr = exportStr.concat(";");
 
     exportStr = exportStr.concat(
-      historyDelta.current.filter(
-        (element) => element[0] != fieryColor && element != "empty"
-      ).length
+      historyDelta.current.filter((element) => element[0] != fieryColor && element != "empty")
+        .length
     );
     exportStr = exportStr.concat(";");
 
-    exportStr = exportStr.concat(
-      winner.current.winner != false ? "TRUE" : "FALSE"
-    );
+    exportStr = exportStr.concat(winner.current.winner != false ? "TRUE" : "FALSE");
     exportStr = exportStr.concat(";");
 
     exportStr = exportStr.concat(
@@ -331,9 +337,7 @@ function App() {
     exportStr = exportStr.concat(";");
 
     exportStr = exportStr.concat(
-      winner.current.winner != false
-        ? historyDelta.current.at(-1)[2]
-        : "03:00:00"
+      winner.current.winner != false ? historyDelta.current.at(-1)[2] : "03:00:00"
     );
     exportStr = exportStr.concat(";");
     return exportStr;
@@ -342,7 +346,7 @@ function App() {
   const undoShortcut = useCallback(
     (event) => {
       const platform = navigator.platform;
-      console.log(platform)
+      console.log(platform);
       if (platform.startsWith("Mac")) {
         if (event.key == "z" && event.metaKey == true) {
           event.preventDefault();
@@ -432,11 +436,7 @@ function App() {
               </Grid>
 
               <Grid container direction="column" alignItems="center" xs={4}>
-                <Gamefield
-                  poles={poles}
-                  scoreHandler={scoreHandler}
-                  orientation={orientation}
-                />
+                <Gamefield poles={poles} scoreHandler={scoreHandler} orientation={orientation} />
               </Grid>
 
               <Grid
