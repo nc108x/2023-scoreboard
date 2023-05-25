@@ -6,8 +6,13 @@
 Designed for the internal use of the HKUST Robotics Team.
 
 First time using Javascript and ReactJS so code is very bad I am trying my best orz \
+Feel free to ping me with found bugs/feedback/PRs. \
 WIP so stuff may be broken use at your own risk.
 
+### Disclaimer
+I am not responsible for frozen mainboards, dead batteries, thermonuclear war, or you getting owned because the scoreboard failed. Please
+do some research if you have any concerns about features included in this scoreboard.
+ 
 ### Usage
 
 - Left click on a pole to add a red ring and right click to add a blue ring.
@@ -24,8 +29,6 @@ WIP so stuff may be broken use at your own risk.
 - Other controls are pretty self-explanatory.
 
 ### Known Issues
-
-- Currently does not support both sides achieving endgame. I kind of want to support this (in case a team wants to continue on their own after the other side has already achieved endgame for training purposes), but also cannot be bothered to completely redo how score calculation/endgame detection is done. Might(?) try in the future but no promises.
 
 - Resizing the browser window/scuffed aspect ratios will break the UI layout spectacularly because I haven't figured out how resizing works lmao. But you'll probably be using it in fullscreen... right? |･ω･) Current workaround is to simply zoom out on the browser side.
 
