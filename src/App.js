@@ -278,71 +278,90 @@ function App() {
     return [redScore, blueScore];
   }
 
-  function exportData() {
+  function exportData(type) {
     let exportStr = "";
 
-    let timestamp = new Date();
-    timestamp.toISOString();
-    exportStr = exportStr.concat(timestamp);
-    exportStr = exportStr.concat(";");
+    if (type == 0) {
+      let timestamp = new Date();
+      timestamp.toISOString();
+      exportStr = exportStr.concat(timestamp);
+      exportStr = exportStr.concat(";");
 
-    exportStr = exportStr.concat(redDragon == "FIERY" ? "RED" : "BLUE");
-    exportStr = exportStr.concat(";");
+      exportStr = exportStr.concat(redDragon == "FIERY" ? "RED" : "BLUE");
+      exportStr = exportStr.concat(";");
 
-    exportStr = exportStr.concat(redDragon == "FIERY" ? "BLUE" : "RED");
-    exportStr = exportStr.concat(";");
+      exportStr = exportStr.concat(redDragon == "FIERY" ? "BLUE" : "RED");
+      exportStr = exportStr.concat(";");
 
-    exportStr = exportStr.concat(redDragon == "FIERY" ? redScore : blueScore);
-    exportStr = exportStr.concat(";");
+      exportStr = exportStr.concat(redDragon == "FIERY" ? redScore : blueScore);
+      exportStr = exportStr.concat(";");
 
-    exportStr = exportStr.concat(redDragon == "FIERY" ? blueScore : redScore);
-    exportStr = exportStr.concat(";");
+      exportStr = exportStr.concat(redDragon == "FIERY" ? blueScore : redScore);
+      exportStr = exportStr.concat(";");
 
-    const fieryColor = redDragon == "FIERY" ? "red" : "blue";
+      const fieryColor = redDragon == "FIERY" ? "red" : "blue";
 
-    exportStr = exportStr.concat(
-      historyDelta.current.filter((element) => element[0] == fieryColor).length
-    );
-    exportStr = exportStr.concat(";");
+      exportStr = exportStr.concat(
+        historyDelta.current.filter((element) => element[0] == fieryColor)
+          .length
+      );
+      exportStr = exportStr.concat(";");
 
-    exportStr = exportStr.concat(
-      historyDelta.current.filter(
-        (element) => element[0] != fieryColor && element != "empty"
-      ).length
-    );
-    exportStr = exportStr.concat(";");
+      exportStr = exportStr.concat(
+        historyDelta.current.filter(
+          (element) => element[0] != fieryColor && element != "empty"
+        ).length
+      );
+      exportStr = exportStr.concat(";");
 
-    exportStr = exportStr.concat(
-      winner.current.winner != false ? "TRUE" : "FALSE"
-    );
-    exportStr = exportStr.concat(";");
+      exportStr = exportStr.concat(
+        winner.current.winner != false ? "TRUE" : "FALSE"
+      );
+      exportStr = exportStr.concat(";");
 
-    exportStr = exportStr.concat(
-      winner.current.winner
-        ? winner.current.winner == "red"
+      exportStr = exportStr.concat(
+        winner.current.winner
+          ? winner.current.winner == "red"
+            ? redDragon
+            : blueDragon
+          : redScore > blueScore
           ? redDragon
-          : blueDragon
-        : redScore > blueScore
-        ? redDragon
-        : blueScore > redScore
-        ? blueDragon
-        : "TIE"
-    );
-    exportStr = exportStr.concat(";");
+          : blueScore > redScore
+          ? blueDragon
+          : "TIE"
+      );
+      exportStr = exportStr.concat(";");
 
-    exportStr = exportStr.concat(
-      winner.current.winner != false
-        ? historyDelta.current.at(-1)[2]
-        : "03:00:00"
-    );
-    exportStr = exportStr.concat(";");
-    return exportStr;
+      exportStr = exportStr.concat(
+        winner.current.winner != false
+          ? historyDelta.current.at(-1)[2]
+          : "03:00:00"
+      );
+      exportStr = exportStr.concat(";");
+    } else {
+      for (let i = 0; i < poles.length; i++) {
+        console.log(poles[i].at(-1));
+        switch (poles[i].at(-1)) {
+          case "empty":
+            exportStr = exportStr.concat("0;");
+            break;
+          case "red":
+            exportStr = exportStr.concat("r;");
+            break;
+          case "blue":
+            exportStr = exportStr.concat("b;");
+            break;
+        }
+      }
+    }
+
+    return exportStr.slice(0, -1);
   }
 
   const undoShortcut = useCallback(
     (event) => {
       const platform = navigator.platform;
-      console.log(platform)
+      console.log(platform);
       if (platform.startsWith("Mac")) {
         if (event.key == "z" && event.metaKey == true) {
           event.preventDefault();

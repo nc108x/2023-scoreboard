@@ -266,17 +266,20 @@ export default function ControlPanel({
             <DialogTitle id="alert-dialog-title">{"Export data"}</DialogTitle>
             <DialogContent>
               <DialogContentText id="alert-dialog-description">
-                <Typography>
+                <Typography paragraph="true">
                   {"Copy the following to the Excel spreadsheet:\n\n"}
                 </Typography>
-                <Typography>{exportData()}</Typography>
-                <Typography>
+                <Typography>{exportData(0)}</Typography>
+                <Typography paragraph="true">
                   {"("}
                   <Link href={emptyExcel} download="results_blank.xlsx">
                     {"Blank spreadsheet download here"}
                   </Link>
                   {")"}
                 </Typography>
+                <Typography>{"Pole states:"}</Typography>
+                <Typography>{exportData(1)}</Typography>
+                <Typography>{"NOTE: use CTRL+SHIFT+V when pasting this string to keep formatting"}</Typography>
               </DialogContentText>
             </DialogContent>
             <DialogActions>

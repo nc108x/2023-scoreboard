@@ -33,8 +33,9 @@ export default function Gamefield({ poles, scoreHandler, orientation }) {
     <>
       <Box
         sx={{
-          width: 462,
-          height: 462,
+          minWidth: 462,
+          minHeight: 462,
+          width: "50%",
           backgroundImage: "url(" + gamefield + ")",
           position: "relative",
         }}
