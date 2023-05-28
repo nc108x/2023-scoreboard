@@ -1,19 +1,26 @@
+import { useGameStates } from "./StatesContextProvider.js";
+
 import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 
 export default function Info({
   score,
-  dragonName,
   color,
   historyDelta,
   winner,
 }) {
+  const { gameState1 } = useGameStates();
+
   let bgColor;
+  let name;
+
   if (color == "red") {
     bgColor = "redTeam.main";
+    name = gameState1.redDragon1;
   } else {
     bgColor = "blueTeam.main";
+    name = gameState1.blueDragon1;
   }
 
   const ringsScored = historyDelta.filter(
@@ -31,7 +38,9 @@ export default function Info({
           textAlign: "center",
         }}
       >
-        <Typography variant="h4">{dragonName + "\nDRAGON"}</Typography>
+        <Typography variant="h4">
+          {name + "\nDRAGON"}
+        </Typography>
         <Typography variant="h4">{score}</Typography>
         <Typography variant="h6">{"Rings scored: " + ringsScored}</Typography>
         <Typography variant="h6">

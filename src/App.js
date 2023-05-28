@@ -14,11 +14,15 @@ import Options from "./components/Options.js";
 
 import { SnackbarProvider, enqueueSnackbar } from "notistack";
 
+import { useGameStates } from "./components/StatesContextProvider.js";
+
 const empty_poles = Array(11).fill(["empty"]);
 const ONE_MIN = 60000;
 const THREE_MINS = 180000;
 
 function App() {
+  const { gameState1, setGameState1 } = useGameStates();
+  console.log(gameState1);
   /* don't call setGameState_real just use setGameState (defined below) */
   const [gameState, setGameState_real] = useState({
     state: "PREP",
@@ -32,8 +36,6 @@ function App() {
   const history = useRef([empty_poles]);
   const historyDelta = useRef(["empty"]);
 
-  const [redDragon, setRedDragon] = useState("FIERY");
-  const [blueDragon, setBlueDragon] = useState("WAR");
   const winner = useRef({ winner: false, time: -1 });
 
   const [orientation, setOrientation] = useState("red");
@@ -84,13 +86,13 @@ function App() {
       .filter((element) => element[0] == color).length;
 
     if (ringsScored == 40) {
-      enqueueSnackbar(
-        (color == "red" ? redDragon : blueDragon) +
-          " Dragon has used up their rings!",
-        {
-          variant: "error",
-        }
-      );
+      /* enqueueSnackbar( */
+      /*   (color == "red" ? redDragon : blueDragon) + */
+      /*     " Dragon has used up their rings!", */
+      /*   { */
+      /*     variant: "error", */
+      /*   } */
+      /* ); */
       return;
     }
 
@@ -155,15 +157,6 @@ function App() {
     });
   }
 
-  function swapDragons() {
-    setRedDragon(redDragon == "FIERY" ? "WAR" : "FIERY");
-    setBlueDragon(blueDragon == "FIERY" ? "WAR" : "FIERY");
-
-    enqueueSnackbar("Dragons have been swapped.", {
-      variant: "success",
-    });
-  }
-
   /* present will be denoted by -1 */
   /* since history.at(-1) corresponds to the newest entry in the stack */
   /* pointInTime should never be positive */
@@ -208,7 +201,7 @@ function App() {
     const blueWinCon = topRings.slice(3, 11);
 
     if (redWinCon.every((currVal) => currVal == "red")) {
-      enqueueSnackbar(redDragon + " Dragon has ended the game!", {
+      enqueueSnackbar(gameState1.redDragon1 + " Dragon has ended the game!", {
         variant: "success",
         preventDuplicate: true,
       });
@@ -218,7 +211,7 @@ function App() {
         winner.current.time = historyDelta.current.length;
       }
     } else if (blueWinCon.every((currVal) => currVal == "blue")) {
-      enqueueSnackbar(blueDragon + " Dragon has ended the game!", {
+      enqueueSnackbar(gameState1.blueDragon1 + " Dragon has ended the game!", {
         variant: "success",
         preventDuplicate: true,
       });
@@ -287,19 +280,27 @@ function App() {
       exportStr = exportStr.concat(timestamp);
       exportStr = exportStr.concat(";");
 
-      exportStr = exportStr.concat(redDragon == "FIERY" ? "RED" : "BLUE");
+      exportStr = exportStr.concat(
+        gameState1.redDragon1 == "FIERY" ? "RED" : "BLUE"
+      );
       exportStr = exportStr.concat(";");
 
-      exportStr = exportStr.concat(redDragon == "FIERY" ? "BLUE" : "RED");
+      exportStr = exportStr.concat(
+        gameState1.redDragon1 == "FIERY" ? "BLUE" : "RED"
+      );
       exportStr = exportStr.concat(";");
 
-      exportStr = exportStr.concat(redDragon == "FIERY" ? redScore : blueScore);
+      exportStr = exportStr.concat(
+        gameState1.redDragon1 == "FIERY" ? redScore : blueScore
+      );
       exportStr = exportStr.concat(";");
 
-      exportStr = exportStr.concat(redDragon == "FIERY" ? blueScore : redScore);
+      exportStr = exportStr.concat(
+        gameState1.redDragon1 == "FIERY" ? blueScore : redScore
+      );
       exportStr = exportStr.concat(";");
 
-      const fieryColor = redDragon == "FIERY" ? "red" : "blue";
+      const fieryColor = gameState1.redDragon1 == "FIERY" ? "red" : "blue";
 
       exportStr = exportStr.concat(
         historyDelta.current.filter((element) => element[0] == fieryColor)
@@ -322,12 +323,12 @@ function App() {
       exportStr = exportStr.concat(
         winner.current.winner
           ? winner.current.winner == "red"
-            ? redDragon
-            : blueDragon
+            ? gameState1.redDragon1
+            : gameState1.blueDragon1
           : redScore > blueScore
-          ? redDragon
+          ? gameState1.redDragon1
           : blueScore > redScore
-          ? blueDragon
+          ? gameState1.blueDragon1
           : "TIE"
       );
       exportStr = exportStr.concat(";");
@@ -340,7 +341,6 @@ function App() {
       exportStr = exportStr.concat(";");
     } else {
       for (let i = 0; i < poles.length; i++) {
-        console.log(poles[i].at(-1));
         switch (poles[i].at(-1)) {
           case "empty":
             exportStr = exportStr.concat("0;");
@@ -361,7 +361,6 @@ function App() {
   const undoShortcut = useCallback(
     (event) => {
       const platform = navigator.platform;
-      console.log(platform);
       if (platform.startsWith("Mac")) {
         if (event.key == "z" && event.metaKey == true) {
           event.preventDefault();
@@ -408,7 +407,6 @@ function App() {
             <Grid container item justifyContent="space-evenly">
               <ControlPanel
                 resetHandler={resetHandler}
-                swapDragons={swapDragons}
                 undo={undo}
                 redo={redo}
                 gameState={gameState}
@@ -427,7 +425,6 @@ function App() {
                 <Grid item>
                   <Info
                     score={redScore}
-                    dragonName={redDragon}
                     color="red"
                     historyDelta={historyDelta.current.slice(
                       0,
@@ -468,7 +465,6 @@ function App() {
                 <Grid item>
                   <Info
                     score={blueScore}
-                    dragonName={blueDragon}
                     color="blue"
                     historyDelta={historyDelta.current.slice(
                       0,

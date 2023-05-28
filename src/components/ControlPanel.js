@@ -1,7 +1,8 @@
+import { useGameStates } from "./StatesContextProvider.js";
+
 import { useState, useRef } from "react";
 import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
-import { enqueueSnackbar } from "notistack";
 
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
@@ -15,17 +16,19 @@ import emptyExcel from "../results_blank.xlsx";
 import Tooltip from "@mui/material/Tooltip";
 import Zoom from "@mui/material/Zoom";
 
+import { enqueueSnackbar } from "notistack";
+
 import Timer from "./Timer.js";
 
 export default function ControlPanel({
   resetHandler,
-  swapDragons,
   undo,
   redo,
   gameState,
   setGameState,
   exportData,
 }) {
+  const { gameState1, setGameState1 } = useGameStates();
   const [confirmReset, setConfirmReset] = useState(false);
   const [showExport, setShowExport] = useState(false);
   /* TODO maybe consider refactoring this? */
@@ -165,6 +168,17 @@ export default function ControlPanel({
     }
   }
 
+  function swapDragons() {
+    setGameState1({
+      redDragon1: gameState1.redDragon1 == "FIERY" ? "WAR" : "FIERY",
+      blueDragon1: gameState1.blueDragon1 == "FIERY" ? "WAR" : "FIERY",
+    });
+
+    enqueueSnackbar("Dragons have been swapped.", {
+      variant: "success",
+    });
+  }
+
   return (
     <>
       <Grid item>
@@ -279,7 +293,11 @@ export default function ControlPanel({
                 </Typography>
                 <Typography>{"Pole states:"}</Typography>
                 <Typography>{exportData(1)}</Typography>
-                <Typography>{"NOTE: use CTRL+SHIFT+V when pasting this string to keep formatting"}</Typography>
+                <Typography>
+                  {
+                    "NOTE: use CTRL+SHIFT+V when pasting this string to keep formatting"
+                  }
+                </Typography>
               </DialogContentText>
             </DialogContent>
             <DialogActions>
