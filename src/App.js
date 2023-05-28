@@ -43,16 +43,8 @@ function App() {
   });
 
   console.log(value);
-  const [toggle, setToggle] = useState(false);
-
-  useEffect(() => {
-    mutate({
-      fields: {
-        red: "FIERY",
-        blue: "WAR",
-      },
-    });
-  }, [toggle]);
+  const counter = value?.counter ?? 0;
+  const setCounter = (val) => mutate({ counter: val });
 
   /* don't call setGameState_real just use setGameState (defined below) */
   const [gameState, setGameState_real] = useState({
@@ -412,6 +404,7 @@ function App() {
                 exportData={exportData}
               />
             </Grid>
+            <button onClick={() => setCounter(counter + 1)}>{counter}</button>
             <Grid container item direction="row">
               <Grid
                 container
@@ -481,7 +474,6 @@ function App() {
                     orientation={orientation}
                   />
                 </Grid>
-                <button onClick={() => setToggle(!toggle)}>Toggle</button>
               </Grid>
             </Grid>
           </Grid>
