@@ -1,6 +1,6 @@
-import { React, createContext, useState, useContext } from "react";
+import { React, createContext, useState, useContext, useMemo } from "react";
 import { initializeApp } from "firebase/app";
-import { getDatabase } from "firebase/database";
+import { getDatabase, runTransaction, ref } from "firebase/database";
 
 const firebaseContext = createContext(null);
 const app = initializeApp({
@@ -12,8 +12,17 @@ const app = initializeApp({
 
 export default function FirebaseProvider({ children }) {
   const [db] = useState(getDatabase(app));
+  const dbRef = useMemo(() => ref(db, process.env.REACT_APP_SCOREBOARD_YEAR), [db]);
 
-  return <firebaseContext.Provider value={{ db }}>{children}</firebaseContext.Provider>;
+  const mutate = (newVal, ref = dbRef) =>
+    runTransaction(ref, (oldVal) => {
+      if (Object.is(oldVal, newVal)) return oldVal;
+      return { ...structuredClone(oldVal), ...newVal };
+    });
+
+  return (
+    <firebaseContext.Provider value={{ db, dbRef, mutate }}>{children}</firebaseContext.Provider>
+  );
 }
 
 export const useFirebase = () => useContext(firebaseContext);

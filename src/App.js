@@ -13,7 +13,7 @@ import Options from "./components/Options.js";
 import { elapsedTime } from "./components/Timer.js";
 
 import { SnackbarProvider, enqueueSnackbar } from "notistack";
-import { useFirebase } from "./components/FirebaseProvider.js";
+import { useFirebase, useMutateDB } from "./components/FirebaseProvider.js";
 import { ref } from "firebase/database";
 import { useObjectVal } from "react-firebase-hooks/database";
 
@@ -36,12 +36,23 @@ const initialState = {
 };
 
 function App() {
-  const { db } = useFirebase();
-  const [value, loading, error] = useObjectVal(ref(db, "2023"), {
+  const { dbRef, mutate } = useFirebase();
+
+  const [value, loading, error] = useObjectVal(dbRef, {
     keyField: "id",
   });
 
-  console.log(value, error);
+  console.log(value);
+  const [toggle, setToggle] = useState(false);
+
+  useEffect(() => {
+    mutate({
+      fields: {
+        red: "FIERY",
+        blue: "WAR",
+      },
+    });
+  }, [toggle]);
 
   /* don't call setGameState_real just use setGameState (defined below) */
   const [gameState, setGameState_real] = useState({
@@ -470,6 +481,7 @@ function App() {
                     orientation={orientation}
                   />
                 </Grid>
+                <button onClick={() => setToggle(!toggle)}>Toggle</button>
               </Grid>
             </Grid>
           </Grid>
