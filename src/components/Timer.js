@@ -21,7 +21,7 @@ function msToTime(og_ms) {
 }
 
 /* TODO consider moving Timer.js up? or find a more elegant method of transporting elapsedTime */
-export default function Timer({ timerState: setApi, onComplete, fallthrough }) {
+export default function Timer({ setApi, onComplete, fallthrough }) {
   const { gameState1 } = useGameStates();
 
   const [playCountdown] = useSound(countdownSFX, { volume: 0.25 });
