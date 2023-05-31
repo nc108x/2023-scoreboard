@@ -1,3 +1,5 @@
+import { useGameStates } from "./StatesContextProvider.js";
+
 import { useRef } from "react";
 
 import Countdown from "react-countdown";
@@ -19,7 +21,9 @@ function msToTime(og_ms) {
 }
 
 /* TODO consider moving Timer.js up? or find a more elegant method of transporting elapsedTime */
-export default function Timer({ timerState, setApi, onComplete, fallthrough }) {
+export default function Timer({ timerState: setApi, onComplete, fallthrough }) {
+  const { gameState1 } = useGameStates();
+
   const [playCountdown] = useSound(countdownSFX, { volume: 0.25 });
   const playingCountdown = useRef(false);
 
@@ -31,14 +35,14 @@ export default function Timer({ timerState, setApi, onComplete, fallthrough }) {
 
     remainingTime = msToTime(min * 60000 + sec * 1000 + ms);
     elapsedTime = msToTime(
-      timerState.countdownAmt - (min * 60000 + sec * 1000 + ms)
+      gameState1.countdownAmt - (min * 60000 + sec * 1000 + ms)
     );
 
     if (
       remainingTime.sec == 3 &&
       remainingTime.ms == 10 &&
       !playingCountdown.current &&
-      timerState.state == "PREP"
+      gameState1.stage == "PREP"
     ) {
       playCountdown();
       playingCountdown.current = true;
@@ -60,12 +64,12 @@ export default function Timer({ timerState, setApi, onComplete, fallthrough }) {
   return (
     <>
       <Countdown
-        key={timerState.startTime}
-        date={timerState.startTime + timerState.countdownAmt}
+        key={gameState1.startTime1}
+        date={gameState1.startTime1 + gameState1.countdownAmt1}
         precision={3}
         intervalDelay={0}
         renderer={renderer}
-        autoStart={fallthrough && timerState.state == "GAME" ? true : false}
+        autoStart={fallthrough && gameState1.state1 == "GAME" ? true : false}
         ref={setApi}
         onComplete={onComplete}
         onTick={onTick}

@@ -49,33 +49,33 @@ function App() {
     }
   }
 
-  function setGameState(state) {
-    switch (state) {
-      case "PREP":
-        setGameState_real({
-          state: "PREP",
-          startTime: Date.now(),
-          countdownAmt: ONE_MIN,
-        });
-        break;
-      case "GAME":
-        setGameState_real({
-          state: "GAME",
-          startTime: Date.now(),
-          countdownAmt: THREE_MINS,
-        });
-        break;
-      case "END":
-        setGameState_real({
-          state: "END",
-          startTime: Date.now(),
-          countdownAmt: 0,
-        });
-        break;
-      default:
-        setGameState_real(state);
-    }
-  }
+  /* function setGameState(state) { */
+  /*   switch (state) { */
+  /*     case "PREP": */
+  /*       setGameState_real({ */
+  /*         state: "PREP", */
+  /*         startTime: Date.now(), */
+  /*         countdownAmt: ONE_MIN, */
+  /*       }); */
+  /*       break; */
+  /*     case "GAME": */
+  /*       setGameState_real({ */
+  /*         state: "GAME", */
+  /*         startTime: Date.now(), */
+  /*         countdownAmt: THREE_MINS, */
+  /*       }); */
+  /*       break; */
+  /*     case "END": */
+  /*       setGameState_real({ */
+  /*         state: "END", */
+  /*         startTime: Date.now(), */
+  /*         countdownAmt: 0, */
+  /*       }); */
+  /*       break; */
+  /*     default: */
+  /*       setGameState_real(state); */
+  /*   } */
+  /* } */
 
   function scoreHandler(e, pole_no, color) {
     /* to prevent right click menu from showing up */
@@ -145,7 +145,12 @@ function App() {
   }
 
   function resetHandler() {
-    setGameState("PREP");
+    /* setGameState("PREP"); */
+    setGameState1({
+      stage1: "PREP",
+      startTime1: Date.now(),
+      countdownAmt1: 60000,
+    })
     setPoles(empty_poles);
     history.current = [empty_poles];
     setPointInTime(-1);
@@ -410,7 +415,7 @@ function App() {
                 undo={undo}
                 redo={redo}
                 gameState={gameState}
-                setGameState={setGameState}
+                /* setGameState={setGameState} */
                 exportData={exportData}
               />
             </Grid>
