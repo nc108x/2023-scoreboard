@@ -82,7 +82,7 @@ function App() {
     e.preventDefault();
 
     const ringsScored = historyDelta.current
-      .slice((pointInTime + 1) * -1)
+      .slice((gameState1.pointInTime + 1) * -1)
       .filter((element) => element[0] == color).length;
 
     if (ringsScored == 40) {
@@ -96,7 +96,7 @@ function App() {
       return;
     }
 
-    if (gameState.state == "GAME" || gameState.state == "END") {
+    if (gameState1.stage == "GAME" || gameState1.stage == "END") {
       let temp = [...poles];
       temp[pole_no] = [...poles[pole_no], color];
       setPoles(temp);
@@ -104,17 +104,17 @@ function App() {
       /* update the timeline so that undo/redo will work as intended */
       /* when a new ring is added, prune the (undone) future and set the current point in time to be the present */
       history.current = [
-        ...history.current.slice(0, history.current.length + pointInTime + 1),
+        ...history.current.slice(0, history.current.length + gameState1.pointInTime + 1),
         temp,
       ];
       setPointInTime(-1);
 
-      if (gameState.state == "GAME") {
+      if (gameState1.stage == "GAME") {
         /* update delta for the log */
         historyDelta.current = [
           ...historyDelta.current.slice(
             0,
-            historyDelta.current.length + pointInTime + 1
+            historyDelta.current.length + gameState1.pointInTime + 1
           ),
           [
             color,
@@ -132,7 +132,7 @@ function App() {
         historyDelta.current = [
           ...historyDelta.current.slice(
             0,
-            historyDelta.current.length + pointInTime + 1
+            historyDelta.current.length + gameState1.pointInTime + 1
           ),
           [color, pole_no, "03:00:00"],
         ];
@@ -147,9 +147,9 @@ function App() {
   function resetHandler() {
     /* setGameState("PREP"); */
     setGameState1({
-      stage1: "PREP",
-      startTime1: Date.now(),
-      countdownAmt1: 60000,
+      stage: "PREP",
+      startTime: Date.now(),
+      countdownAmt: 60000,
     })
     setPoles(empty_poles);
     history.current = [empty_poles];
@@ -167,37 +167,39 @@ function App() {
   /* pointInTime should never be positive */
   /* undo/redo works by manipulating pointInTime */
   function undo() {
-    if (-pointInTime == history.current.length) {
+    if (-gameState1.pointInTime == history.current.length) {
       enqueueSnackbar("Cannot undo any further!", {
         variant: "error",
       });
       return;
     }
 
-    if (gameState.state == "END") {
+    if (gameState1.state == "END") {
       enqueueSnackbar("Currently modifying rings after game has ended.", {
         variant: "warning",
       });
     }
-    setPointInTime(pointInTime - 1);
-    setPoles(history.current.at(pointInTime - 1));
+    /* setPointInTime(pointInTime - 1); */
+    setGameState1({pointInTime: gameState1.pointInTime - 1})
+    setPoles(history.current.at(gameState1.pointInTime - 1));
   }
 
   function redo() {
-    if (pointInTime == -1) {
+    if (gameState1.pointInTime == -1) {
       enqueueSnackbar("Cannot redo any further!", {
         variant: "error",
       });
       return;
     }
 
-    if (gameState.state == "END") {
+    if (gameState1.state == "END") {
       enqueueSnackbar("Currently modifying rings after game has ended.", {
         variant: "warning",
       });
     }
-    setPointInTime(pointInTime + 1);
-    setPoles(history.current.at(pointInTime + 1));
+    /* setPointInTime(pointInTime + 1); */
+    setGameState1({pointInTime: gameState1.pointInTime + 1})
+    setPoles(history.current.at(gameState1.pointInTime + 1));
   }
 
   /* called by checkScore */
@@ -378,7 +380,7 @@ function App() {
         }
       }
     },
-    [pointInTime]
+    [gameState1.pointInTime]
   );
 
   useEffect(() => {
@@ -414,8 +416,6 @@ function App() {
                 resetHandler={resetHandler}
                 undo={undo}
                 redo={redo}
-                gameState={gameState}
-                /* setGameState={setGameState} */
                 exportData={exportData}
               />
             </Grid>
@@ -433,7 +433,7 @@ function App() {
                     color="red"
                     historyDelta={historyDelta.current.slice(
                       0,
-                      historyDelta.current.length + pointInTime + 1
+                      historyDelta.current.length + gameState1.pointInTime + 1
                     )}
                     winner={winner.current}
                   />
@@ -443,7 +443,7 @@ function App() {
                   <Log
                     historyDelta={historyDelta.current.slice(
                       0,
-                      historyDelta.current.length + pointInTime + 1
+                      historyDelta.current.length + gameState1.pointInTime + 1
                     )}
                     color="red"
                     winner={winner.current}
@@ -473,7 +473,7 @@ function App() {
                     color="blue"
                     historyDelta={historyDelta.current.slice(
                       0,
-                      historyDelta.current.length + pointInTime + 1
+                      historyDelta.current.length + gameState1.pointInTime + 1
                     )}
                     winner={winner.current}
                   />
@@ -483,7 +483,7 @@ function App() {
                   <Log
                     historyDelta={historyDelta.current.slice(
                       0,
-                      historyDelta.current.length + pointInTime + 1
+                      historyDelta.current.length + gameState1.pointInTime + 1
                     )}
                     color="blue"
                     winner={winner.current}

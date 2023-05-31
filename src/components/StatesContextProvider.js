@@ -3,11 +3,11 @@ import { useState, createContext, useContext } from "react";
 const emptyPoles = Array(11).fill(["empty"]);
 
 const initialState = {
-  stage1: "PREP",
-  startTime1: Date.now(),
-  countdownAmt1: 0,
+  stage: "PREP",
+  startTime: Date.now(),
+  countdownAmt: 0,
   history1: [emptyPoles],
-  pointInTime1: -1,
+  pointInTime: -1,
   currPoles1: emptyPoles,
   redDragon1: "FIERY",
   blueDragon1: "WAR",

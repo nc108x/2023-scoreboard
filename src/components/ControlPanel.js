@@ -51,24 +51,24 @@ export default function ControlPanel({
     switch (stage) {
       case "PREP":
         setGameState1({
-          stage1: "PREP",
-          startTime1: Date.now(),
-          countdownAmt1: ONE_MIN,
+          stage: "PREP",
+          startTime: Date.now(),
+          countdownAmt: ONE_MIN,
         });
 
         break;
       case "GAME":
         setGameState1({
-          stage1: "GAME",
-          startTime1: Date.now(),
-          countdownAmt1: THREE_MINS,
+          stage: "GAME",
+          startTime: Date.now(),
+          countdownAmt: THREE_MINS,
         });
         break;
       case "END":
         setGameState1({
-          stage1: "END",
-          startTime1: Date.now(),
-          countdownAmt1: 0,
+          stage: "END",
+          startTime: Date.now(),
+          countdownAmt: 0,
         });
         break;
     }
@@ -79,7 +79,7 @@ export default function ControlPanel({
   /* can also be triggered manually */
   function nextTimerState(force) {
     fallthrough.current = false;
-    switch (gameState1.stage1) {
+    switch (gameState1.stage) {
       case "PREP":
         if (force) {
           setTimerRun(false);
@@ -127,9 +127,9 @@ export default function ControlPanel({
     setTimerRun(false);
     /* if timer is running alr just go to beginning of the CURRENT state */
     if (timerRun) {
-      setTimerStage(gameState1.stage1);
+      setTimerStage(gameState1.stage);
 
-      switch (gameState1.stage1) {
+      switch (gameState1.stage) {
         case "PREP":
           enqueueSnackbar("Rewind to beginning of preparation time.", {
             variant: "success",
@@ -143,7 +143,7 @@ export default function ControlPanel({
       }
     } else {
       /* go to previous state */
-      switch (gameState1.stage1) {
+      switch (gameState1.stage) {
         case "PREP":
           enqueueSnackbar("Nothing to rewind.", {
             variant: "error",
@@ -217,7 +217,7 @@ export default function ControlPanel({
           onComplete={() => nextTimerState(false)}
           fallthrough={fallthrough.current}
         />
-        <Grid item>{"Current state: " + gameState1.stage1}</Grid>
+        <Grid item>{"Current state: " + gameState1.stage}</Grid>
         <Grid item>
           <Tooltip
             TransitionComponent={Zoom}
@@ -237,12 +237,12 @@ export default function ControlPanel({
           <Button onClick={redo}>REDO</Button>
           <Button
             onClick={
-              gameState1.stage1 == "END"
+              gameState1.stage == "END"
                 ? () => setShowExport(true)
                 : timerBtnHandler
             }
           >
-            {gameState1.stage1 == "END"
+            {gameState1.stage == "END"
               ? "EXPORT"
               : timerRun == false
               ? "START"

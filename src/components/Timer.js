@@ -64,12 +64,12 @@ export default function Timer({ setApi, onComplete, fallthrough }) {
   return (
     <>
       <Countdown
-        key={gameState1.startTime1}
-        date={gameState1.startTime1 + gameState1.countdownAmt1}
+        key={gameState1.startTime}
+        date={gameState1.startTime + gameState1.countdownAmt}
         precision={3}
         intervalDelay={0}
         renderer={renderer}
-        autoStart={fallthrough && gameState1.state1 == "GAME" ? true : false}
+        autoStart={fallthrough && gameState1.state == "GAME" ? true : false}
         ref={setApi}
         onComplete={onComplete}
         onTick={onTick}
