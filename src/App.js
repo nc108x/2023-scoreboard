@@ -1,3 +1,5 @@
+import { useGameStates } from "./components/StatesContextProvider.js";
+
 import { useState, useRef } from "react";
 import Grid from "@mui/material/Grid";
 
@@ -13,10 +15,8 @@ import Options from "./components/Options.js";
 
 import { SnackbarProvider, enqueueSnackbar } from "notistack";
 
-import { useGameStates } from "./components/StatesContextProvider.js";
-
 function App() {
-  const { gameState } = useGameStates();
+  const { gameState, gameResult } = useGameStates();
   console.log(gameState);
 
   const winner = useRef({ winner: false, time: -1 });
@@ -43,9 +43,9 @@ function App() {
         preventDuplicate: true,
       });
 
-      winner.current.winner = "red";
-      if (winner.current.time == -1) {
-        winner.current.time = gameState.historyDelta.length;
+      gameResult.current.winner = "red";
+      if (gameResult.current.winTime == -1) {
+        gameResult.current.winTime = gameState.historyDelta.length;
       }
     } else if (blueWinCon.every((currVal) => currVal == "blue")) {
       enqueueSnackbar(gameState.blueDragon + " Dragon has ended the game!", {
@@ -53,13 +53,13 @@ function App() {
         preventDuplicate: true,
       });
 
-      winner.current.winner = "blue";
-      if (winner.current.time == -1) {
-        winner.current.time = gameState.historyDelta.length;
+      gameResult.current.winner = "blue";
+      if (gameResult.current.winTime == -1) {
+        gameResult.current.winTime = gameState.historyDelta.length;
       }
     } else {
-      winner.current.winner = false;
-      winner.current.time = -1;
+      gameResult.current.winner = false;
+      gameResult.current.winTime = -1;
     }
   }
 
@@ -103,100 +103,13 @@ function App() {
       }
     }
 
+    gameResult.current.redScore = redScore;
+    gameResult.current.blueScore = blueScore;
     checkEndgame(topRings);
-
-    return [redScore, blueScore];
-  }
-
-  function exportData(type) {
-    let exportStr = "";
-
-    if (type == 0) {
-      let timestamp = new Date();
-      timestamp.toISOString();
-      exportStr = exportStr.concat(timestamp);
-      exportStr = exportStr.concat(";");
-
-      exportStr = exportStr.concat(
-        gameState.redDragon == "FIERY" ? "RED" : "BLUE"
-      );
-      exportStr = exportStr.concat(";");
-
-      exportStr = exportStr.concat(
-        gameState.redDragon == "FIERY" ? "BLUE" : "RED"
-      );
-      exportStr = exportStr.concat(";");
-
-      exportStr = exportStr.concat(
-        gameState.redDragon == "FIERY" ? redScore : blueScore
-      );
-      exportStr = exportStr.concat(";");
-
-      exportStr = exportStr.concat(
-        gameState.redDragon == "FIERY" ? blueScore : redScore
-      );
-      exportStr = exportStr.concat(";");
-
-      const fieryColor = gameState.redDragon == "FIERY" ? "red" : "blue";
-
-      exportStr = exportStr.concat(
-        gameState.historyDelta.filter((element) => element[0] == fieryColor)
-          .length
-      );
-      exportStr = exportStr.concat(";");
-
-      exportStr = exportStr.concat(
-        gameState.historyDelta.filter(
-          (element) => element[0] != fieryColor && element != "empty"
-        ).length
-      );
-      exportStr = exportStr.concat(";");
-
-      exportStr = exportStr.concat(
-        winner.current.winner != false ? "TRUE" : "FALSE"
-      );
-      exportStr = exportStr.concat(";");
-
-      exportStr = exportStr.concat(
-        winner.current.winner
-          ? winner.current.winner == "red"
-            ? gameState.redDragon
-            : gameState.blueDragon
-          : redScore > blueScore
-          ? gameState.redDragon
-          : blueScore > redScore
-          ? gameState.blueDragon
-          : "TIE"
-      );
-      exportStr = exportStr.concat(";");
-
-      exportStr = exportStr.concat(
-        winner.current.winner != false
-          ? gameState.historyDelta.at(-1)[2]
-          : "03:00:00"
-      );
-      exportStr = exportStr.concat(";");
-    } else {
-      for (let i = 0; i < gameState.currPoles.length; i++) {
-        switch (gameState.currPoles[i].at(-1)) {
-          case "empty":
-            exportStr = exportStr.concat("0;");
-            break;
-          case "red":
-            exportStr = exportStr.concat("r;");
-            break;
-          case "blue":
-            exportStr = exportStr.concat("b;");
-            break;
-        }
-      }
-    }
-
-    return exportStr.slice(0, -1);
   }
 
   /* update score */
-  const [redScore, blueScore] = checkScore();
+  checkScore();
 
   return (
     <>
@@ -214,7 +127,7 @@ function App() {
             }}
           >
             <Grid container item justifyContent="space-evenly">
-              <ControlPanel exportData={exportData} />
+              <ControlPanel />
             </Grid>
             <Grid container item direction="row">
               <Grid
@@ -225,15 +138,11 @@ function App() {
                 justifyContent="space-between"
               >
                 <Grid item>
-                  <Info score={redScore} color="red" winner={winner.current} />
+                  <Info color="red" />
                 </Grid>
 
                 <Grid item>
-                  <Log
-                    color="red"
-                    winner={winner.current}
-                    orientation={orientation}
-                  />
+                  <Log color="red" orientation={orientation} />
                 </Grid>
               </Grid>
 
@@ -249,15 +158,11 @@ function App() {
                 justifyContent="space-between"
               >
                 <Grid item>
-                  <Info
-                    score={blueScore}
-                    color="blue"
-                    winner={winner.current}
-                  />
+                  <Info color="blue" />
                 </Grid>
 
                 <Grid item>
-                  <Log winner={winner.current} orientation={orientation} />
+                  <Log color="blue" orientation={orientation} />
                 </Grid>
               </Grid>
             </Grid>

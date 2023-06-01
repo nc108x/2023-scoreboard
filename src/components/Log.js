@@ -9,7 +9,7 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 
 export default function Log({ color, winner, orientation }) {
-  const { gameState } = useGameStates();
+  const { gameState, gameResult } = useGameStates();
 
   const logTable = gameState.historyDelta
     .slice(0, gameState.historyDelta.length + gameState.pointInTime + 1)
@@ -17,8 +17,8 @@ export default function Log({ color, winner, orientation }) {
     .map((action, index) => {
       if (action != "empty" && action[0] == color) {
         if (
-          winner.winner == color &&
-          index == gameState.historyDelta.length - winner.time
+          gameResult.current.winner == color &&
+          index == gameState.historyDelta.length - gameResult.current.winTime
         ) {
           return (
             <>

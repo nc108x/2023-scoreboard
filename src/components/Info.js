@@ -4,8 +4,8 @@ import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 
-export default function Info({ score, color, winner }) {
-  const { gameState } = useGameStates();
+export default function Info({ color }) {
+  const { gameState, gameResult } = useGameStates();
 
   let bgColor;
   let name;
@@ -34,14 +34,14 @@ export default function Info({ score, color, winner }) {
         }}
       >
         <Typography variant="h4">{name + "\nDRAGON"}</Typography>
-        <Typography variant="h4">{score}</Typography>
+        <Typography variant="h4">{color == "red" ? gameResult.current.redScore : gameResult.current.blueScore}</Typography>
         <Typography variant="h6">{"Rings scored: " + ringsScored}</Typography>
         <Typography variant="h6">
           {"Rings remaining: " + (40 - ringsScored)}
         </Typography>
         <Typography variant="h6">
           <Box sx={{ backgroundColor: "#a6e3a1", borderRadius: 2 }}>
-            {winner.winner == color ? "CHEY-YO" : " "}
+            {gameResult.current.winner == color ? "CHEY-YO" : " "}
           </Box>
         </Typography>
       </Paper>
