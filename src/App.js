@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback, useEffect } from "react";
+import { useState, useRef } from "react";
 import Grid from "@mui/material/Grid";
 
 import theme from "./Theme.js";
@@ -9,20 +9,14 @@ import Gamefield from "./components/Gamefield.js";
 import Info from "./components/Info.js";
 import ControlPanel from "./components/ControlPanel.js";
 import Log from "./components/Log.js";
-import { elapsedTime } from "./components/Timer.js";
 import Options from "./components/Options.js";
 
 import { SnackbarProvider, enqueueSnackbar } from "notistack";
 
 import { useGameStates } from "./components/StatesContextProvider.js";
 
-const empty_poles = Array(11).fill(["empty"]);
-const ONE_MIN = 60000;
-const THREE_MINS = 180000;
-
 function App() {
-  const { gameState1, setGameState1 } = useGameStates();
-  console.log(gameState1);
+  const { gameState1 } = useGameStates();
 
   const winner = useRef({ winner: false, time: -1 });
 
@@ -35,149 +29,6 @@ function App() {
     } else {
       setOrientation("red");
     }
-  }
-
-  function scoreHandler(e, pole_no, color) {
-    /* to prevent right click menu from showing up */
-    e.preventDefault();
-
-    const ringsScored = gameState1.historyDelta
-      .slice((gameState1.pointInTime + 1) * -1)
-      .filter((element) => element[0] == color).length;
-
-    if (ringsScored == 40) {
-      enqueueSnackbar(
-        (color == "red" ? gameState1.redDragon : gameState1.blueDragon) +
-          " Dragon has used up their rings!",
-        {
-          variant: "error",
-        }
-      );
-      return;
-    }
-
-    if (gameState1.stage == "GAME" || gameState1.stage == "END") {
-      let temp = [...gameState1.currPoles];
-      temp[pole_no] = [...gameState1.currPoles[pole_no], color];
-      console.log(temp);
-
-      /* update the timeline so that undo/redo will work as intended */
-      /* when a new ring is added, prune the (undone) future and set the current point in time to be the present */
-      if (gameState1.stage == "GAME") {
-        /* also update delta for the log */
-        setGameState1({
-          history: [
-            ...gameState1.history.slice(
-              0,
-              gameState1.history.length + gameState1.pointInTime + 1
-            ),
-            temp,
-          ],
-          historyDelta: [
-            ...gameState1.historyDelta.slice(
-              0,
-              gameState1.historyDelta.length + gameState1.pointInTime + 1
-            ),
-            [
-              color,
-              pole_no,
-              elapsedTime.min + ":" + elapsedTime.sec + ":" + elapsedTime.ms,
-            ],
-          ],
-          pointInTime: -1,
-          currPoles: temp,
-        });
-      } else {
-        /* game has ended */
-        /* same thing as above but fix timestamp and ping user with a warning */
-        enqueueSnackbar("Currently modifying rings after game has ended.", {
-          variant: "warning",
-        });
-
-        setGameState1({
-          history: [
-            ...gameState1.history.slice(
-              0,
-              gameState1.history.length + gameState1.pointInTime + 1
-            ),
-            temp,
-          ],
-          historyDelta: [
-            ...gameState1.historyDelta.slice(
-              0,
-              gameState1.historyDelta.length + gameState1.pointInTime + 1
-            ),
-            [color, pole_no, "03:00:00"],
-          ],
-          pointInTime: -1,
-          currPoles: temp,
-        });
-      }
-    } else {
-      enqueueSnackbar("Cannot interact with poles in preparation time!", {
-        variant: "error",
-      });
-    }
-  }
-
-  function resetHandler() {
-    setGameState1({
-      stage: "PREP",
-      startTime: Date.now(),
-      countdownAmt: 60000,
-      history: [empty_poles],
-      historyDelta: ["empty"],
-      pointInTime: -1,
-      currPoles: empty_poles,
-    });
-
-    winner.current = { winner: false, time: -1 };
-
-    enqueueSnackbar("Scoreboard has been reset.", {
-      variant: "success",
-    });
-  }
-
-  /* present will be denoted by -1 */
-  /* since history.at(-1) corresponds to the newest entry in the stack */
-  /* pointInTime should never be positive */
-  /* undo/redo works by manipulating pointInTime */
-  function undo() {
-    if (-gameState1.pointInTime == gameState1.history.length) {
-      enqueueSnackbar("Cannot undo any further!", {
-        variant: "error",
-      });
-      return;
-    }
-
-    if (gameState1.state == "END") {
-      enqueueSnackbar("Currently modifying rings after game has ended.", {
-        variant: "warning",
-      });
-    }
-    setGameState1({
-      pointInTime: gameState1.pointInTime - 1,
-      currPoles: gameState1.history.at(gameState1.pointInTime - 1),
-    });
-  }
-
-  function redo() {
-    if (gameState1.pointInTime == -1) {
-      enqueueSnackbar("Cannot redo any further!", {
-        variant: "error",
-      });
-      return;
-    }
-
-    if (gameState1.state == "END") {
-      enqueueSnackbar("Currently modifying rings after game has ended.", {
-        variant: "warning",
-      });
-    }
-    setGameState1({
-      pointInTime: gameState1.pointInTime + 1,
-      currPoles: gameState1.history.at(gameState1.pointInTime + 1),
-    });
   }
 
   /* called by checkScore */
@@ -343,34 +194,6 @@ function App() {
     return exportStr.slice(0, -1);
   }
 
-  const undoShortcut = useCallback(
-    (event) => {
-      const platform = navigator.platform;
-      if (platform.startsWith("Mac")) {
-        if (event.key == "z" && event.metaKey == true) {
-          event.preventDefault();
-          undo();
-        }
-      } else {
-        if (event.key == "z" && event.ctrlKey == true) {
-          event.preventDefault();
-          undo();
-        }
-      }
-    },
-    [gameState1.pointInTime]
-  );
-
-  useEffect(() => {
-    // attach the event listener
-    document.addEventListener("keydown", undoShortcut);
-
-    // remove the event listener
-    return () => {
-      document.removeEventListener("keydown", undoShortcut);
-    };
-  }, [undoShortcut]);
-
   /* update score */
   const [redScore, blueScore] = checkScore();
 
@@ -390,12 +213,7 @@ function App() {
             }}
           >
             <Grid container item justifyContent="space-evenly">
-              <ControlPanel
-                resetHandler={resetHandler}
-                undo={undo}
-                redo={redo}
-                exportData={exportData}
-              />
+              <ControlPanel exportData={exportData} />
             </Grid>
             <Grid container item direction="row">
               <Grid
@@ -406,11 +224,7 @@ function App() {
                 justifyContent="space-between"
               >
                 <Grid item>
-                  <Info
-                    score={redScore}
-                    color="red"
-                    winner={winner.current}
-                  />
+                  <Info score={redScore} color="red" winner={winner.current} />
                 </Grid>
 
                 <Grid item>
@@ -423,10 +237,7 @@ function App() {
               </Grid>
 
               <Grid container direction="column" alignItems="center" xs={4}>
-                <Gamefield
-                  scoreHandler={scoreHandler}
-                  orientation={orientation}
-                />
+                <Gamefield orientation={orientation} />
               </Grid>
 
               <Grid
@@ -445,10 +256,7 @@ function App() {
                 </Grid>
 
                 <Grid item>
-                  <Log
-                    winner={winner.current}
-                    orientation={orientation}
-                  />
+                  <Log winner={winner.current} orientation={orientation} />
                 </Grid>
               </Grid>
             </Grid>

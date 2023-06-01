@@ -1,6 +1,6 @@
 import { useGameStates } from "./StatesContextProvider.js";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useCallback, useEffect } from "react";
 import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
 
@@ -22,13 +22,9 @@ import Timer from "./Timer.js";
 
 const ONE_MIN = 60000;
 const THREE_MINS = 180000;
+const empty_poles = Array(11).fill(["empty"]);
 
-export default function ControlPanel({
-  resetHandler,
-  undo,
-  redo,
-  exportData,
-}) {
+export default function ControlPanel({ exportData }) {
   const { gameState1, setGameState1 } = useGameStates();
 
   const [confirmReset, setConfirmReset] = useState(false);
@@ -207,6 +203,93 @@ export default function ControlPanel({
       variant: "success",
     });
   }
+
+  function resetHandler() {
+    setGameState1({
+      stage: "PREP",
+      startTime: Date.now(),
+      countdownAmt: 60000,
+      history: [empty_poles],
+      historyDelta: ["empty"],
+      pointInTime: -1,
+      currPoles: empty_poles,
+      winner: { winner: false, timer: -1 },
+    });
+
+    enqueueSnackbar("Scoreboard has been reset.", {
+      variant: "success",
+    });
+  }
+
+  /* present will be denoted by -1 */
+  /* since history.at(-1) corresponds to the newest entry in the stack */
+  /* pointInTime should never be positive */
+  /* undo/redo works by manipulating pointInTime */
+  function undo() {
+    if (-gameState1.pointInTime == gameState1.history.length) {
+      enqueueSnackbar("Cannot undo any further!", {
+        variant: "error",
+      });
+      return;
+    }
+
+    if (gameState1.state == "END") {
+      enqueueSnackbar("Currently modifying rings after game has ended.", {
+        variant: "warning",
+      });
+    }
+    setGameState1({
+      pointInTime: gameState1.pointInTime - 1,
+      currPoles: gameState1.history.at(gameState1.pointInTime - 1),
+    });
+  }
+
+  function redo() {
+    if (gameState1.pointInTime == -1) {
+      enqueueSnackbar("Cannot redo any further!", {
+        variant: "error",
+      });
+      return;
+    }
+
+    if (gameState1.state == "END") {
+      enqueueSnackbar("Currently modifying rings after game has ended.", {
+        variant: "warning",
+      });
+    }
+    setGameState1({
+      pointInTime: gameState1.pointInTime + 1,
+      currPoles: gameState1.history.at(gameState1.pointInTime + 1),
+    });
+  }
+
+  const undoShortcut = useCallback(
+    (event) => {
+      const platform = navigator.platform;
+      if (platform.startsWith("Mac")) {
+        if (event.key == "z" && event.metaKey == true) {
+          event.preventDefault();
+          undo();
+        }
+      } else {
+        if (event.key == "z" && event.ctrlKey == true) {
+          event.preventDefault();
+          undo();
+        }
+      }
+    },
+    [gameState1.pointInTime]
+  );
+
+  useEffect(() => {
+    // attach the event listener
+    document.addEventListener("keydown", undoShortcut);
+
+    // remove the event listener
+    return () => {
+      document.removeEventListener("keydown", undoShortcut);
+    };
+  }, [undoShortcut]);
 
   return (
     <>
