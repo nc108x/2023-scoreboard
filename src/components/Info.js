@@ -17,10 +17,10 @@ export default function Info({
 
   if (color == "red") {
     bgColor = "redTeam.main";
-    name = gameState1.redDragon1;
+    name = gameState1.redDragon;
   } else {
     bgColor = "blueTeam.main";
-    name = gameState1.blueDragon1;
+    name = gameState1.blueDragon;
   }
 
   const ringsScored = historyDelta.filter(

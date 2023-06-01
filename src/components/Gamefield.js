@@ -1,3 +1,5 @@
+import { useGameStates } from "./StatesContextProvider.js";
+
 import Box from "@mui/material/Box";
 
 import Pole from "./Pole.js";
@@ -11,8 +13,10 @@ const pos_y_red = [390, 390, 390, 280, 280, 200, 120, 120, 10, 10, 10];
 const pos_x_blue = [380, 200, 25, 280, 130, 200, 280, 130, 380, 200, 25];
 const pos_y_blue = [10, 10, 10, 120, 120, 200, 280, 280, 390, 390, 390];
 
-export default function Gamefield({ poles, scoreHandler, orientation }) {
-  const poleButtons = poles.map((pole, index) => {
+export default function Gamefield({ scoreHandler, orientation }) {
+  const { gameState1 } = useGameStates();
+
+  const poleButtons = gameState1.currPoles.map((pole, index) => {
     return (
       <Pole
         key={index}

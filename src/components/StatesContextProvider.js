@@ -6,11 +6,12 @@ const initialState = {
   stage: "PREP",
   startTime: Date.now(),
   countdownAmt: 0,
-  history1: [emptyPoles],
+  history: [emptyPoles],
+  historyDelta: ["empty"],
   pointInTime: -1,
-  currPoles1: emptyPoles,
-  redDragon1: "FIERY",
-  blueDragon1: "WAR",
+  currPoles: emptyPoles,
+  redDragon: "FIERY",
+  blueDragon: "WAR",
 };
 
 const StatesContext = createContext({});

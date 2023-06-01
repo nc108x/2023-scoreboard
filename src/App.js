@@ -23,17 +23,8 @@ const THREE_MINS = 180000;
 function App() {
   const { gameState1, setGameState1 } = useGameStates();
   console.log(gameState1);
-  /* don't call setGameState_real just use setGameState (defined below) */
-  const [gameState, setGameState_real] = useState({
-    state: "PREP",
-    startTime: Date.now(),
-    countdownAmt: ONE_MIN,
-  });
 
-  const [poles, setPoles] = useState(empty_poles);
-  const [pointInTime, setPointInTime] = useState(-1);
   /* a 3d array representing the timeline */
-  const history = useRef([empty_poles]);
   const historyDelta = useRef(["empty"]);
 
   const winner = useRef({ winner: false, time: -1 });
@@ -49,34 +40,6 @@ function App() {
     }
   }
 
-  /* function setGameState(state) { */
-  /*   switch (state) { */
-  /*     case "PREP": */
-  /*       setGameState_real({ */
-  /*         state: "PREP", */
-  /*         startTime: Date.now(), */
-  /*         countdownAmt: ONE_MIN, */
-  /*       }); */
-  /*       break; */
-  /*     case "GAME": */
-  /*       setGameState_real({ */
-  /*         state: "GAME", */
-  /*         startTime: Date.now(), */
-  /*         countdownAmt: THREE_MINS, */
-  /*       }); */
-  /*       break; */
-  /*     case "END": */
-  /*       setGameState_real({ */
-  /*         state: "END", */
-  /*         startTime: Date.now(), */
-  /*         countdownAmt: 0, */
-  /*       }); */
-  /*       break; */
-  /*     default: */
-  /*       setGameState_real(state); */
-  /*   } */
-  /* } */
-
   function scoreHandler(e, pole_no, color) {
     /* to prevent right click menu from showing up */
     e.preventDefault();
@@ -86,28 +49,34 @@ function App() {
       .filter((element) => element[0] == color).length;
 
     if (ringsScored == 40) {
-      /* enqueueSnackbar( */
-      /*   (color == "red" ? redDragon : blueDragon) + */
-      /*     " Dragon has used up their rings!", */
-      /*   { */
-      /*     variant: "error", */
-      /*   } */
-      /* ); */
+      enqueueSnackbar(
+        (color == "red" ? gameState1.redDragon : gameState1.blueDragon) +
+          " Dragon has used up their rings!",
+        {
+          variant: "error",
+        }
+      );
       return;
     }
 
     if (gameState1.stage == "GAME" || gameState1.stage == "END") {
-      let temp = [...poles];
-      temp[pole_no] = [...poles[pole_no], color];
-      setPoles(temp);
+      let temp = [...gameState1.currPoles];
+      temp[pole_no] = [...gameState1.currPoles[pole_no], color];
+      console.log(temp);
 
       /* update the timeline so that undo/redo will work as intended */
       /* when a new ring is added, prune the (undone) future and set the current point in time to be the present */
-      history.current = [
-        ...history.current.slice(0, history.current.length + gameState1.pointInTime + 1),
-        temp,
-      ];
-      setPointInTime(-1);
+      setGameState1({
+        history: [
+          ...gameState1.history.slice(
+            0,
+            gameState1.history.length + gameState1.pointInTime + 1
+          ),
+          temp,
+        ],
+        pointInTime: -1,
+        currPoles: temp,
+      });
 
       if (gameState1.stage == "GAME") {
         /* update delta for the log */
@@ -145,15 +114,15 @@ function App() {
   }
 
   function resetHandler() {
-    /* setGameState("PREP"); */
     setGameState1({
       stage: "PREP",
       startTime: Date.now(),
       countdownAmt: 60000,
-    })
-    setPoles(empty_poles);
-    history.current = [empty_poles];
-    setPointInTime(-1);
+      history: [empty_poles],
+      pointInTime: -1,
+      currPoles: empty_poles,
+    });
+
     historyDelta.current = ["empty"];
     winner.current = { winner: false, time: -1 };
 
@@ -167,7 +136,7 @@ function App() {
   /* pointInTime should never be positive */
   /* undo/redo works by manipulating pointInTime */
   function undo() {
-    if (-gameState1.pointInTime == history.current.length) {
+    if (-gameState1.pointInTime == gameState1.history.length) {
       enqueueSnackbar("Cannot undo any further!", {
         variant: "error",
       });
@@ -179,9 +148,10 @@ function App() {
         variant: "warning",
       });
     }
-    /* setPointInTime(pointInTime - 1); */
-    setGameState1({pointInTime: gameState1.pointInTime - 1})
-    setPoles(history.current.at(gameState1.pointInTime - 1));
+    setGameState1({
+      pointInTime: gameState1.pointInTime - 1,
+      currPoles: gameState1.history.at(gameState1.pointInTime - 1),
+    });
   }
 
   function redo() {
@@ -197,9 +167,10 @@ function App() {
         variant: "warning",
       });
     }
-    /* setPointInTime(pointInTime + 1); */
-    setGameState1({pointInTime: gameState1.pointInTime + 1})
-    setPoles(history.current.at(gameState1.pointInTime + 1));
+    setGameState1({
+      pointInTime: gameState1.pointInTime + 1,
+      currPoles: gameState1.history.at(gameState1.pointInTime + 1),
+    });
   }
 
   /* called by checkScore */
@@ -243,8 +214,8 @@ function App() {
 
     let topRings = [];
 
-    for (let i = 0; i < poles.length; i++) {
-      topRings[i] = poles[i].at(-1);
+    for (let i = 0; i < gameState1.currPoles.length; i++) {
+      topRings[i] = gameState1.currPoles[i].at(-1);
       let scoreIncrease = 0;
 
       if (topRings[i] == "empty") {
@@ -347,8 +318,8 @@ function App() {
       );
       exportStr = exportStr.concat(";");
     } else {
-      for (let i = 0; i < poles.length; i++) {
-        switch (poles[i].at(-1)) {
+      for (let i = 0; i < gameState1.currPoles.length; i++) {
+        switch (gameState1.currPoles[i].at(-1)) {
           case "empty":
             exportStr = exportStr.concat("0;");
             break;
@@ -454,7 +425,6 @@ function App() {
 
               <Grid container direction="column" alignItems="center" xs={4}>
                 <Gamefield
-                  poles={poles}
                   scoreHandler={scoreHandler}
                   orientation={orientation}
                 />
