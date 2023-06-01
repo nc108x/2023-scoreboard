@@ -6,8 +6,6 @@ import ControlPanel from "./components/ControlPanel.js";
 import Log from "./components/Log.js";
 import Options from "./components/Options.js";
 
-import { useState } from "react";
-
 import Grid from "@mui/material/Grid";
 
 import theme from "./Theme.js";
