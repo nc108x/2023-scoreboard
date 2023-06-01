@@ -13,9 +13,8 @@ export default function Pole({
   y,
   index,
   rings,
-  orientation,
 }) {
-  const { gameState, setGameState } = useGameStates();
+  const { gameState, setGameState, options } = useGameStates();
 
   function scoreHandler(e, pole_no, color) {
     /* to prevent right click menu from showing up */
@@ -125,7 +124,7 @@ export default function Pole({
           fontSize: 28,
         }}
       >
-        {orientation == "red" ? index + 1 : 11 - index}
+        {options.orientation == "SOUTH" ? index + 1 : 11 - index}
       </Fab>
     </Tooltip>
   );

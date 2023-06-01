@@ -1,7 +1,10 @@
-import { useState, createContext, useContext, createRef, useRef } from "react";
+import { useState, createContext, useContext, useRef } from "react";
 
 const emptyPoles = Array(11).fill(["empty"]);
 
+/* history: 3d array representing the timeline */
+/* historyDelta: the change in each entry of the timeline */
+/* currPoles: 2d array representing all the poles */
 const initialState = {
   stage: "PREP",
   startTime: Date.now(),
@@ -21,6 +24,11 @@ const initialResult = {
   blueScore: 0,
 };
 
+/* orientation: where red is located */
+const defaultOptions = {
+  orientation: "SOUTH"
+}
+
 const StatesContext = createContext({});
 
 export function StatesContextProvider({ children }) {
@@ -28,14 +36,20 @@ export function StatesContextProvider({ children }) {
   /* TODO maybe don't use ref? there should be a better option */
   /* don't think ref is supposed to be used this way */
   const gameResult = useRef(initialResult);
+  const [options, _setOptions] = useState(defaultOptions);
 
   function setGameState(newState) {
     const copy = structuredClone(gameState);
     _setGameState({ ...copy, ...newState });
   }
 
+  function setOptions(newOptions) {
+    const copy = structuredClone(options);
+    _setOptions({ ...copy, ...newOptions});
+  }
+
   return (
-    <StatesContext.Provider value={{ gameState, setGameState, gameResult }}>
+    <StatesContext.Provider value={{ gameState, setGameState, gameResult, options, setOptions }}>
       {children}
     </StatesContext.Provider>
   );

@@ -19,17 +19,6 @@ import { SnackbarProvider, enqueueSnackbar } from "notistack";
 function App() {
   const { gameState, gameResult } = useGameStates();
 
-  const [orientation, setOrientation] = useState("red");
-
-  /* passed to options menu */
-  function toggleOrientation() {
-    if (orientation == "red") {
-      setOrientation("blue");
-    } else {
-      setOrientation("red");
-    }
-  }
-
   /* called by checkScore */
   function checkEndgame(topRings) {
     const redWinCon = topRings.slice(0, 8);
@@ -114,7 +103,7 @@ function App() {
       <ThemeProvider theme={theme}>
         <CssBaseline />
         <SnackbarProvider maxSnack={3} autoHideDuration={1500}>
-          <Options toggleOrientation={toggleOrientation} />
+          <Options />
           <Grid
             container
             direction="column"
@@ -140,12 +129,12 @@ function App() {
                 </Grid>
 
                 <Grid item>
-                  <Log color="red" orientation={orientation} />
+                  <Log color="red" />
                 </Grid>
               </Grid>
 
               <Grid container direction="column" alignItems="center" xs={4}>
-                <Gamefield orientation={orientation} />
+                <Gamefield />
               </Grid>
 
               <Grid
@@ -160,7 +149,7 @@ function App() {
                 </Grid>
 
                 <Grid item>
-                  <Log color="blue" orientation={orientation} />
+                  <Log color="blue" />
                 </Grid>
               </Grid>
             </Grid>
