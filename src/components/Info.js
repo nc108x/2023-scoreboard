@@ -7,7 +7,6 @@ import Typography from "@mui/material/Typography";
 export default function Info({
   score,
   color,
-  historyDelta,
   winner,
 }) {
   const { gameState1 } = useGameStates();
@@ -23,7 +22,7 @@ export default function Info({
     name = gameState1.blueDragon;
   }
 
-  const ringsScored = historyDelta.filter(
+  const ringsScored = gameState1.historyDelta.filter(
     (element) => element[0] == color
   ).length;
 

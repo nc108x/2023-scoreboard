@@ -24,9 +24,6 @@ function App() {
   const { gameState1, setGameState1 } = useGameStates();
   console.log(gameState1);
 
-  /* a 3d array representing the timeline */
-  const historyDelta = useRef(["empty"]);
-
   const winner = useRef({ winner: false, time: -1 });
 
   const [orientation, setOrientation] = useState("red");
@@ -44,7 +41,7 @@ function App() {
     /* to prevent right click menu from showing up */
     e.preventDefault();
 
-    const ringsScored = historyDelta.current
+    const ringsScored = gameState1.historyDelta
       .slice((gameState1.pointInTime + 1) * -1)
       .filter((element) => element[0] == color).length;
 
@@ -66,31 +63,30 @@ function App() {
 
       /* update the timeline so that undo/redo will work as intended */
       /* when a new ring is added, prune the (undone) future and set the current point in time to be the present */
-      setGameState1({
-        history: [
-          ...gameState1.history.slice(
-            0,
-            gameState1.history.length + gameState1.pointInTime + 1
-          ),
-          temp,
-        ],
-        pointInTime: -1,
-        currPoles: temp,
-      });
-
       if (gameState1.stage == "GAME") {
-        /* update delta for the log */
-        historyDelta.current = [
-          ...historyDelta.current.slice(
-            0,
-            historyDelta.current.length + gameState1.pointInTime + 1
-          ),
-          [
-            color,
-            pole_no,
-            elapsedTime.min + ":" + elapsedTime.sec + ":" + elapsedTime.ms,
+        /* also update delta for the log */
+        setGameState1({
+          history: [
+            ...gameState1.history.slice(
+              0,
+              gameState1.history.length + gameState1.pointInTime + 1
+            ),
+            temp,
           ],
-        ];
+          historyDelta: [
+            ...gameState1.historyDelta.slice(
+              0,
+              gameState1.historyDelta.length + gameState1.pointInTime + 1
+            ),
+            [
+              color,
+              pole_no,
+              elapsedTime.min + ":" + elapsedTime.sec + ":" + elapsedTime.ms,
+            ],
+          ],
+          pointInTime: -1,
+          currPoles: temp,
+        });
       } else {
         /* game has ended */
         /* same thing as above but fix timestamp and ping user with a warning */
@@ -98,13 +94,24 @@ function App() {
           variant: "warning",
         });
 
-        historyDelta.current = [
-          ...historyDelta.current.slice(
-            0,
-            historyDelta.current.length + gameState1.pointInTime + 1
-          ),
-          [color, pole_no, "03:00:00"],
-        ];
+        setGameState1({
+          history: [
+            ...gameState1.history.slice(
+              0,
+              gameState1.history.length + gameState1.pointInTime + 1
+            ),
+            temp,
+          ],
+          historyDelta: [
+            ...gameState1.historyDelta.slice(
+              0,
+              gameState1.historyDelta.length + gameState1.pointInTime + 1
+            ),
+            [color, pole_no, "03:00:00"],
+          ],
+          pointInTime: -1,
+          currPoles: temp,
+        });
       }
     } else {
       enqueueSnackbar("Cannot interact with poles in preparation time!", {
@@ -119,11 +126,11 @@ function App() {
       startTime: Date.now(),
       countdownAmt: 60000,
       history: [empty_poles],
+      historyDelta: ["empty"],
       pointInTime: -1,
       currPoles: empty_poles,
     });
 
-    historyDelta.current = ["empty"];
     winner.current = { winner: false, time: -1 };
 
     enqueueSnackbar("Scoreboard has been reset.", {
@@ -186,7 +193,7 @@ function App() {
 
       winner.current.winner = "red";
       if (winner.current.time == -1) {
-        winner.current.time = historyDelta.current.length;
+        winner.current.time = gameState1.historyDelta.length;
       }
     } else if (blueWinCon.every((currVal) => currVal == "blue")) {
       enqueueSnackbar(gameState1.blueDragon1 + " Dragon has ended the game!", {
@@ -196,7 +203,7 @@ function App() {
 
       winner.current.winner = "blue";
       if (winner.current.time == -1) {
-        winner.current.time = historyDelta.current.length;
+        winner.current.time = gameState1.historyDelta.length;
       }
     } else {
       winner.current.winner = false;
@@ -281,13 +288,13 @@ function App() {
       const fieryColor = gameState1.redDragon1 == "FIERY" ? "red" : "blue";
 
       exportStr = exportStr.concat(
-        historyDelta.current.filter((element) => element[0] == fieryColor)
+        gameState1.historyDelta.filter((element) => element[0] == fieryColor)
           .length
       );
       exportStr = exportStr.concat(";");
 
       exportStr = exportStr.concat(
-        historyDelta.current.filter(
+        gameState1.historyDelta.filter(
           (element) => element[0] != fieryColor && element != "empty"
         ).length
       );
@@ -313,7 +320,7 @@ function App() {
 
       exportStr = exportStr.concat(
         winner.current.winner != false
-          ? historyDelta.current.at(-1)[2]
+          ? gameState1.historyDelta.at(-1)[2]
           : "03:00:00"
       );
       exportStr = exportStr.concat(";");
@@ -402,20 +409,12 @@ function App() {
                   <Info
                     score={redScore}
                     color="red"
-                    historyDelta={historyDelta.current.slice(
-                      0,
-                      historyDelta.current.length + gameState1.pointInTime + 1
-                    )}
                     winner={winner.current}
                   />
                 </Grid>
 
                 <Grid item>
                   <Log
-                    historyDelta={historyDelta.current.slice(
-                      0,
-                      historyDelta.current.length + gameState1.pointInTime + 1
-                    )}
                     color="red"
                     winner={winner.current}
                     orientation={orientation}
@@ -441,21 +440,12 @@ function App() {
                   <Info
                     score={blueScore}
                     color="blue"
-                    historyDelta={historyDelta.current.slice(
-                      0,
-                      historyDelta.current.length + gameState1.pointInTime + 1
-                    )}
                     winner={winner.current}
                   />
                 </Grid>
 
                 <Grid item>
                   <Log
-                    historyDelta={historyDelta.current.slice(
-                      0,
-                      historyDelta.current.length + gameState1.pointInTime + 1
-                    )}
-                    color="blue"
                     winner={winner.current}
                     orientation={orientation}
                   />

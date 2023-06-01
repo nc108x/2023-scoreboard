@@ -1,3 +1,5 @@
+import { useGameStates } from "./StatesContextProvider.js";
+
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -6,15 +8,17 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 
-export default function Log({ historyDelta, color, winner, orientation }) {
-  const logTable = historyDelta
+export default function Log({ color, winner, orientation }) {
+  const { gameState1 } = useGameStates();
+
+  const logTable = gameState1.historyDelta
     .slice(0)
     .reverse()
     .map((action, index) => {
       if (action != "empty" && action[0] == color) {
         if (
           winner.winner == color &&
-          index == historyDelta.length - winner.time
+          index == gameState1.historyDelta.length - winner.time
         ) {
           return (
             <>
