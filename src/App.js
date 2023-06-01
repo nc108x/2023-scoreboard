@@ -16,7 +16,8 @@ import { SnackbarProvider, enqueueSnackbar } from "notistack";
 import { useGameStates } from "./components/StatesContextProvider.js";
 
 function App() {
-  const { gameState1 } = useGameStates();
+  const { gameState } = useGameStates();
+  console.log(gameState);
 
   const winner = useRef({ winner: false, time: -1 });
 
@@ -37,24 +38,24 @@ function App() {
     const blueWinCon = topRings.slice(3, 11);
 
     if (redWinCon.every((currVal) => currVal == "red")) {
-      enqueueSnackbar(gameState1.redDragon1 + " Dragon has ended the game!", {
+      enqueueSnackbar(gameState.redDragon + " Dragon has ended the game!", {
         variant: "success",
         preventDuplicate: true,
       });
 
       winner.current.winner = "red";
       if (winner.current.time == -1) {
-        winner.current.time = gameState1.historyDelta.length;
+        winner.current.time = gameState.historyDelta.length;
       }
     } else if (blueWinCon.every((currVal) => currVal == "blue")) {
-      enqueueSnackbar(gameState1.blueDragon1 + " Dragon has ended the game!", {
+      enqueueSnackbar(gameState.blueDragon + " Dragon has ended the game!", {
         variant: "success",
         preventDuplicate: true,
       });
 
       winner.current.winner = "blue";
       if (winner.current.time == -1) {
-        winner.current.time = gameState1.historyDelta.length;
+        winner.current.time = gameState.historyDelta.length;
       }
     } else {
       winner.current.winner = false;
@@ -72,8 +73,8 @@ function App() {
 
     let topRings = [];
 
-    for (let i = 0; i < gameState1.currPoles.length; i++) {
-      topRings[i] = gameState1.currPoles[i].at(-1);
+    for (let i = 0; i < gameState.currPoles.length; i++) {
+      topRings[i] = gameState.currPoles[i].at(-1);
       let scoreIncrease = 0;
 
       if (topRings[i] == "empty") {
@@ -117,35 +118,35 @@ function App() {
       exportStr = exportStr.concat(";");
 
       exportStr = exportStr.concat(
-        gameState1.redDragon1 == "FIERY" ? "RED" : "BLUE"
+        gameState.redDragon == "FIERY" ? "RED" : "BLUE"
       );
       exportStr = exportStr.concat(";");
 
       exportStr = exportStr.concat(
-        gameState1.redDragon1 == "FIERY" ? "BLUE" : "RED"
+        gameState.redDragon == "FIERY" ? "BLUE" : "RED"
       );
       exportStr = exportStr.concat(";");
 
       exportStr = exportStr.concat(
-        gameState1.redDragon1 == "FIERY" ? redScore : blueScore
+        gameState.redDragon == "FIERY" ? redScore : blueScore
       );
       exportStr = exportStr.concat(";");
 
       exportStr = exportStr.concat(
-        gameState1.redDragon1 == "FIERY" ? blueScore : redScore
+        gameState.redDragon == "FIERY" ? blueScore : redScore
       );
       exportStr = exportStr.concat(";");
 
-      const fieryColor = gameState1.redDragon1 == "FIERY" ? "red" : "blue";
+      const fieryColor = gameState.redDragon == "FIERY" ? "red" : "blue";
 
       exportStr = exportStr.concat(
-        gameState1.historyDelta.filter((element) => element[0] == fieryColor)
+        gameState.historyDelta.filter((element) => element[0] == fieryColor)
           .length
       );
       exportStr = exportStr.concat(";");
 
       exportStr = exportStr.concat(
-        gameState1.historyDelta.filter(
+        gameState.historyDelta.filter(
           (element) => element[0] != fieryColor && element != "empty"
         ).length
       );
@@ -159,25 +160,25 @@ function App() {
       exportStr = exportStr.concat(
         winner.current.winner
           ? winner.current.winner == "red"
-            ? gameState1.redDragon1
-            : gameState1.blueDragon1
+            ? gameState.redDragon
+            : gameState.blueDragon
           : redScore > blueScore
-          ? gameState1.redDragon1
+          ? gameState.redDragon
           : blueScore > redScore
-          ? gameState1.blueDragon1
+          ? gameState.blueDragon
           : "TIE"
       );
       exportStr = exportStr.concat(";");
 
       exportStr = exportStr.concat(
         winner.current.winner != false
-          ? gameState1.historyDelta.at(-1)[2]
+          ? gameState.historyDelta.at(-1)[2]
           : "03:00:00"
       );
       exportStr = exportStr.concat(";");
     } else {
-      for (let i = 0; i < gameState1.currPoles.length; i++) {
-        switch (gameState1.currPoles[i].at(-1)) {
+      for (let i = 0; i < gameState.currPoles.length; i++) {
+        switch (gameState.currPoles[i].at(-1)) {
           case "empty":
             exportStr = exportStr.concat("0;");
             break;

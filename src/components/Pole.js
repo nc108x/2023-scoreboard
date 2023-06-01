@@ -15,19 +15,19 @@ export default function Pole({
   rings,
   orientation,
 }) {
-  const { gameState1, setGameState1 } = useGameStates();
+  const { gameState, setGameState } = useGameStates();
 
   function scoreHandler(e, pole_no, color) {
     /* to prevent right click menu from showing up */
     e.preventDefault();
 
-    const ringsScored = gameState1.historyDelta
-      .slice((gameState1.pointInTime + 1) * -1)
+    const ringsScored = gameState.historyDelta
+      .slice((gameState.pointInTime + 1) * -1)
       .filter((element) => element[0] == color).length;
 
     if (ringsScored == 40) {
       enqueueSnackbar(
-        (color == "red" ? gameState1.redDragon : gameState1.blueDragon) +
+        (color == "red" ? gameState.redDragon : gameState.blueDragon) +
           " Dragon has used up their rings!",
         {
           variant: "error",
@@ -36,26 +36,26 @@ export default function Pole({
       return;
     }
 
-    if (gameState1.stage == "GAME" || gameState1.stage == "END") {
-      let temp = [...gameState1.currPoles];
-      temp[pole_no] = [...gameState1.currPoles[pole_no], color];
+    if (gameState.stage == "GAME" || gameState.stage == "END") {
+      let temp = [...gameState.currPoles];
+      temp[pole_no] = [...gameState.currPoles[pole_no], color];
 
       /* update the timeline so that undo/redo will work as intended */
       /* when a new ring is added, prune the (undone) future and set the current point in time to be the present */
-      if (gameState1.stage == "GAME") {
+      if (gameState.stage == "GAME") {
         /* also update delta for the log */
-        setGameState1({
+        setGameState({
           history: [
-            ...gameState1.history.slice(
+            ...gameState.history.slice(
               0,
-              gameState1.history.length + gameState1.pointInTime + 1
+              gameState.history.length + gameState.pointInTime + 1
             ),
             temp,
           ],
           historyDelta: [
-            ...gameState1.historyDelta.slice(
+            ...gameState.historyDelta.slice(
               0,
-              gameState1.historyDelta.length + gameState1.pointInTime + 1
+              gameState.historyDelta.length + gameState.pointInTime + 1
             ),
             [
               color,
@@ -73,18 +73,18 @@ export default function Pole({
           variant: "warning",
         });
 
-        setGameState1({
+        setGameState({
           history: [
-            ...gameState1.history.slice(
+            ...gameState.history.slice(
               0,
-              gameState1.history.length + gameState1.pointInTime + 1
+              gameState.history.length + gameState.pointInTime + 1
             ),
             temp,
           ],
           historyDelta: [
-            ...gameState1.historyDelta.slice(
+            ...gameState.historyDelta.slice(
               0,
-              gameState1.historyDelta.length + gameState1.pointInTime + 1
+              gameState.historyDelta.length + gameState.pointInTime + 1
             ),
             [color, pole_no, "03:00:00"],
           ],

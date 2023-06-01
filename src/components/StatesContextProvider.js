@@ -5,7 +5,7 @@ const emptyPoles = Array(11).fill(["empty"]);
 const initialState = {
   stage: "PREP",
   startTime: Date.now(),
-  countdownAmt: 0,
+  countdownAmt: 60000,
   history: [emptyPoles],
   historyDelta: ["empty"],
   pointInTime: -1,
@@ -15,18 +15,31 @@ const initialState = {
   winner: { winner: false, time: -1 },
 };
 
+const initialResult = {
+  winner: false,
+  timer: -1,
+  redScore: 0,
+  blueScore: 0,
+};
+
 const StatesContext = createContext({});
 
 export function StatesContextProvider({ children }) {
-  const [gameState1, _setGameState] = useState(initialState);
+  const [gameState, _setGameState] = useState(initialState);
+  const [gameResult, _setGameResult] = useState(initialResult);
 
-  function setGameState1(newState) {
-    const copy = structuredClone(gameState1);
+  function setGameState(newState) {
+    const copy = structuredClone(gameState);
     _setGameState({ ...copy, ...newState });
   }
 
+  function setGameResult(newResult) {
+    const copy = structuredClone(gameResult);
+    _setGameResult({ ...copy, ...newResult});
+  }
+
   return (
-    <StatesContext.Provider value={{ gameState1, setGameState1 }}>
+    <StatesContext.Provider value={{ gameState, setGameState }}>
       {children}
     </StatesContext.Provider>
   );

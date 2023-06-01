@@ -22,7 +22,7 @@ function msToTime(og_ms) {
 
 /* TODO consider moving Timer.js up? or find a more elegant method of transporting elapsedTime */
 export default function Timer({ setApi, onComplete, fallthrough }) {
-  const { gameState1 } = useGameStates();
+  const { gameState } = useGameStates();
 
   const [playCountdown] = useSound(countdownSFX, { volume: 0.25 });
   const playingCountdown = useRef(false);
@@ -35,14 +35,14 @@ export default function Timer({ setApi, onComplete, fallthrough }) {
 
     remainingTime = msToTime(min * 60000 + sec * 1000 + ms);
     elapsedTime = msToTime(
-      gameState1.countdownAmt - (min * 60000 + sec * 1000 + ms)
+      gameState.countdownAmt - (min * 60000 + sec * 1000 + ms)
     );
 
     if (
       remainingTime.sec == 3 &&
       remainingTime.ms == 10 &&
       !playingCountdown.current &&
-      gameState1.stage == "PREP"
+      gameState.stage == "PREP"
     ) {
       playCountdown();
       playingCountdown.current = true;
@@ -64,12 +64,12 @@ export default function Timer({ setApi, onComplete, fallthrough }) {
   return (
     <>
       <Countdown
-        key={gameState1.startTime}
-        date={gameState1.startTime + gameState1.countdownAmt}
+        key={gameState.startTime}
+        date={gameState.startTime + gameState.countdownAmt}
         precision={3}
         intervalDelay={0}
         renderer={renderer}
-        autoStart={fallthrough && gameState1.state == "GAME" ? true : false}
+        autoStart={fallthrough && gameState.state == "GAME" ? true : false}
         ref={setApi}
         onComplete={onComplete}
         onTick={onTick}

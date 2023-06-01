@@ -4,27 +4,23 @@ import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 
-export default function Info({
-  score,
-  color,
-  winner,
-}) {
-  const { gameState1 } = useGameStates();
+export default function Info({ score, color, winner }) {
+  const { gameState } = useGameStates();
 
   let bgColor;
   let name;
 
   if (color == "red") {
     bgColor = "redTeam.main";
-    name = gameState1.redDragon;
+    name = gameState.redDragon;
   } else {
     bgColor = "blueTeam.main";
-    name = gameState1.blueDragon;
+    name = gameState.blueDragon;
   }
 
-  const ringsScored = gameState1.historyDelta.filter(
-    (element) => element[0] == color
-  ).length;
+  const ringsScored = gameState.historyDelta
+    .slice(0, gameState.historyDelta.length + gameState.pointInTime + 1)
+    .filter((element) => element[0] == color).length;
 
   return (
     <>
@@ -37,9 +33,7 @@ export default function Info({
           textAlign: "center",
         }}
       >
-        <Typography variant="h4">
-          {name + "\nDRAGON"}
-        </Typography>
+        <Typography variant="h4">{name + "\nDRAGON"}</Typography>
         <Typography variant="h4">{score}</Typography>
         <Typography variant="h6">{"Rings scored: " + ringsScored}</Typography>
         <Typography variant="h6">

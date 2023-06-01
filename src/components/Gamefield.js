@@ -14,9 +14,9 @@ const pos_x_blue = [380, 200, 25, 280, 130, 200, 280, 130, 380, 200, 25];
 const pos_y_blue = [10, 10, 10, 120, 120, 200, 280, 280, 390, 390, 390];
 
 export default function Gamefield({ scoreHandler, orientation }) {
-  const { gameState1 } = useGameStates();
+  const { gameState } = useGameStates();
 
-  const poleButtons = gameState1.currPoles.map((pole, index) => {
+  const poleButtons = gameState.currPoles.map((pole, index) => {
     return (
       <Pole
         key={index}

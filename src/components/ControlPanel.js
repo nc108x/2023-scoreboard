@@ -25,7 +25,7 @@ const THREE_MINS = 180000;
 const empty_poles = Array(11).fill(["empty"]);
 
 export default function ControlPanel({ exportData }) {
-  const { gameState1, setGameState1 } = useGameStates();
+  const { gameState, setGameState } = useGameStates();
 
   const [confirmReset, setConfirmReset] = useState(false);
   const [showExport, setShowExport] = useState(false);
@@ -46,7 +46,7 @@ export default function ControlPanel({ exportData }) {
   function setTimerStage(stage) {
     switch (stage) {
       case "PREP":
-        setGameState1({
+        setGameState({
           stage: "PREP",
           startTime: Date.now(),
           countdownAmt: ONE_MIN,
@@ -54,14 +54,14 @@ export default function ControlPanel({ exportData }) {
 
         break;
       case "GAME":
-        setGameState1({
+        setGameState({
           stage: "GAME",
           startTime: Date.now(),
           countdownAmt: THREE_MINS,
         });
         break;
       case "END":
-        setGameState1({
+        setGameState({
           stage: "END",
           startTime: Date.now(),
           countdownAmt: 0,
@@ -75,7 +75,7 @@ export default function ControlPanel({ exportData }) {
   /* can also be triggered manually */
   function nextTimerState(force) {
     fallthrough.current = false;
-    switch (gameState1.stage) {
+    switch (gameState.stage) {
       case "PREP":
         if (force) {
           setTimerRun(false);
@@ -123,9 +123,9 @@ export default function ControlPanel({ exportData }) {
     setTimerRun(false);
     /* if timer is running alr just go to beginning of the CURRENT state */
     if (timerRun) {
-      setTimerStage(gameState1.stage);
+      setTimerStage(gameState.stage);
 
-      switch (gameState1.stage) {
+      switch (gameState.stage) {
         case "PREP":
           enqueueSnackbar("Rewind to beginning of preparation time.", {
             variant: "success",
@@ -139,7 +139,7 @@ export default function ControlPanel({ exportData }) {
       }
     } else {
       /* go to previous state */
-      switch (gameState1.stage) {
+      switch (gameState.stage) {
         case "PREP":
           enqueueSnackbar("Nothing to rewind.", {
             variant: "error",
@@ -167,7 +167,7 @@ export default function ControlPanel({ exportData }) {
   /* toggles between starting and pausing current countdown */
   function timerBtnHandler() {
     fallthrough.current = false;
-    if (gameState1.stage == "END") {
+    if (gameState.stage == "END") {
       return;
     }
 
@@ -179,7 +179,7 @@ export default function ControlPanel({ exportData }) {
         variant: "success",
       });
 
-      if (gameState1.stage == "PREP") {
+      if (gameState.stage == "PREP") {
         enqueueSnackbar("Preparation time has started.", {
           variant: "info",
         });
@@ -194,9 +194,9 @@ export default function ControlPanel({ exportData }) {
   }
 
   function swapDragons() {
-    setGameState1({
-      redDragon1: gameState1.redDragon1 == "FIERY" ? "WAR" : "FIERY",
-      blueDragon1: gameState1.blueDragon1 == "FIERY" ? "WAR" : "FIERY",
+    setGameState({
+      redDragon1: gameState.redDragon1 == "FIERY" ? "WAR" : "FIERY",
+      blueDragon1: gameState.blueDragon1 == "FIERY" ? "WAR" : "FIERY",
     });
 
     enqueueSnackbar("Dragons have been swapped.", {
@@ -205,7 +205,7 @@ export default function ControlPanel({ exportData }) {
   }
 
   function resetHandler() {
-    setGameState1({
+    setGameState({
       stage: "PREP",
       startTime: Date.now(),
       countdownAmt: 60000,
@@ -226,40 +226,40 @@ export default function ControlPanel({ exportData }) {
   /* pointInTime should never be positive */
   /* undo/redo works by manipulating pointInTime */
   function undo() {
-    if (-gameState1.pointInTime == gameState1.history.length) {
+    if (-gameState.pointInTime == gameState.history.length) {
       enqueueSnackbar("Cannot undo any further!", {
         variant: "error",
       });
       return;
     }
 
-    if (gameState1.state == "END") {
+    if (gameState.state == "END") {
       enqueueSnackbar("Currently modifying rings after game has ended.", {
         variant: "warning",
       });
     }
-    setGameState1({
-      pointInTime: gameState1.pointInTime - 1,
-      currPoles: gameState1.history.at(gameState1.pointInTime - 1),
+    setGameState({
+      pointInTime: gameState.pointInTime - 1,
+      currPoles: gameState.history.at(gameState.pointInTime - 1),
     });
   }
 
   function redo() {
-    if (gameState1.pointInTime == -1) {
+    if (gameState.pointInTime == -1) {
       enqueueSnackbar("Cannot redo any further!", {
         variant: "error",
       });
       return;
     }
 
-    if (gameState1.state == "END") {
+    if (gameState.state == "END") {
       enqueueSnackbar("Currently modifying rings after game has ended.", {
         variant: "warning",
       });
     }
-    setGameState1({
-      pointInTime: gameState1.pointInTime + 1,
-      currPoles: gameState1.history.at(gameState1.pointInTime + 1),
+    setGameState({
+      pointInTime: gameState.pointInTime + 1,
+      currPoles: gameState.history.at(gameState.pointInTime + 1),
     });
   }
 
@@ -278,7 +278,7 @@ export default function ControlPanel({ exportData }) {
         }
       }
     },
-    [gameState1.pointInTime]
+    [gameState.pointInTime]
   );
 
   useEffect(() => {
@@ -295,12 +295,12 @@ export default function ControlPanel({ exportData }) {
     <>
       <Grid item>
         <Timer
-          timerState={gameState1}
+          timerState={gameState}
           setApi={setApi}
           onComplete={() => nextTimerState(false)}
           fallthrough={fallthrough.current}
         />
-        <Grid item>{"Current state: " + gameState1.stage}</Grid>
+        <Grid item>{"Current state: " + gameState.stage}</Grid>
         <Grid item>
           <Tooltip
             TransitionComponent={Zoom}
@@ -320,12 +320,12 @@ export default function ControlPanel({ exportData }) {
           <Button onClick={redo}>REDO</Button>
           <Button
             onClick={
-              gameState1.stage == "END"
+              gameState.stage == "END"
                 ? () => setShowExport(true)
                 : timerBtnHandler
             }
           >
-            {gameState1.stage == "END"
+            {gameState.stage == "END"
               ? "EXPORT"
               : timerRun == false
               ? "START"
