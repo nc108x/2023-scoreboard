@@ -2,10 +2,10 @@ import { useGameStates } from "./StatesContextProvider.js";
 
 import { useRef } from "react";
 
+import Box from "@mui/material/Box";
+
 import Countdown from "react-countdown";
 import { zeroPad } from "react-countdown";
-
-import Box from "@mui/material/Box";
 
 import useSound from "use-sound";
 import countdownSFX from "../assets/sfx/countdown.mp3";

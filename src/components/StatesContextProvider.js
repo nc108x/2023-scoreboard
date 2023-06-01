@@ -12,7 +12,6 @@ const initialState = {
   currPoles: emptyPoles,
   redDragon: "FIERY",
   blueDragon: "WAR",
-  winner: { winner: false, time: -1 },
 };
 
 const initialResult = {

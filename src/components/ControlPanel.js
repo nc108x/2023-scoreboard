@@ -1,6 +1,9 @@
 import { useGameStates } from "./StatesContextProvider.js";
 
+import Timer from "./Timer.js";
+
 import { useState, useRef, useCallback, useEffect } from "react";
+
 import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
 
@@ -18,7 +21,6 @@ import Zoom from "@mui/material/Zoom";
 
 import { enqueueSnackbar } from "notistack";
 
-import Timer from "./Timer.js";
 
 const ONE_MIN = 60000;
 const THREE_MINS = 180000;

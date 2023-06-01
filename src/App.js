@@ -1,25 +1,23 @@
 import { useGameStates } from "./components/StatesContextProvider.js";
 
-import { useState, useRef } from "react";
-import Grid from "@mui/material/Grid";
-
-import theme from "./Theme.js";
-import { ThemeProvider } from "@mui/material/styles";
-import CssBaseline from "@mui/material/CssBaseline";
-
 import Gamefield from "./components/Gamefield.js";
 import Info from "./components/Info.js";
 import ControlPanel from "./components/ControlPanel.js";
 import Log from "./components/Log.js";
 import Options from "./components/Options.js";
 
+import { useState } from "react";
+
+import Grid from "@mui/material/Grid";
+
+import theme from "./Theme.js";
+import { ThemeProvider } from "@mui/material/styles";
+import CssBaseline from "@mui/material/CssBaseline";
+
 import { SnackbarProvider, enqueueSnackbar } from "notistack";
 
 function App() {
   const { gameState, gameResult } = useGameStates();
-  console.log(gameState);
-
-  const winner = useRef({ winner: false, time: -1 });
 
   const [orientation, setOrientation] = useState("red");
 
