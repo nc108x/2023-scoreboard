@@ -1,7 +1,5 @@
 import { useGameStates } from "./StatesContextProvider.js";
 
-import { elapsedTime } from "./Timer.js";
-
 import Fab from "@mui/material/Fab";
 import Tooltip from "@mui/material/Tooltip";
 import Zoom from "@mui/material/Zoom";
@@ -14,7 +12,7 @@ export default function Pole({
   index,
   rings,
 }) {
-  const { gameState, setGameState, options } = useGameStates();
+  const { gameState, setGameState, options, elapsedTime } = useGameStates();
 
   function scoreHandler(e, pole_no, color) {
     /* to prevent right click menu from showing up */
@@ -59,7 +57,7 @@ export default function Pole({
             [
               color,
               pole_no,
-              elapsedTime.min + ":" + elapsedTime.sec + ":" + elapsedTime.ms,
+              elapsedTime.current.min + ":" + elapsedTime.current.sec + ":" + elapsedTime.current.ms,
             ],
           ],
           pointInTime: -1,

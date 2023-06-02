@@ -10,9 +10,6 @@ import { zeroPad } from "react-countdown";
 import useSound from "use-sound";
 import countdownSFX from "../assets/sfx/countdown.mp3";
 
-export let elapsedTime = 0;
-export let remainingTime = 0;
-
 function msToTime(og_ms) {
   const ms = ("0" + Math.floor((og_ms % 1000) / 10)).slice(-2);
   const sec = ("0" + Math.floor((og_ms / 1000) % 60)).slice(-2);
@@ -20,9 +17,8 @@ function msToTime(og_ms) {
   return { min, sec, ms };
 }
 
-/* TODO consider moving Timer.js up? or find a more elegant method of transporting elapsedTime */
 export default function Timer({ setApi, onComplete, fallthrough }) {
-  const { gameState } = useGameStates();
+  const { gameState, elapsedTime } = useGameStates();
 
   const [playCountdown] = useSound(countdownSFX, { volume: 0.25 });
   const playingCountdown = useRef(false);
@@ -31,10 +27,9 @@ export default function Timer({ setApi, onComplete, fallthrough }) {
     const min = time.minutes;
     const sec = time.seconds;
     const ms = time.milliseconds;
-    remainingTime = { min, sec, ms };
 
-    remainingTime = msToTime(min * 60000 + sec * 1000 + ms);
-    elapsedTime = msToTime(
+    const remainingTime = msToTime(min * 60000 + sec * 1000 + ms);
+    elapsedTime.current = msToTime(
       gameState.countdownAmt - (min * 60000 + sec * 1000 + ms)
     );
 

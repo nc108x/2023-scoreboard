@@ -26,8 +26,8 @@ const initialResult = {
 
 /* orientation: where red is located */
 const defaultOptions = {
-  orientation: "SOUTH"
-}
+  orientation: "SOUTH",
+};
 
 const StatesContext = createContext({});
 
@@ -37,6 +37,7 @@ export function StatesContextProvider({ children }) {
   /* don't think ref is supposed to be used this way */
   const gameResult = useRef(initialResult);
   const [options, _setOptions] = useState(defaultOptions);
+  const elapsedTime = useRef({ min: 0, sec: 0, ms: 0 });
 
   function setGameState(newState) {
     const copy = structuredClone(gameState);
@@ -45,11 +46,20 @@ export function StatesContextProvider({ children }) {
 
   function setOptions(newOptions) {
     const copy = structuredClone(options);
-    _setOptions({ ...copy, ...newOptions});
+    _setOptions({ ...copy, ...newOptions });
   }
 
   return (
-    <StatesContext.Provider value={{ gameState, setGameState, gameResult, options, setOptions }}>
+    <StatesContext.Provider
+      value={{
+        gameState,
+        setGameState,
+        gameResult,
+        options,
+        setOptions,
+        elapsedTime,
+      }}
+    >
       {children}
     </StatesContext.Provider>
   );
