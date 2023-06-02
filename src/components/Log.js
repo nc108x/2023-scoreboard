@@ -8,8 +8,8 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 
-export default function Log({ color, orientation }) {
-  const { gameState, gameResult, options} = useGameStates();
+export default function Log({ color }) {
+  const { gameState, gameResult, options } = useGameStates();
 
   const logTable = gameState.historyDelta
     .slice(0, gameState.historyDelta.length + gameState.pointInTime + 1)
@@ -29,7 +29,9 @@ export default function Log({ color, orientation }) {
               <TableRow key={index}>
                 <TableCell>
                   {"Scored pole " +
-                    (options.orientation == "SOUTH" ? action[1] + 1 : 11 - action[1])}
+                    (options.orientation == "SOUTH"
+                      ? action[1] + 1
+                      : 11 - action[1])}
                 </TableCell>
                 <TableCell>{action[2]}</TableCell>
               </TableRow>
@@ -40,7 +42,9 @@ export default function Log({ color, orientation }) {
           <TableRow key={index}>
             <TableCell>
               {"Scored pole " +
-                (options.orientation == "SOUTH" ? action[1] + 1 : 11 - action[1])}
+                (options.orientation == "SOUTH"
+                  ? action[1] + 1
+                  : 11 - action[1])}
             </TableCell>
             <TableCell>{action[2]}</TableCell>
           </TableRow>
