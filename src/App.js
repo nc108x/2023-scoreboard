@@ -2,11 +2,13 @@ import { useGameStates } from "./components/StatesContextProvider.js";
 
 import Gamefield from "./components/Gamefield.js";
 import Info from "./components/Info.js";
-import ControlPanel from "./components/ControlPanel.js";
 import Log from "./components/Log.js";
 import Options from "./components/Options.js";
 
 import Grid from "@mui/material/Grid";
+import { useFirebase, useMutateDB } from "./components/FirebaseProvider.js";
+import { ref } from "firebase/database";
+import { useObjectVal } from "react-firebase-hooks/database";
 
 import theme from "./Theme.js";
 import { ThemeProvider } from "@mui/material/styles";
@@ -16,6 +18,16 @@ import { SnackbarProvider, enqueueSnackbar } from "notistack";
 
 function App() {
   const { gameState, gameResult } = useGameStates();
+
+  const { dbRef, mutate } = useFirebase();
+
+  const [value, loading, error] = useObjectVal(dbRef, {
+    keyField: "id",
+  });
+
+  console.log(value);
+  const counter = value?.counter ?? 0;
+  const setCounter = (val) => mutate({ counter: val });
 
   /* called by checkScore */
   function checkEndgame(topRings) {
@@ -114,6 +126,7 @@ function App() {
             <Grid container item justifyContent="space-evenly">
               <ControlPanel />
             </Grid>
+            <button onClick={() => setCounter(counter + 1)}>{counter}</button>
             <Grid container item direction="row">
               <Grid
                 container
