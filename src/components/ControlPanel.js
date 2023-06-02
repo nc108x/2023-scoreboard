@@ -21,7 +21,6 @@ import Zoom from "@mui/material/Zoom";
 
 import { enqueueSnackbar } from "notistack";
 
-
 const ONE_MIN = 60000;
 const THREE_MINS = 180000;
 const empty_poles = Array(11).fill(["empty"]);
@@ -31,8 +30,6 @@ export default function ControlPanel({}) {
 
   const [confirmReset, setConfirmReset] = useState(false);
   const [showExport, setShowExport] = useState(false);
-  /* TODO maybe consider refactoring this? */
-  const [timerRun, setTimerRun] = useState(false);
 
   /* to allow us to use the CountdownApi outside of Timer.js */
   const countdownApi = useRef();
@@ -45,13 +42,14 @@ export default function ControlPanel({}) {
   /* used to trigger autostart when going from prep to game */
   const fallthrough = useRef(false);
 
-  function setTimerStage(stage) {
+  function setTimerStage(stage, running) {
     switch (stage) {
       case "PREP":
         setGameState({
           stage: "PREP",
           startTime: Date.now(),
           countdownAmt: ONE_MIN,
+          timerRunning: running,
         });
 
         break;
@@ -60,6 +58,7 @@ export default function ControlPanel({}) {
           stage: "GAME",
           startTime: Date.now(),
           countdownAmt: THREE_MINS,
+          timerRunning: running,
         });
         break;
       case "END":
@@ -67,6 +66,7 @@ export default function ControlPanel({}) {
           stage: "END",
           startTime: Date.now(),
           countdownAmt: 0,
+          timerRunning: running,
         });
         break;
     }
@@ -79,24 +79,25 @@ export default function ControlPanel({}) {
     fallthrough.current = false;
     switch (gameState.stage) {
       case "PREP":
+        setTimerStage("GAME", !force);
+
         if (force) {
-          setTimerRun(false);
+          /* setTimerRun(false); */
           enqueueSnackbar("Fast forward to game time.", {
             variant: "success",
           });
         } else {
           fallthrough.current = true;
-          setTimerRun(true);
+          /* setTimerRun(true); */
           enqueueSnackbar("Game time has started.", {
             variant: "info",
           });
         }
-
-        setTimerStage("GAME");
         break;
 
       case "GAME":
-        setTimerRun(false);
+        setTimerStage("END", false);
+        /* setTimerRun(false); */
         if (force) {
           enqueueSnackbar("Fast forward to end.", {
             variant: "success",
@@ -106,8 +107,6 @@ export default function ControlPanel({}) {
             variant: "info",
           });
         }
-
-        setTimerStage("END");
         break;
 
       case "END":
@@ -122,10 +121,10 @@ export default function ControlPanel({}) {
 
   function prevTimerState() {
     fallthrough.current = false;
-    setTimerRun(false);
+    /* setTimerRun(false); */
     /* if timer is running alr just go to beginning of the CURRENT state */
-    if (timerRun) {
-      setTimerStage(gameState.stage);
+    if (gameState.timerRunning) {
+      setTimerStage(gameState.stage, false);
 
       switch (gameState.stage) {
         case "PREP":
@@ -149,14 +148,14 @@ export default function ControlPanel({}) {
           break;
 
         case "GAME":
-          setTimerStage("PREP");
+          setTimerStage("PREP", false);
           enqueueSnackbar("Rewind to preparation time.", {
             variant: "success",
           });
           break;
 
         case "END":
-          setTimerStage("GAME");
+          setTimerStage("GAME", false);
           enqueueSnackbar("Rewind to game time.", {
             variant: "success",
           });
@@ -174,7 +173,8 @@ export default function ControlPanel({}) {
     }
 
     if (countdownApi.current?.isPaused() || countdownApi.current?.isStopped()) {
-      setTimerRun(true);
+      /* setTimerRun(true); */
+      setGameState({ timerRunning: true });
 
       countdownApi.current.start();
       enqueueSnackbar("Timer started.", {
@@ -187,7 +187,8 @@ export default function ControlPanel({}) {
         });
       }
     } else {
-      setTimerRun(false);
+      /* setTimerRun(false); */
+      setGameState({ timerRunning: false });
       countdownApi.current.pause();
       enqueueSnackbar("Timer paused.", {
         variant: "success",
@@ -211,6 +212,7 @@ export default function ControlPanel({}) {
       stage: "PREP",
       startTime: Date.now(),
       countdownAmt: 60000,
+      timerRunning: false,
       history: [empty_poles],
       historyDelta: ["empty"],
       pointInTime: -1,
@@ -419,7 +421,7 @@ export default function ControlPanel({}) {
           >
             {gameState.stage == "END"
               ? "EXPORT"
-              : timerRun == false
+              : gameState.timerRunning == false
               ? "START"
               : "PAUSE"}
           </Button>
@@ -463,7 +465,7 @@ export default function ControlPanel({}) {
                   setConfirmReset(false);
                   resetHandler();
 
-                  setTimerRun(false);
+                  /* setTimerRun(false); */
                   countdownApi.current.pause();
                 }}
               >

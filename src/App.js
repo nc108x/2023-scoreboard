@@ -19,6 +19,7 @@ import { SnackbarProvider, enqueueSnackbar } from "notistack";
 
 function App() {
   const { gameState, gameResult } = useGameStates();
+  console.log(gameState)
 
   /* const { dbRef, mutate } = useFirebase(); */
 

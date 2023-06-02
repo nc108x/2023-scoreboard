@@ -13,6 +13,8 @@ const initialState = {
   stage: "PREP",
   startTime: Date.now(),
   countdownAmt: 60000,
+  timerRunning: false,
+  timerAutorun: false,
   history: [emptyPoles],
   historyDelta: ["empty"],
   pointInTime: -1,
@@ -50,6 +52,7 @@ export default function StatesContextProvider({ children }) {
     if (options.sync) {
       mutate({ ...newState });
     } else {
+      console.log("here")
       const copy = structuredClone(gameState);
       _setGameState({ ...copy, ...newState });
     }
@@ -62,14 +65,15 @@ export default function StatesContextProvider({ children }) {
 
   const [dbState, loading, error] = useObjectVal(dbRef);
   useEffect(() => {
-    if (typeof dbState != "undefined" && options.sync) {
-      const copy = structuredClone(gameState);
-      _setGameState({...copy, ...dbState});
-    } else {
-      _setGameState(initialState);
+    if (options.sync) {
+      if (typeof dbState == "undefined") {
+        _setGameState(initialState);
+      } else {
+        const copy = structuredClone(gameState);
+        _setGameState({ ...copy, ...dbState });
+      }
     }
   }, [dbState]);
-
 
   return (
     <StatesContext.Provider
