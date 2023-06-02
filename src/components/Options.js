@@ -1,4 +1,7 @@
-import { useState, useRef } from "react";
+import { useGameStates } from "./StatesContextProvider.js";
+
+import { useState } from "react";
+
 import Box from "@mui/material/Box";
 import SwipeableDrawer from "@mui/material/SwipeableDrawer";
 import Button from "@mui/material/Button";
@@ -7,7 +10,17 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import Switch from "@mui/material/Switch";
 
 export default function Options({ toggleOrientation }) {
+  const { options, setOptions } = useGameStates();
+
   const [showOptions, setShowOptions] = useState(false);
+
+  function toggleOrientation() {
+    if (options.orientation == "SOUTH") {
+      setOptions({ orientation: "NORTH" });
+    } else {
+      setOptions({ orientation: "SOUTH" });
+    }
+  }
 
   return (
     <>

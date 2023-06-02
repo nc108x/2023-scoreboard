@@ -1,15 +1,14 @@
+import { useGameStates } from "./StatesContextProvider.js";
+
 import { useRef } from "react";
+
+import Box from "@mui/material/Box";
 
 import Countdown from "react-countdown";
 import { zeroPad } from "react-countdown";
 
-import Box from "@mui/material/Box";
-
 import useSound from "use-sound";
 import countdownSFX from "../assets/sfx/countdown.mp3";
-
-export let elapsedTime = 0;
-export let remainingTime = 0;
 
 function msToTime(og_ms) {
   const ms = ("0" + Math.floor((og_ms % 1000) / 10)).slice(-2);
@@ -18,8 +17,9 @@ function msToTime(og_ms) {
   return { min, sec, ms };
 }
 
-/* TODO consider moving Timer.js up? or find a more elegant method of transporting elapsedTime */
-export default function Timer({ timerState, setApi, onComplete, fallthrough }) {
+export default function Timer({ setApi, onComplete, fallthrough }) {
+  const { gameState, elapsedTime } = useGameStates();
+
   const [playCountdown] = useSound(countdownSFX, { volume: 0.25 });
   const playingCountdown = useRef(false);
 
@@ -27,18 +27,17 @@ export default function Timer({ timerState, setApi, onComplete, fallthrough }) {
     const min = time.minutes;
     const sec = time.seconds;
     const ms = time.milliseconds;
-    remainingTime = { min, sec, ms };
 
-    remainingTime = msToTime(min * 60000 + sec * 1000 + ms);
-    elapsedTime = msToTime(
-      timerState.countdownAmt - (min * 60000 + sec * 1000 + ms)
+    const remainingTime = msToTime(min * 60000 + sec * 1000 + ms);
+    elapsedTime.current = msToTime(
+      gameState.countdownAmt - (min * 60000 + sec * 1000 + ms)
     );
 
     if (
       remainingTime.sec == 3 &&
       remainingTime.ms == 10 &&
       !playingCountdown.current &&
-      timerState.state == "PREP"
+      gameState.stage == "PREP"
     ) {
       playCountdown();
       playingCountdown.current = true;
@@ -60,12 +59,12 @@ export default function Timer({ timerState, setApi, onComplete, fallthrough }) {
   return (
     <>
       <Countdown
-        key={timerState.startTime}
-        date={timerState.startTime + timerState.countdownAmt}
+        key={gameState.startTime}
+        date={gameState.startTime + gameState.countdownAmt}
         precision={3}
         intervalDelay={0}
         renderer={renderer}
-        autoStart={fallthrough && timerState.state == "GAME" ? true : false}
+        autoStart={fallthrough && gameState.stage == "GAME" ? true : false}
         ref={setApi}
         onComplete={onComplete}
         onTick={onTick}

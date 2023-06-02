@@ -1,7 +1,11 @@
-import { useState, useRef } from "react";
+import { useGameStates } from "./StatesContextProvider.js";
+
+import Timer from "./Timer.js";
+
+import { useState, useRef, useCallback, useEffect } from "react";
+
 import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
-import { enqueueSnackbar } from "notistack";
 
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
@@ -15,17 +19,16 @@ import emptyExcel from "../results_blank.xlsx";
 import Tooltip from "@mui/material/Tooltip";
 import Zoom from "@mui/material/Zoom";
 
-import Timer from "./Timer.js";
+import { enqueueSnackbar } from "notistack";
 
-export default function ControlPanel({
-  resetHandler,
-  swapDragons,
-  undo,
-  redo,
-  gameState,
-  setGameState,
-  exportData,
-}) {
+
+const ONE_MIN = 60000;
+const THREE_MINS = 180000;
+const empty_poles = Array(11).fill(["empty"]);
+
+export default function ControlPanel({}) {
+  const { gameState, setGameState, gameResult } = useGameStates();
+
   const [confirmReset, setConfirmReset] = useState(false);
   const [showExport, setShowExport] = useState(false);
   /* TODO maybe consider refactoring this? */
@@ -42,12 +45,39 @@ export default function ControlPanel({
   /* used to trigger autostart when going from prep to game */
   const fallthrough = useRef(false);
 
+  function setTimerStage(stage) {
+    switch (stage) {
+      case "PREP":
+        setGameState({
+          stage: "PREP",
+          startTime: Date.now(),
+          countdownAmt: ONE_MIN,
+        });
+
+        break;
+      case "GAME":
+        setGameState({
+          stage: "GAME",
+          startTime: Date.now(),
+          countdownAmt: THREE_MINS,
+        });
+        break;
+      case "END":
+        setGameState({
+          stage: "END",
+          startTime: Date.now(),
+          countdownAmt: 0,
+        });
+        break;
+    }
+  }
+
   /* triggered when current countdown arrives at zero */
   /* automatically goes to next state of the game */
   /* can also be triggered manually */
   function nextTimerState(force) {
     fallthrough.current = false;
-    switch (gameState.state) {
+    switch (gameState.stage) {
       case "PREP":
         if (force) {
           setTimerRun(false);
@@ -62,7 +92,7 @@ export default function ControlPanel({
           });
         }
 
-        setGameState("GAME");
+        setTimerStage("GAME");
         break;
 
       case "GAME":
@@ -77,7 +107,7 @@ export default function ControlPanel({
           });
         }
 
-        setGameState("END");
+        setTimerStage("END");
         break;
 
       case "END":
@@ -95,9 +125,9 @@ export default function ControlPanel({
     setTimerRun(false);
     /* if timer is running alr just go to beginning of the CURRENT state */
     if (timerRun) {
-      setGameState(gameState.state);
+      setTimerStage(gameState.stage);
 
-      switch (gameState.state) {
+      switch (gameState.stage) {
         case "PREP":
           enqueueSnackbar("Rewind to beginning of preparation time.", {
             variant: "success",
@@ -111,7 +141,7 @@ export default function ControlPanel({
       }
     } else {
       /* go to previous state */
-      switch (gameState.state) {
+      switch (gameState.stage) {
         case "PREP":
           enqueueSnackbar("Nothing to rewind.", {
             variant: "error",
@@ -119,14 +149,14 @@ export default function ControlPanel({
           break;
 
         case "GAME":
-          setGameState("PREP");
+          setTimerStage("PREP");
           enqueueSnackbar("Rewind to preparation time.", {
             variant: "success",
           });
           break;
 
         case "END":
-          setGameState("GAME");
+          setTimerStage("GAME");
           enqueueSnackbar("Rewind to game time.", {
             variant: "success",
           });
@@ -139,7 +169,7 @@ export default function ControlPanel({
   /* toggles between starting and pausing current countdown */
   function timerBtnHandler() {
     fallthrough.current = false;
-    if (gameState.state == "END") {
+    if (gameState.stage == "END") {
       return;
     }
 
@@ -151,7 +181,7 @@ export default function ControlPanel({
         variant: "success",
       });
 
-      if (gameState.state == "PREP") {
+      if (gameState.stage == "PREP") {
         enqueueSnackbar("Preparation time has started.", {
           variant: "info",
         });
@@ -165,6 +195,194 @@ export default function ControlPanel({
     }
   }
 
+  function swapDragons() {
+    setGameState({
+      redDragon: gameState.redDragon == "FIERY" ? "WAR" : "FIERY",
+      blueDragon: gameState.blueDragon == "FIERY" ? "WAR" : "FIERY",
+    });
+
+    enqueueSnackbar("Dragons have been swapped.", {
+      variant: "success",
+    });
+  }
+
+  function resetHandler() {
+    setGameState({
+      stage: "PREP",
+      startTime: Date.now(),
+      countdownAmt: 60000,
+      history: [empty_poles],
+      historyDelta: ["empty"],
+      pointInTime: -1,
+      currPoles: empty_poles,
+    });
+
+    enqueueSnackbar("Scoreboard has been reset.", {
+      variant: "success",
+    });
+  }
+
+  /* present will be denoted by -1 */
+  /* since history.at(-1) corresponds to the newest entry in the stack */
+  /* pointInTime should never be positive */
+  /* undo/redo works by manipulating pointInTime */
+  function undo() {
+    if (-gameState.pointInTime == gameState.history.length) {
+      enqueueSnackbar("Cannot undo any further!", {
+        variant: "error",
+      });
+      return;
+    }
+
+    if (gameState.state == "END") {
+      enqueueSnackbar("Currently modifying rings after game has ended.", {
+        variant: "warning",
+      });
+    }
+    setGameState({
+      pointInTime: gameState.pointInTime - 1,
+      currPoles: gameState.history.at(gameState.pointInTime - 1),
+    });
+  }
+
+  function redo() {
+    if (gameState.pointInTime == -1) {
+      enqueueSnackbar("Cannot redo any further!", {
+        variant: "error",
+      });
+      return;
+    }
+
+    if (gameState.state == "END") {
+      enqueueSnackbar("Currently modifying rings after game has ended.", {
+        variant: "warning",
+      });
+    }
+    setGameState({
+      pointInTime: gameState.pointInTime + 1,
+      currPoles: gameState.history.at(gameState.pointInTime + 1),
+    });
+  }
+
+  const undoShortcut = useCallback(
+    (event) => {
+      const platform = navigator.platform;
+      if (platform.startsWith("Mac")) {
+        if (event.key == "z" && event.metaKey == true) {
+          event.preventDefault();
+          undo();
+        }
+      } else {
+        if (event.key == "z" && event.ctrlKey == true) {
+          event.preventDefault();
+          undo();
+        }
+      }
+    },
+    [gameState.pointInTime]
+  );
+
+  useEffect(() => {
+    // attach the event listener
+    document.addEventListener("keydown", undoShortcut);
+
+    // remove the event listener
+    return () => {
+      document.removeEventListener("keydown", undoShortcut);
+    };
+  }, [undoShortcut]);
+
+  function exportData(type) {
+    let exportStr = "";
+
+    if (type == 0) {
+      let timestamp = new Date();
+      timestamp.toISOString();
+      exportStr = exportStr.concat(timestamp);
+      exportStr = exportStr.concat(";");
+
+      exportStr = exportStr.concat(
+        gameState.redDragon == "FIERY" ? "RED" : "BLUE"
+      );
+      exportStr = exportStr.concat(";");
+
+      exportStr = exportStr.concat(
+        gameState.redDragon == "FIERY" ? "BLUE" : "RED"
+      );
+      exportStr = exportStr.concat(";");
+
+      exportStr = exportStr.concat(
+        gameState.redDragon == "FIERY"
+          ? gameResult.current.redScore
+          : gameResult.current.blueScore
+      );
+      exportStr = exportStr.concat(";");
+
+      exportStr = exportStr.concat(
+        gameState.redDragon == "FIERY"
+          ? gameResult.current.blueScore
+          : gameResult.current.redScore
+      );
+      exportStr = exportStr.concat(";");
+
+      const fieryColor = gameState.redDragon == "FIERY" ? "RED" : "BLUE";
+
+      exportStr = exportStr.concat(
+        gameState.historyDelta.filter((element) => element[0] == fieryColor)
+          .length
+      );
+      exportStr = exportStr.concat(";");
+
+      exportStr = exportStr.concat(
+        gameState.historyDelta.filter(
+          (element) => element[0] != fieryColor && element != "empty"
+        ).length
+      );
+      exportStr = exportStr.concat(";");
+
+      exportStr = exportStr.concat(
+        gameResult.current.winner != false ? "TRUE" : "FALSE"
+      );
+      exportStr = exportStr.concat(";");
+
+      exportStr = exportStr.concat(
+        gameResult.current.winner
+          ? gameResult.current.winner == "RED"
+            ? gameState.redDragon
+            : gameState.blueDragon
+          : gameResult.current.redScore > gameResult.current.blueScore
+          ? gameState.redDragon
+          : gameResult.current.blueScore > gameResult.current.redScore
+          ? gameState.blueDragon
+          : "TIE"
+      );
+      exportStr = exportStr.concat(";");
+
+      exportStr = exportStr.concat(
+        gameResult.current.winner != false
+          ? gameState.historyDelta.at(-1)[2]
+          : "03:00:00"
+      );
+      exportStr = exportStr.concat(";");
+    } else {
+      for (let i = 0; i < gameState.currPoles.length; i++) {
+        switch (gameState.currPoles[i].at(-1)) {
+          case "empty":
+            exportStr = exportStr.concat("0;");
+            break;
+          case "RED":
+            exportStr = exportStr.concat("r;");
+            break;
+          case "BLUE":
+            exportStr = exportStr.concat("b;");
+            break;
+        }
+      }
+    }
+
+    return exportStr.slice(0, -1);
+  }
+
   return (
     <>
       <Grid item>
@@ -174,7 +392,7 @@ export default function ControlPanel({
           onComplete={() => nextTimerState(false)}
           fallthrough={fallthrough.current}
         />
-        <Grid item>{"Current state: " + gameState.state}</Grid>
+        <Grid item>{"Current state: " + gameState.stage}</Grid>
         <Grid item>
           <Tooltip
             TransitionComponent={Zoom}
@@ -194,12 +412,12 @@ export default function ControlPanel({
           <Button onClick={redo}>REDO</Button>
           <Button
             onClick={
-              gameState.state == "END"
+              gameState.stage == "END"
                 ? () => setShowExport(true)
                 : timerBtnHandler
             }
           >
-            {gameState.state == "END"
+            {gameState.stage == "END"
               ? "EXPORT"
               : timerRun == false
               ? "START"
@@ -279,7 +497,11 @@ export default function ControlPanel({
                 </Typography>
                 <Typography>{"Pole states:"}</Typography>
                 <Typography>{exportData(1)}</Typography>
-                <Typography>{"NOTE: use CTRL+SHIFT+V when pasting this string to keep formatting"}</Typography>
+                <Typography>
+                  {
+                    "NOTE: use CTRL+SHIFT+V when pasting this string to keep formatting"
+                  }
+                </Typography>
               </DialogContentText>
             </DialogContent>
             <DialogActions>

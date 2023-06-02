@@ -1,24 +1,26 @@
+import { useGameStates } from "./StatesContextProvider.js";
+
 import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 
-export default function Info({
-  score,
-  dragonName,
-  color,
-  historyDelta,
-  winner,
-}) {
+export default function Info({ color }) {
+  const { gameState, gameResult } = useGameStates();
+
   let bgColor;
-  if (color == "red") {
+  let name;
+
+  if (color == "RED") {
     bgColor = "redTeam.main";
+    name = gameState.redDragon;
   } else {
     bgColor = "blueTeam.main";
+    name = gameState.blueDragon;
   }
 
-  const ringsScored = historyDelta.filter(
-    (element) => element[0] == color
-  ).length;
+  const ringsScored = gameState.historyDelta
+    .slice(0, gameState.historyDelta.length + gameState.pointInTime + 1)
+    .filter((element) => element[0] == color).length;
 
   return (
     <>
@@ -31,15 +33,15 @@ export default function Info({
           textAlign: "center",
         }}
       >
-        <Typography variant="h4">{dragonName + "\nDRAGON"}</Typography>
-        <Typography variant="h4">{score}</Typography>
+        <Typography variant="h4">{name + "\nDRAGON"}</Typography>
+        <Typography variant="h4">{color == "RED" ? gameResult.current.redScore : gameResult.current.blueScore}</Typography>
         <Typography variant="h6">{"Rings scored: " + ringsScored}</Typography>
         <Typography variant="h6">
           {"Rings remaining: " + (40 - ringsScored)}
         </Typography>
         <Typography variant="h6">
           <Box sx={{ backgroundColor: "#a6e3a1", borderRadius: 2 }}>
-            {winner.winner == color ? "CHEY-YO" : " "}
+            {gameResult.current.winner == color ? "CHEY-YO" : " "}
           </Box>
         </Typography>
       </Paper>

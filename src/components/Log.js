@@ -1,3 +1,5 @@
+import { useGameStates } from "./StatesContextProvider.js";
+
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -6,15 +8,17 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 
-export default function Log({ historyDelta, color, winner, orientation }) {
-  const logTable = historyDelta
-    .slice(0)
+export default function Log({ color }) {
+  const { gameState, gameResult, options } = useGameStates();
+
+  const logTable = gameState.historyDelta
+    .slice(0, gameState.historyDelta.length + gameState.pointInTime + 1)
     .reverse()
     .map((action, index) => {
       if (action != "empty" && action[0] == color) {
         if (
-          winner.winner == color &&
-          index == historyDelta.length - winner.time
+          gameResult.current.winner == color &&
+          index == gameState.historyDelta.length - gameResult.current.winTime
         ) {
           return (
             <>
@@ -25,7 +29,9 @@ export default function Log({ historyDelta, color, winner, orientation }) {
               <TableRow key={index}>
                 <TableCell>
                   {"Scored pole " +
-                    (orientation == "red" ? action[1] + 1 : 11 - action[1])}
+                    (options.orientation == "SOUTH"
+                      ? action[1] + 1
+                      : 11 - action[1])}
                 </TableCell>
                 <TableCell>{action[2]}</TableCell>
               </TableRow>
@@ -36,7 +42,9 @@ export default function Log({ historyDelta, color, winner, orientation }) {
           <TableRow key={index}>
             <TableCell>
               {"Scored pole " +
-                (orientation == "red" ? action[1] + 1 : 11 - action[1])}
+                (options.orientation == "SOUTH"
+                  ? action[1] + 1
+                  : 11 - action[1])}
             </TableCell>
             <TableCell>{action[2]}</TableCell>
           </TableRow>
