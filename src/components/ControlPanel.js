@@ -42,7 +42,7 @@ export default function ControlPanel({}) {
   /* used to trigger autostart when going from prep to game */
   const fallthrough = useRef(false);
 
-  function setTimerStage(stage, running) {
+  function setTimerStage(stage, running, fallthrough) {
     switch (stage) {
       case "PREP":
         setGameState({
@@ -50,6 +50,7 @@ export default function ControlPanel({}) {
           startTime: Date.now(),
           countdownAmt: ONE_MIN,
           timerRunning: running,
+          timerFallthrough: fallthrough,
         });
 
         break;
@@ -59,6 +60,7 @@ export default function ControlPanel({}) {
           startTime: Date.now(),
           countdownAmt: THREE_MINS,
           timerRunning: running,
+          timerFallthrough: fallthrough,
         });
         break;
       case "END":
@@ -67,6 +69,7 @@ export default function ControlPanel({}) {
           startTime: Date.now(),
           countdownAmt: 0,
           timerRunning: running,
+          timerFallthrough: fallthrough,
         });
         break;
     }
@@ -76,10 +79,11 @@ export default function ControlPanel({}) {
   /* automatically goes to next state of the game */
   /* can also be triggered manually */
   function nextTimerState(force) {
-    fallthrough.current = false;
+    /* fallthrough.current = false; */
+
     switch (gameState.stage) {
       case "PREP":
-        setTimerStage("GAME", !force);
+        setTimerStage("GAME", !force, !force);
 
         if (force) {
           /* setTimerRun(false); */
@@ -87,7 +91,7 @@ export default function ControlPanel({}) {
             variant: "success",
           });
         } else {
-          fallthrough.current = true;
+          /* fallthrough.current = true; */
           /* setTimerRun(true); */
           enqueueSnackbar("Game time has started.", {
             variant: "info",
@@ -96,7 +100,7 @@ export default function ControlPanel({}) {
         break;
 
       case "GAME":
-        setTimerStage("END", false);
+        setTimerStage("END", false, false);
         /* setTimerRun(false); */
         if (force) {
           enqueueSnackbar("Fast forward to end.", {
@@ -120,11 +124,11 @@ export default function ControlPanel({}) {
   }
 
   function prevTimerState() {
-    fallthrough.current = false;
+    /* fallthrough.current = false; */
     /* setTimerRun(false); */
     /* if timer is running alr just go to beginning of the CURRENT state */
     if (gameState.timerRunning) {
-      setTimerStage(gameState.stage, false);
+      setTimerStage(gameState.stage, false, false);
 
       switch (gameState.stage) {
         case "PREP":
@@ -148,14 +152,14 @@ export default function ControlPanel({}) {
           break;
 
         case "GAME":
-          setTimerStage("PREP", false);
+          setTimerStage("PREP", false, false);
           enqueueSnackbar("Rewind to preparation time.", {
             variant: "success",
           });
           break;
 
         case "END":
-          setTimerStage("GAME", false);
+          setTimerStage("GAME", false, false);
           enqueueSnackbar("Rewind to game time.", {
             variant: "success",
           });
@@ -167,14 +171,14 @@ export default function ControlPanel({}) {
   /* triggered when button is clicked */
   /* toggles between starting and pausing current countdown */
   function timerBtnHandler() {
-    fallthrough.current = false;
+    /* fallthrough.current = false; */
     if (gameState.stage == "END") {
       return;
     }
 
     if (countdownApi.current?.isPaused() || countdownApi.current?.isStopped()) {
       /* setTimerRun(true); */
-      setGameState({ timerRunning: true });
+      setGameState({ timerRunning: true, timerFallthrough: false });
 
       countdownApi.current.start();
       enqueueSnackbar("Timer started.", {
@@ -188,7 +192,7 @@ export default function ControlPanel({}) {
       }
     } else {
       /* setTimerRun(false); */
-      setGameState({ timerRunning: false });
+      setGameState({ timerRunning: false, timerFallthrough: false });
       countdownApi.current.pause();
       enqueueSnackbar("Timer paused.", {
         variant: "success",
@@ -385,6 +389,14 @@ export default function ControlPanel({}) {
     return exportStr.slice(0, -1);
   }
 
+  useEffect(() => {
+    if (gameState.timerRunning) {
+      countdownApi.current.start();
+    } else {
+      countdownApi.current.pause();
+    }
+  }, [gameState.timerRunning]);
+
   return (
     <>
       <Grid item>
@@ -392,7 +404,7 @@ export default function ControlPanel({}) {
           timerState={gameState}
           setApi={setApi}
           onComplete={() => nextTimerState(false)}
-          fallthrough={fallthrough.current}
+          /* fallthrough={fallthrough.current} */
         />
         <Grid item>{"Current state: " + gameState.stage}</Grid>
         <Grid item>

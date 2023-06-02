@@ -14,7 +14,7 @@ const initialState = {
   startTime: Date.now(),
   countdownAmt: 60000,
   timerRunning: false,
-  timerAutorun: false,
+  timerFallthrough: false,
   history: [emptyPoles],
   historyDelta: ["empty"],
   pointInTime: -1,
