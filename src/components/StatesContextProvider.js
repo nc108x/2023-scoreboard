@@ -1,4 +1,8 @@
-import { useState, createContext, useContext, useRef } from "react";
+import { useFirebase } from "./FirebaseProvider.js";
+
+import { useState, createContext, useContext, useRef, useEffect } from "react";
+
+import { useObjectVal } from "react-firebase-hooks/database";
 
 const emptyPoles = Array(11).fill(["empty"]);
 
@@ -27,11 +31,14 @@ const initialResult = {
 /* orientation: where red is located */
 const defaultOptions = {
   orientation: "SOUTH",
+  sync: false,
 };
 
 const StatesContext = createContext({});
 
 export default function StatesContextProvider({ children }) {
+  const { dbRef, mutate } = useFirebase();
+
   const [gameState, _setGameState] = useState(initialState);
   /* TODO maybe don't use ref? there should be a better option */
   /* don't think ref is supposed to be used this way */
@@ -40,14 +47,29 @@ export default function StatesContextProvider({ children }) {
   const elapsedTime = useRef({ min: 0, sec: 0, ms: 0 });
 
   function setGameState(newState) {
-    const copy = structuredClone(gameState);
-    _setGameState({ ...copy, ...newState });
+    if (options.sync) {
+      mutate({ ...newState });
+    } else {
+      const copy = structuredClone(gameState);
+      _setGameState({ ...copy, ...newState });
+    }
   }
 
   function setOptions(newOptions) {
     const copy = structuredClone(options);
     _setOptions({ ...copy, ...newOptions });
   }
+
+  const [dbState, loading, error] = useObjectVal(dbRef);
+  useEffect(() => {
+    if (typeof dbState != "undefined" && options.sync) {
+      const copy = structuredClone(gameState);
+      _setGameState({...copy, ...dbState});
+    } else {
+      _setGameState(initialState);
+    }
+  }, [dbState]);
+
 
   return (
     <StatesContext.Provider

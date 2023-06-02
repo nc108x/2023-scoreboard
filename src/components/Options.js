@@ -22,6 +22,10 @@ export default function Options({ toggleOrientation }) {
     }
   }
 
+  function toggleSync() {
+    setOptions({ sync: !options.sync });
+  }
+
   return (
     <>
       <Button
@@ -37,10 +41,18 @@ export default function Options({ toggleOrientation }) {
       >
         <Box sx={{ margin: 2 }}>
           <Box>Options:</Box>
-          <FormControlLabel
-            control={<Switch onChange={toggleOrientation} />}
-            label="Use blue perspective"
-          />
+          <Box>
+            <FormControlLabel
+              control={<Switch onChange={toggleOrientation} />}
+              label="Use blue perspective"
+            />
+          </Box>
+          <Box>
+            <FormControlLabel
+              control={<Switch onChange={toggleSync} />}
+              label="Sync"
+            />
+          </Box>
         </Box>
       </SwipeableDrawer>
     </>
