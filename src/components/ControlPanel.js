@@ -26,7 +26,7 @@ const THREE_MINS = 180000;
 const empty_poles = Array(11).fill(["empty"]);
 
 export default function ControlPanel({}) {
-  const { gameState, setGameState, gameResult } = useGameStates();
+  const { gameState, setGameState, gameResult, options } = useGameStates();
 
   const [confirmReset, setConfirmReset] = useState(false);
   const [showExport, setShowExport] = useState(false);
@@ -176,7 +176,6 @@ export default function ControlPanel({}) {
     if (countdownApi.current?.isPaused() || countdownApi.current?.isStopped()) {
       setGameState({ timerRunning: true, timerFallthrough: false });
 
-      /* countdownApi.current.start(); */
       enqueueSnackbar("Timer started.", {
         variant: "success",
       });
@@ -188,7 +187,6 @@ export default function ControlPanel({}) {
       }
     } else {
       setGameState({ timerRunning: false, timerFallthrough: false });
-      /* countdownApi.current.pause(); */
       enqueueSnackbar("Timer paused.", {
         variant: "success",
       });
@@ -391,7 +389,6 @@ export default function ControlPanel({}) {
           timerState={gameState}
           setApi={setApi}
           onComplete={() => nextTimerState(false)}
-          /* fallthrough={fallthrough.current} */
         />
         <Grid item>{"Current state: " + gameState.stage}</Grid>
         <Grid item>
@@ -445,9 +442,16 @@ export default function ControlPanel({}) {
             </DialogTitle>
             <DialogContent>
               <DialogContentText id="alert-dialog-description">
-                {
-                  "All poles will be emptied. This action cannot be undone because I am too lazy to implement this feature."
-                }
+                <Typography paragraph="true">
+                  {
+                    "All poles will be emptied. This action cannot be undone because I am too lazy to implement this feature."
+                  }
+                </Typography>
+                <Typography paragraph="true">
+                  {options.sync
+                    ? "WARNING: SYNC IS ENABLED. RESETTING CURRENT GAME STATE WILL AFFECT ALL OTHERS CURRENTLY SYNCED."
+                    : ""}
+                </Typography>
               </DialogContentText>
             </DialogContent>
             <DialogActions>
@@ -463,9 +467,6 @@ export default function ControlPanel({}) {
                 onClick={() => {
                   setConfirmReset(false);
                   resetHandler();
-
-                  /* setTimerRun(false); */
-                  /* countdownApi.current.pause(); */
                 }}
               >
                 {"繼續開game啦咁多野講"}

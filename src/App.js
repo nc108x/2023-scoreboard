@@ -7,6 +7,9 @@ import Log from "./components/Log.js";
 import Options from "./components/Options.js";
 
 import Grid from "@mui/material/Grid";
+import Typography from "@mui/material/Typography";
+import CircleIcon from "@mui/icons-material/Circle";
+import { green } from "@mui/material/colors";
 
 import theme from "./Theme.js";
 import { ThemeProvider } from "@mui/material/styles";
@@ -15,7 +18,7 @@ import CssBaseline from "@mui/material/CssBaseline";
 import { SnackbarProvider, enqueueSnackbar } from "notistack";
 
 function App() {
-  const { gameState, gameResult } = useGameStates();
+  const { gameState, gameResult, options } = useGameStates();
 
   /* called by checkScore */
   function checkEndgame(topRings) {
@@ -96,12 +99,35 @@ function App() {
   /* update score */
   checkScore();
 
+  function SyncIndicator() {
+    if (options.sync) {
+      return (
+        <>
+          <Typography
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              position: "absolute",
+              left: "90%",
+              top: 10,
+              color: green[500],
+            }}
+          >
+            <CircleIcon sx={{ fontSize: 16 }} />
+            {"SYNC ENABLED"}
+          </Typography>
+        </>
+      );
+    }
+  }
+
   return (
     <>
       <ThemeProvider theme={theme}>
         <CssBaseline />
         <SnackbarProvider maxSnack={3} autoHideDuration={1500}>
           <Options />
+          <SyncIndicator />
           <Grid
             container
             direction="column"
@@ -114,7 +140,6 @@ function App() {
             <Grid container item justifyContent="space-evenly">
               <ControlPanel />
             </Grid>
-            {/* <button onClick={() => setCounter(counter + 1)}>{counter}</button> */}
             <Grid container item direction="row">
               <Grid
                 container
