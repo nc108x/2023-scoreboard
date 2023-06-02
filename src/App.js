@@ -2,6 +2,7 @@ import { useGameStates } from "./components/StatesContextProvider.js";
 
 import Gamefield from "./components/Gamefield.js";
 import Info from "./components/Info.js";
+import ControlPanel from "./components/ControlPanel.js";
 import Log from "./components/Log.js";
 import Options from "./components/Options.js";
 

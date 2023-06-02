@@ -31,7 +31,7 @@ const defaultOptions = {
 
 const StatesContext = createContext({});
 
-export function StatesContextProvider({ children }) {
+export default function StatesContextProvider({ children }) {
   const [gameState, _setGameState] = useState(initialState);
   /* TODO maybe don't use ref? there should be a better option */
   /* don't think ref is supposed to be used this way */

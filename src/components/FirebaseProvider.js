@@ -12,7 +12,10 @@ const app = initializeApp({
 
 export default function FirebaseProvider({ children }) {
   const [db] = useState(getDatabase(app));
-  const dbRef = useMemo(() => ref(db, process.env.REACT_APP_SCOREBOARD_YEAR), [db]);
+  const dbRef = useMemo(
+    () => ref(db, process.env.REACT_APP_SCOREBOARD_YEAR),
+    [db]
+  );
 
   const mutate = (newVal, ref = dbRef) =>
     runTransaction(ref, (oldVal) => {
@@ -21,7 +24,9 @@ export default function FirebaseProvider({ children }) {
     });
 
   return (
-    <firebaseContext.Provider value={{ db, dbRef, mutate }}>{children}</firebaseContext.Provider>
+    <firebaseContext.Provider value={{ db, dbRef, mutate }}>
+      {children}
+    </firebaseContext.Provider>
   );
 }
 
