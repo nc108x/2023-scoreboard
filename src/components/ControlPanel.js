@@ -39,8 +39,14 @@ export default function ControlPanel({}) {
     countdownApi.current = ref.getApi();
   };
 
-  /* used to trigger autostart when going from prep to game */
-  const fallthrough = useRef(false);
+  /* to start/stop timer based on gameState */
+  useEffect(() => {
+    if (gameState.timerRunning) {
+      countdownApi.current.start();
+    } else {
+      countdownApi.current.pause();
+    }
+  }, [gameState.timerRunning]);
 
   function setTimerStage(stage, running, fallthrough) {
     switch (stage) {
@@ -79,20 +85,15 @@ export default function ControlPanel({}) {
   /* automatically goes to next state of the game */
   /* can also be triggered manually */
   function nextTimerState(force) {
-    /* fallthrough.current = false; */
-
     switch (gameState.stage) {
       case "PREP":
         setTimerStage("GAME", !force, !force);
 
         if (force) {
-          /* setTimerRun(false); */
           enqueueSnackbar("Fast forward to game time.", {
             variant: "success",
           });
         } else {
-          /* fallthrough.current = true; */
-          /* setTimerRun(true); */
           enqueueSnackbar("Game time has started.", {
             variant: "info",
           });
@@ -101,7 +102,6 @@ export default function ControlPanel({}) {
 
       case "GAME":
         setTimerStage("END", false, false);
-        /* setTimerRun(false); */
         if (force) {
           enqueueSnackbar("Fast forward to end.", {
             variant: "success",
@@ -124,8 +124,6 @@ export default function ControlPanel({}) {
   }
 
   function prevTimerState() {
-    /* fallthrough.current = false; */
-    /* setTimerRun(false); */
     /* if timer is running alr just go to beginning of the CURRENT state */
     if (gameState.timerRunning) {
       setTimerStage(gameState.stage, false, false);
@@ -171,16 +169,14 @@ export default function ControlPanel({}) {
   /* triggered when button is clicked */
   /* toggles between starting and pausing current countdown */
   function timerBtnHandler() {
-    /* fallthrough.current = false; */
     if (gameState.stage == "END") {
       return;
     }
 
     if (countdownApi.current?.isPaused() || countdownApi.current?.isStopped()) {
-      /* setTimerRun(true); */
       setGameState({ timerRunning: true, timerFallthrough: false });
 
-      countdownApi.current.start();
+      /* countdownApi.current.start(); */
       enqueueSnackbar("Timer started.", {
         variant: "success",
       });
@@ -191,9 +187,8 @@ export default function ControlPanel({}) {
         });
       }
     } else {
-      /* setTimerRun(false); */
       setGameState({ timerRunning: false, timerFallthrough: false });
-      countdownApi.current.pause();
+      /* countdownApi.current.pause(); */
       enqueueSnackbar("Timer paused.", {
         variant: "success",
       });
@@ -389,14 +384,6 @@ export default function ControlPanel({}) {
     return exportStr.slice(0, -1);
   }
 
-  useEffect(() => {
-    if (gameState.timerRunning) {
-      countdownApi.current.start();
-    } else {
-      countdownApi.current.pause();
-    }
-  }, [gameState.timerRunning]);
-
   return (
     <>
       <Grid item>
@@ -478,7 +465,7 @@ export default function ControlPanel({}) {
                   resetHandler();
 
                   /* setTimerRun(false); */
-                  countdownApi.current.pause();
+                  /* countdownApi.current.pause(); */
                 }}
               >
                 {"繼續開game啦咁多野講"}
