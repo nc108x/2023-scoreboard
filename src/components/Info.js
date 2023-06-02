@@ -10,7 +10,7 @@ export default function Info({ color }) {
   let bgColor;
   let name;
 
-  if (color == "red") {
+  if (color == "RED") {
     bgColor = "redTeam.main";
     name = gameState.redDragon;
   } else {
@@ -34,7 +34,7 @@ export default function Info({ color }) {
         }}
       >
         <Typography variant="h4">{name + "\nDRAGON"}</Typography>
-        <Typography variant="h4">{color == "red" ? gameResult.current.redScore : gameResult.current.blueScore}</Typography>
+        <Typography variant="h4">{color == "RED" ? gameResult.current.redScore : gameResult.current.blueScore}</Typography>
         <Typography variant="h6">{"Rings scored: " + ringsScored}</Typography>
         <Typography variant="h6">
           {"Rings remaining: " + (40 - ringsScored)}

@@ -22,23 +22,23 @@ function App() {
     const redWinCon = topRings.slice(0, 8);
     const blueWinCon = topRings.slice(3, 11);
 
-    if (redWinCon.every((currVal) => currVal == "red")) {
+    if (redWinCon.every((currVal) => currVal == "RED")) {
       enqueueSnackbar(gameState.redDragon + " Dragon has ended the game!", {
         variant: "success",
         preventDuplicate: true,
       });
 
-      gameResult.current.winner = "red";
+      gameResult.current.winner = "RED";
       if (gameResult.current.winTime == -1) {
         gameResult.current.winTime = gameState.historyDelta.length;
       }
-    } else if (blueWinCon.every((currVal) => currVal == "blue")) {
+    } else if (blueWinCon.every((currVal) => currVal == "BLUE")) {
       enqueueSnackbar(gameState.blueDragon + " Dragon has ended the game!", {
         variant: "success",
         preventDuplicate: true,
       });
 
-      gameResult.current.winner = "blue";
+      gameResult.current.winner = "BLUE";
       if (gameResult.current.winTime == -1) {
         gameResult.current.winTime = gameState.historyDelta.length;
       }
@@ -68,8 +68,8 @@ function App() {
 
       if (type1.includes(i)) {
         if (
-          (i < 5 && topRings[i] == "blue") ||
-          (i > 5 && topRings[i] == "red")
+          (i < 5 && topRings[i] == "BLUE") ||
+          (i > 5 && topRings[i] == "RED")
         ) {
           scoreIncrease = 25;
         } else {
@@ -81,7 +81,7 @@ function App() {
         scoreIncrease = 70;
       }
 
-      if (topRings[i] == "red") {
+      if (topRings[i] == "RED") {
         redScore += scoreIncrease;
       } else {
         blueScore += scoreIncrease;
@@ -123,11 +123,11 @@ function App() {
                 justifyContent="space-between"
               >
                 <Grid item>
-                  <Info color="red" />
+                  <Info color="RED" />
                 </Grid>
 
                 <Grid item>
-                  <Log color="red" />
+                  <Log color="RED" />
                 </Grid>
               </Grid>
 
@@ -143,11 +143,11 @@ function App() {
                 justifyContent="space-between"
               >
                 <Grid item>
-                  <Info color="blue" />
+                  <Info color="BLUE" />
                 </Grid>
 
                 <Grid item>
-                  <Log color="blue" />
+                  <Log color="BLUE" />
                 </Grid>
               </Grid>
             </Grid>

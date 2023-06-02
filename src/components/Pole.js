@@ -26,7 +26,7 @@ export default function Pole({
 
     if (ringsScored == 40) {
       enqueueSnackbar(
-        (color == "red" ? gameState.redDragon : gameState.blueDragon) +
+        (color == "RED" ? gameState.redDragon : gameState.blueDragon) +
           " Dragon has used up their rings!",
         {
           variant: "error",
@@ -99,24 +99,24 @@ export default function Pole({
   }
 
   const color =
-    rings.at(-1) == "red"
+    rings.at(-1) == "RED"
       ? "redTeam"
-      : rings.at(-1) == "blue"
+      : rings.at(-1) == "BLUE"
       ? "blueTeam"
       : "standbyColor";
 
   const hover =
     "Red: " +
-    rings.filter((element) => element == "red").length +
+    rings.filter((element) => element == "RED").length +
     " | Blue: " +
-    rings.filter((element) => element == "blue").length;
+    rings.filter((element) => element == "BLUE").length;
 
   return (
     <Tooltip TransitionComponent={Zoom} title={hover}>
       <Fab
         color={color}
-        onClick={(e) => scoreHandler(e, index, "red")}
-        onContextMenu={(e) => scoreHandler(e, index, "blue")}
+        onClick={(e) => scoreHandler(e, index, "RED")}
+        onContextMenu={(e) => scoreHandler(e, index, "BLUE")}
         sx={{
           position: "absolute",
           top: y,

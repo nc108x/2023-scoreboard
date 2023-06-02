@@ -197,8 +197,8 @@ export default function ControlPanel({}) {
 
   function swapDragons() {
     setGameState({
-      redDragon1: gameState.redDragon1 == "FIERY" ? "WAR" : "FIERY",
-      blueDragon1: gameState.blueDragon1 == "FIERY" ? "WAR" : "FIERY",
+      redDragon: gameState.redDragon == "FIERY" ? "WAR" : "FIERY",
+      blueDragon: gameState.blueDragon == "FIERY" ? "WAR" : "FIERY",
     });
 
     enqueueSnackbar("Dragons have been swapped.", {
@@ -325,7 +325,7 @@ export default function ControlPanel({}) {
       );
       exportStr = exportStr.concat(";");
 
-      const fieryColor = gameState.redDragon == "FIERY" ? "red" : "blue";
+      const fieryColor = gameState.redDragon == "FIERY" ? "RED" : "BLUE";
 
       exportStr = exportStr.concat(
         gameState.historyDelta.filter((element) => element[0] == fieryColor)
@@ -347,7 +347,7 @@ export default function ControlPanel({}) {
 
       exportStr = exportStr.concat(
         gameResult.current.winner
-          ? gameResult.current.winner == "red"
+          ? gameResult.current.winner == "RED"
             ? gameState.redDragon
             : gameState.blueDragon
           : gameResult.current.redScore > gameResult.current.blueScore
@@ -370,10 +370,10 @@ export default function ControlPanel({}) {
           case "empty":
             exportStr = exportStr.concat("0;");
             break;
-          case "red":
+          case "RED":
             exportStr = exportStr.concat("r;");
             break;
-          case "blue":
+          case "BLUE":
             exportStr = exportStr.concat("b;");
             break;
         }
