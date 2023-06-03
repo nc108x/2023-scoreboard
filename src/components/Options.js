@@ -8,6 +8,7 @@ import Button from "@mui/material/Button";
 import MenuIcon from "@mui/icons-material/Menu";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Switch from "@mui/material/Switch";
+import Link from "@mui/material/Link";
 
 export default function Options({ toggleOrientation }) {
   const { options, setOptions } = useGameStates();
@@ -40,7 +41,12 @@ export default function Options({ toggleOrientation }) {
         onClose={() => setShowOptions(false)}
       >
         <Box sx={{ margin: 2 }}>
-          <Box>Options:</Box>
+          <Box>
+            <Link href={"https://github.com/nc108x/2023-scoreboard#disclaimer"}>
+              {"Help"}
+            </Link>
+          </Box>
+          <Box>{"Options:"}</Box>
           <Box>
             <FormControlLabel
               control={<Switch onChange={toggleOrientation} />}
