@@ -1,5 +1,7 @@
 import { useGameStates } from "./StatesContextProvider.js";
 
+import { ResetPrompt, ExportPrompt, SyncPrompt } from "./Prompts.js";
+
 import { useState } from "react";
 
 import Box from "@mui/material/Box";
@@ -14,6 +16,7 @@ export default function Options({ toggleOrientation }) {
   const { options, setOptions } = useGameStates();
 
   const [showOptions, setShowOptions] = useState(false);
+  const [showConfirmSync, setShowConfirmSync] = useState(false);
 
   function toggleOrientation() {
     if (options.orientation == "SOUTH") {
@@ -21,10 +24,6 @@ export default function Options({ toggleOrientation }) {
     } else {
       setOptions({ orientation: "SOUTH" });
     }
-  }
-
-  function toggleSync() {
-    setOptions({ sync: !options.sync });
   }
 
   return (
@@ -42,7 +41,10 @@ export default function Options({ toggleOrientation }) {
       >
         <Box sx={{ margin: 2 }}>
           <Box>
-            <Link href={"https://github.com/nc108x/2023-scoreboard#disclaimer"} target="_blank">
+            <Link
+              href={"https://github.com/nc108x/2023-scoreboard#disclaimer"}
+              target="_blank"
+            >
               {"Help"}
             </Link>
           </Box>
@@ -55,12 +57,29 @@ export default function Options({ toggleOrientation }) {
           </Box>
           <Box>
             <FormControlLabel
-              control={<Switch onChange={toggleSync} />}
+              control={
+                <Switch
+                  checked={options.sync}
+                  onChange={(e) => {
+                    console.log(e.target.checked)
+                    if (e.target.checked) {
+                      setShowConfirmSync(true);
+                    } else {
+                      setOptions({ sync: false });
+                    }
+                  }}
+                />
+              }
               label="Sync"
             />
           </Box>
         </Box>
       </SwipeableDrawer>
+
+      <SyncPrompt
+        showConfirmSync={showConfirmSync}
+        setShowConfirmSync={setShowConfirmSync}
+      />
     </>
   );
 }

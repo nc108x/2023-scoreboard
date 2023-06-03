@@ -14,7 +14,7 @@ import { enqueueSnackbar } from "notistack";
 
 const ONE_MIN = 60000;
 const THREE_MINS = 180000;
-const empty_poles = Array(11).fill(["empty"]);
+const emptyPoles = Array(11).fill(["empty"]);
 
 export default function ControlPanel({}) {
   const { gameState, setGameState, gameResult } = useGameStates();
@@ -201,10 +201,10 @@ export default function ControlPanel({}) {
       startTime: Date.now(),
       countdownAmt: 60000,
       timerRunning: false,
-      history: [empty_poles],
+      history: [emptyPoles],
       historyDelta: ["empty"],
       pointInTime: -1,
-      currPoles: empty_poles,
+      currPoles: emptyPoles,
     });
 
     enqueueSnackbar("Scoreboard has been reset.", {
@@ -425,7 +425,11 @@ export default function ControlPanel({}) {
             resetHandler={resetHandler}
           />
 
-          <ExportPrompt showExport={showExport} setShowExport={setShowExport} exportData={exportData} />
+          <ExportPrompt
+            showExport={showExport}
+            setShowExport={setShowExport}
+            exportData={exportData}
+          />
         </Grid>
       </Grid>
     </>

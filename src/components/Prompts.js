@@ -8,6 +8,8 @@ import DialogTitle from "@mui/material/DialogTitle";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 
+import { enqueueSnackbar } from "notistack";
+
 import Link from "@mui/material/Link";
 import emptyExcel from "../results_blank.xlsx";
 
@@ -107,6 +109,73 @@ export function ExportPrompt({ showExport, setShowExport, exportData }) {
           autoFocus
         >
           {"Done"}
+        </Button>
+      </DialogActions>
+    </Dialog>
+  );
+}
+
+export function SyncPrompt({ showConfirmSync, setShowConfirmSync }) {
+  const { setGameState, options, setOptions } = useGameStates();
+
+  return (
+    <Dialog
+      open={showConfirmSync}
+      onClose={() => {
+        setShowConfirmSync(false);
+      }}
+      aria-labelledby="alert-dialog-title"
+      aria-describedby="alert-dialog-description"
+    >
+      <DialogTitle id="alert-dialog-title">
+        {"Sync game state across multiple instances?"}
+      </DialogTitle>
+      <DialogContent>
+        <DialogContentText id="alert-dialog-description">
+          <Typography paragraph="true">
+            {
+              "Changes you make to the scoreboard will be reflected across all other instances of the scoreboard that also have sync enabled."
+            }
+          </Typography>
+
+          <Typography paragraph="true">
+            {
+              "To avoid unintended behavior, make sure all users have enabled sync BEFORE anyone starts the timer."
+            }
+          </Typography>
+
+          <Typography paragraph="true" sx={{ fontSize: 10 }}>
+            {"pls do this I don't wanna debug |･ω･)"}
+          </Typography>
+
+          <Typography paragraph="true">
+            {
+              "WARNING: Enabling sync will also overwrite the current local game state."
+            }
+          </Typography>
+        </DialogContentText>
+      </DialogContent>
+      <DialogActions>
+        <Button
+          onClick={() => {
+            setShowConfirmSync(false);
+          }}
+          autoFocus
+        >
+          {"等等先不要"}
+        </Button>
+        <Button
+          onClick={() => {
+            setShowConfirmSync(false);
+            setOptions({ sync: !options.sync });
+            setGameState({});
+
+            enqueueSnackbar("Sync has been enabled.", {
+              variant: "success",
+            });
+          }}
+        >
+          {"Link start"}
         </Button>
       </DialogActions>
     </Dialog>
