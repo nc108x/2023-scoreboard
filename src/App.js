@@ -109,7 +109,7 @@ function App() {
               alignItems: "center",
               position: "absolute",
               left: "90%",
-              top: 10,
+              top: 16,
               color: green[500],
             }}
           >
