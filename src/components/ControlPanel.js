@@ -1,21 +1,12 @@
 import { useGameStates } from "./StatesContextProvider.js";
 
 import Timer from "./Timer.js";
+import { ResetPrompt, ExportPrompt } from "./Prompts.js";
 
 import { useState, useRef, useCallback, useEffect } from "react";
 
 import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
-
-import Dialog from "@mui/material/Dialog";
-import DialogActions from "@mui/material/DialogActions";
-import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
-import DialogTitle from "@mui/material/DialogTitle";
-import Typography from "@mui/material/Typography";
-import Link from "@mui/material/Link";
-import emptyExcel from "../results_blank.xlsx";
-
 import Tooltip from "@mui/material/Tooltip";
 import Zoom from "@mui/material/Zoom";
 
@@ -26,9 +17,9 @@ const THREE_MINS = 180000;
 const empty_poles = Array(11).fill(["empty"]);
 
 export default function ControlPanel({}) {
-  const { gameState, setGameState, gameResult, options } = useGameStates();
+  const { gameState, setGameState, gameResult } = useGameStates();
 
-  const [confirmReset, setConfirmReset] = useState(false);
+  const [showConfirmReset, setShowConfirmReset] = useState(false);
   const [showExport, setShowExport] = useState(false);
 
   /* to allow us to use the CountdownApi outside of Timer.js */
@@ -400,7 +391,7 @@ export default function ControlPanel({}) {
           </Tooltip>
           <Button
             onClick={() => {
-              setConfirmReset(true);
+              setShowConfirmReset(true);
             }}
           >
             RESET
@@ -428,95 +419,13 @@ export default function ControlPanel({}) {
             <Button onClick={() => nextTimerState(true)}>{">>"}</Button>
           </Tooltip>
 
-          {/* prompt to confirm before reset */}
-          <Dialog
-            open={confirmReset}
-            onClose={() => {
-              setConfirmReset(false);
-            }}
-            aria-labelledby="alert-dialog-title"
-            aria-describedby="alert-dialog-description"
-          >
-            <DialogTitle id="alert-dialog-title">
-              {"Reset current game state?"}
-            </DialogTitle>
-            <DialogContent>
-              <DialogContentText id="alert-dialog-description">
-                <Typography paragraph="true">
-                  {
-                    "All poles will be emptied. This action cannot be undone because I am too lazy to implement this feature."
-                  }
-                </Typography>
-                <Typography paragraph="true">
-                  {options.sync
-                    ? "WARNING: SYNC IS ENABLED. RESETTING CURRENT GAME STATE WILL AFFECT ALL OTHERS CURRENTLY SYNCED."
-                    : ""}
-                </Typography>
-              </DialogContentText>
-            </DialogContent>
-            <DialogActions>
-              <Button
-                onClick={() => {
-                  setConfirmReset(false);
-                }}
-                autoFocus
-              >
-                {"等等先不要"}
-              </Button>
-              <Button
-                onClick={() => {
-                  setConfirmReset(false);
-                  resetHandler();
-                }}
-              >
-                {"繼續開game啦咁多野講"}
-              </Button>
-            </DialogActions>
-          </Dialog>
+          <ResetPrompt
+            showConfirmReset={showConfirmReset}
+            setShowConfirmReset={setShowConfirmReset}
+            resetHandler={resetHandler}
+          />
 
-          {/* export */}
-          <Dialog
-            open={showExport}
-            onClose={() => {
-              setShowExport(false);
-            }}
-            aria-labelledby="alert-dialog-title"
-            aria-describedby="alert-dialog-description"
-          >
-            <DialogTitle id="alert-dialog-title">{"Export data"}</DialogTitle>
-            <DialogContent>
-              <DialogContentText id="alert-dialog-description">
-                <Typography paragraph="true">
-                  {"Copy the following to the Excel spreadsheet:\n\n"}
-                </Typography>
-                <Typography>{exportData(0)}</Typography>
-                <Typography paragraph="true">
-                  {"("}
-                  <Link href={emptyExcel} download="results_blank.xlsx">
-                    {"Blank spreadsheet download here"}
-                  </Link>
-                  {")"}
-                </Typography>
-                <Typography>{"Pole states:"}</Typography>
-                <Typography>{exportData(1)}</Typography>
-                <Typography>
-                  {
-                    "NOTE: use CTRL+SHIFT+V when pasting this string to keep formatting"
-                  }
-                </Typography>
-              </DialogContentText>
-            </DialogContent>
-            <DialogActions>
-              <Button
-                onClick={() => {
-                  setShowExport(false);
-                }}
-                autoFocus
-              >
-                {"Done"}
-              </Button>
-            </DialogActions>
-          </Dialog>
+          <ExportPrompt showExport={showExport} setShowExport={setShowExport} exportData={exportData} />
         </Grid>
       </Grid>
     </>
