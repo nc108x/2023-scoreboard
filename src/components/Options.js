@@ -42,7 +42,7 @@ export default function Options({ toggleOrientation }) {
       >
         <Box sx={{ margin: 2 }}>
           <Box>
-            <Link href={"https://github.com/nc108x/2023-scoreboard#disclaimer"}>
+            <Link href={"https://github.com/nc108x/2023-scoreboard#disclaimer"} target="_blank">
               {"Help"}
             </Link>
           </Box>
