@@ -150,7 +150,7 @@ export function SyncPrompt({ showConfirmSync, setShowConfirmSync }) {
 
           <Typography paragraph="true">
             {
-              "WARNING: Enabling sync will also overwrite the current local game state."
+              "WARNING: ENABLING SYNC WILL OVERWRITE THE CURRENT LOCAL GAME STATE."
             }
           </Typography>
         </DialogContentText>
