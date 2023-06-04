@@ -1,38 +1,26 @@
 import { useGameStates } from "./StatesContextProvider.js";
 
 import Timer from "./Timer.js";
+import { ResetPrompt, ExportPrompt } from "./Prompts.js";
 
 import { useState, useRef, useCallback, useEffect } from "react";
 
 import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
-
-import Dialog from "@mui/material/Dialog";
-import DialogActions from "@mui/material/DialogActions";
-import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
-import DialogTitle from "@mui/material/DialogTitle";
-import Typography from "@mui/material/Typography";
-import Link from "@mui/material/Link";
-import emptyExcel from "../results_blank.xlsx";
-
 import Tooltip from "@mui/material/Tooltip";
 import Zoom from "@mui/material/Zoom";
 
 import { enqueueSnackbar } from "notistack";
 
-
 const ONE_MIN = 60000;
 const THREE_MINS = 180000;
-const empty_poles = Array(11).fill(["empty"]);
+const emptyPoles = Array(11).fill(["empty"]);
 
 export default function ControlPanel({}) {
   const { gameState, setGameState, gameResult } = useGameStates();
 
-  const [confirmReset, setConfirmReset] = useState(false);
+  const [showConfirmReset, setShowConfirmReset] = useState(false);
   const [showExport, setShowExport] = useState(false);
-  /* TODO maybe consider refactoring this? */
-  const [timerRun, setTimerRun] = useState(false);
 
   /* to allow us to use the CountdownApi outside of Timer.js */
   const countdownApi = useRef();
@@ -42,16 +30,24 @@ export default function ControlPanel({}) {
     countdownApi.current = ref.getApi();
   };
 
-  /* used to trigger autostart when going from prep to game */
-  const fallthrough = useRef(false);
+  /* to start/stop timer based on gameState */
+  useEffect(() => {
+    if (gameState.timerRunning) {
+      countdownApi.current.start();
+    } else {
+      countdownApi.current.pause();
+    }
+  }, [gameState.timerRunning]);
 
-  function setTimerStage(stage) {
+  function setTimerStage(stage, running, fallthrough) {
     switch (stage) {
       case "PREP":
         setGameState({
           stage: "PREP",
           startTime: Date.now(),
           countdownAmt: ONE_MIN,
+          timerRunning: running,
+          timerFallthrough: fallthrough,
         });
 
         break;
@@ -60,6 +56,8 @@ export default function ControlPanel({}) {
           stage: "GAME",
           startTime: Date.now(),
           countdownAmt: THREE_MINS,
+          timerRunning: running,
+          timerFallthrough: fallthrough,
         });
         break;
       case "END":
@@ -67,6 +65,8 @@ export default function ControlPanel({}) {
           stage: "END",
           startTime: Date.now(),
           countdownAmt: 0,
+          timerRunning: running,
+          timerFallthrough: fallthrough,
         });
         break;
     }
@@ -76,27 +76,23 @@ export default function ControlPanel({}) {
   /* automatically goes to next state of the game */
   /* can also be triggered manually */
   function nextTimerState(force) {
-    fallthrough.current = false;
     switch (gameState.stage) {
       case "PREP":
+        setTimerStage("GAME", !force, !force);
+
         if (force) {
-          setTimerRun(false);
           enqueueSnackbar("Fast forward to game time.", {
             variant: "success",
           });
         } else {
-          fallthrough.current = true;
-          setTimerRun(true);
           enqueueSnackbar("Game time has started.", {
             variant: "info",
           });
         }
-
-        setTimerStage("GAME");
         break;
 
       case "GAME":
-        setTimerRun(false);
+        setTimerStage("END", false, false);
         if (force) {
           enqueueSnackbar("Fast forward to end.", {
             variant: "success",
@@ -106,8 +102,6 @@ export default function ControlPanel({}) {
             variant: "info",
           });
         }
-
-        setTimerStage("END");
         break;
 
       case "END":
@@ -121,11 +115,9 @@ export default function ControlPanel({}) {
   }
 
   function prevTimerState() {
-    fallthrough.current = false;
-    setTimerRun(false);
     /* if timer is running alr just go to beginning of the CURRENT state */
-    if (timerRun) {
-      setTimerStage(gameState.stage);
+    if (gameState.timerRunning) {
+      setTimerStage(gameState.stage, false, false);
 
       switch (gameState.stage) {
         case "PREP":
@@ -149,14 +141,14 @@ export default function ControlPanel({}) {
           break;
 
         case "GAME":
-          setTimerStage("PREP");
+          setTimerStage("PREP", false, false);
           enqueueSnackbar("Rewind to preparation time.", {
             variant: "success",
           });
           break;
 
         case "END":
-          setTimerStage("GAME");
+          setTimerStage("GAME", false, false);
           enqueueSnackbar("Rewind to game time.", {
             variant: "success",
           });
@@ -168,15 +160,13 @@ export default function ControlPanel({}) {
   /* triggered when button is clicked */
   /* toggles between starting and pausing current countdown */
   function timerBtnHandler() {
-    fallthrough.current = false;
     if (gameState.stage == "END") {
       return;
     }
 
     if (countdownApi.current?.isPaused() || countdownApi.current?.isStopped()) {
-      setTimerRun(true);
+      setGameState({ timerRunning: true, timerFallthrough: false });
 
-      countdownApi.current.start();
       enqueueSnackbar("Timer started.", {
         variant: "success",
       });
@@ -187,8 +177,7 @@ export default function ControlPanel({}) {
         });
       }
     } else {
-      setTimerRun(false);
-      countdownApi.current.pause();
+      setGameState({ timerRunning: false, timerFallthrough: false });
       enqueueSnackbar("Timer paused.", {
         variant: "success",
       });
@@ -211,10 +200,11 @@ export default function ControlPanel({}) {
       stage: "PREP",
       startTime: Date.now(),
       countdownAmt: 60000,
-      history: [empty_poles],
+      timerRunning: false,
+      history: [emptyPoles],
       historyDelta: ["empty"],
       pointInTime: -1,
-      currPoles: empty_poles,
+      currPoles: emptyPoles,
     });
 
     enqueueSnackbar("Scoreboard has been reset.", {
@@ -390,7 +380,6 @@ export default function ControlPanel({}) {
           timerState={gameState}
           setApi={setApi}
           onComplete={() => nextTimerState(false)}
-          fallthrough={fallthrough.current}
         />
         <Grid item>{"Current state: " + gameState.stage}</Grid>
         <Grid item>
@@ -402,7 +391,7 @@ export default function ControlPanel({}) {
           </Tooltip>
           <Button
             onClick={() => {
-              setConfirmReset(true);
+              setShowConfirmReset(true);
             }}
           >
             RESET
@@ -419,7 +408,7 @@ export default function ControlPanel({}) {
           >
             {gameState.stage == "END"
               ? "EXPORT"
-              : timerRun == false
+              : gameState.timerRunning == false
               ? "START"
               : "PAUSE"}
           </Button>
@@ -430,91 +419,17 @@ export default function ControlPanel({}) {
             <Button onClick={() => nextTimerState(true)}>{">>"}</Button>
           </Tooltip>
 
-          {/* prompt to confirm before reset */}
-          <Dialog
-            open={confirmReset}
-            onClose={() => {
-              setConfirmReset(false);
-            }}
-            aria-labelledby="alert-dialog-title"
-            aria-describedby="alert-dialog-description"
-          >
-            <DialogTitle id="alert-dialog-title">
-              {"Reset current game state?"}
-            </DialogTitle>
-            <DialogContent>
-              <DialogContentText id="alert-dialog-description">
-                {
-                  "All poles will be emptied. This action cannot be undone because I am too lazy to implement this feature."
-                }
-              </DialogContentText>
-            </DialogContent>
-            <DialogActions>
-              <Button
-                onClick={() => {
-                  setConfirmReset(false);
-                }}
-                autoFocus
-              >
-                {"等等先不要"}
-              </Button>
-              <Button
-                onClick={() => {
-                  setConfirmReset(false);
-                  resetHandler();
+          <ResetPrompt
+            showConfirmReset={showConfirmReset}
+            setShowConfirmReset={setShowConfirmReset}
+            resetHandler={resetHandler}
+          />
 
-                  setTimerRun(false);
-                  countdownApi.current.pause();
-                }}
-              >
-                {"繼續開game啦咁多野講"}
-              </Button>
-            </DialogActions>
-          </Dialog>
-
-          {/* export */}
-          <Dialog
-            open={showExport}
-            onClose={() => {
-              setShowExport(false);
-            }}
-            aria-labelledby="alert-dialog-title"
-            aria-describedby="alert-dialog-description"
-          >
-            <DialogTitle id="alert-dialog-title">{"Export data"}</DialogTitle>
-            <DialogContent>
-              <DialogContentText id="alert-dialog-description">
-                <Typography paragraph="true">
-                  {"Copy the following to the Excel spreadsheet:\n\n"}
-                </Typography>
-                <Typography>{exportData(0)}</Typography>
-                <Typography paragraph="true">
-                  {"("}
-                  <Link href={emptyExcel} download="results_blank.xlsx">
-                    {"Blank spreadsheet download here"}
-                  </Link>
-                  {")"}
-                </Typography>
-                <Typography>{"Pole states:"}</Typography>
-                <Typography>{exportData(1)}</Typography>
-                <Typography>
-                  {
-                    "NOTE: use CTRL+SHIFT+V when pasting this string to keep formatting"
-                  }
-                </Typography>
-              </DialogContentText>
-            </DialogContent>
-            <DialogActions>
-              <Button
-                onClick={() => {
-                  setShowExport(false);
-                }}
-                autoFocus
-              >
-                {"Done"}
-              </Button>
-            </DialogActions>
-          </Dialog>
+          <ExportPrompt
+            showExport={showExport}
+            setShowExport={setShowExport}
+            exportData={exportData}
+          />
         </Grid>
       </Grid>
     </>
