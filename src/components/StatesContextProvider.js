@@ -52,7 +52,6 @@ export default function StatesContextProvider({ children }) {
     if (options.sync) {
       mutate({ ...newState });
     } else {
-      console.log("here")
       const copy = structuredClone(gameState);
       _setGameState({ ...copy, ...newState });
     }
