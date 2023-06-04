@@ -125,7 +125,7 @@ function App() {
     <>
       <ThemeProvider theme={theme}>
         <CssBaseline />
-        <SnackbarProvider maxSnack={3} autoHideDuration={1500}>
+        <SnackbarProvider maxSnack={3} autoHideDuration={1500} disableWindowBlurListener={true}>
           <Options />
           <SyncIndicator />
           <Grid

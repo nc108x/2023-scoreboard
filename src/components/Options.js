@@ -1,6 +1,6 @@
 import { useGameStates } from "./StatesContextProvider.js";
 
-import { ResetPrompt, ExportPrompt, SyncPrompt } from "./Prompts.js";
+import { SyncPrompt } from "./Prompts.js";
 
 import { useState } from "react";
 
@@ -11,6 +11,8 @@ import MenuIcon from "@mui/icons-material/Menu";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Switch from "@mui/material/Switch";
 import Link from "@mui/material/Link";
+
+import { enqueueSnackbar } from "notistack";
 
 export default function Options({ toggleOrientation }) {
   const { options, setOptions } = useGameStates();
@@ -61,11 +63,14 @@ export default function Options({ toggleOrientation }) {
                 <Switch
                   checked={options.sync}
                   onChange={(e) => {
-                    console.log(e.target.checked)
                     if (e.target.checked) {
                       setShowConfirmSync(true);
                     } else {
                       setOptions({ sync: false });
+
+                      enqueueSnackbar("Sync has been disabled.", {
+                        variant: "success",
+                      });
                     }
                   }}
                 />
