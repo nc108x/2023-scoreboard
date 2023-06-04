@@ -269,7 +269,7 @@ export default function ControlPanel({}) {
         }
       }
     },
-    [gameState.pointInTime]
+    [gameState]
   );
 
   useEffect(() => {
