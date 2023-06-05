@@ -282,6 +282,36 @@ export default function ControlPanel({}) {
     };
   }, [undoShortcut]);
 
+  const redoShortcut = useCallback(
+    (event) => {
+      const platform = navigator.platform;
+      if (platform.startsWith("Mac")) {
+        if (event.key == "y" && event.metaKey == true) {
+          event.preventDefault();
+          redo();
+        }
+      } else {
+        if (event.key == "y" && event.ctrlKey == true) {
+          event.preventDefault();
+          redo();
+        }
+      }
+    },
+    [gameState]
+  );
+
+  useEffect(() => {
+    // attach the event listener
+    document.addEventListener("keydown", redoShortcut);
+
+    // remove the event listener
+    return () => {
+      document.removeEventListener("keydown", redoShortcut);
+    };
+  }, [redoShortcut]);
+
+
+
   function exportData(type) {
     let exportStr = "";
 
