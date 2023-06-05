@@ -6,7 +6,7 @@
 [Link](https://nc108x.github.io/2023-scoreboard/) \
 Designed for the internal use of the HKUST Robotics Team.
 
-Thanks to [@LeoLYW12138](https://github.com/LeoLYW12138) for helping debug my dumb issues and setting up the backend, [@kkdlau](https://www.github.com/kkdlau), [@TrebledJ](https://github.com/TrebledJ), and everyone else in the HKUST Robocon team for their suggestions and help.
+Thanks to [@LeoLYW12138](https://github.com/LeoLYW12138) for helping debug my dumb issues and setting up the backend, and [@kkdlau](https://www.github.com/kkdlau), [@TrebledJ](https://github.com/TrebledJ), and everyone else in the HKUST Robocon team for their suggestions and help.
 
 First time using Javascript and ReactJS so code is very bad I am trying my best orz \
 Feel free to ping me with found bugs/feedback/PRs. (but go check out [Known Issues](https://github.com/nc108x/2023-scoreboard/tree/react#known-issues) first)\
@@ -20,7 +20,7 @@ do some research if you have any concerns about features included in this scoreb
 ### Usage
 
 - Left click on a pole to add a red ring and right click to add a blue ring.
-- Ctrl-Z (or Cmd+Z on Mac) is a valid shortcut.
+- Ctrl-Z/Y (or Cmd+Z/Y) are valid shortcuts.
 - **Exporting data**
 
   - After copying the generated string to the Excel spreadsheet, make use of the "Text to columns" feature to split the data into their corresponding cells. Make sure to use the "semicolon" delimiter option and NOT the "space" delimiter. <br><br>
