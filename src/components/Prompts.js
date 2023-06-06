@@ -127,6 +127,21 @@ export function SyncPrompt({ showConfirmSync, setShowConfirmSync }) {
   const [passwordInput, setPasswordInput] = useState("");
   const [passwordError, setPasswordError] = useState(false);
 
+  function checkPassword() {
+    digestMessage(passwordInput).then((digestHex) => {
+      if (digestHex == process.env.REACT_APP_ROBOCON_CATCHPHRASE) {
+        setShowPwPrompt(false);
+        setOptions({ sync: true });
+
+        enqueueSnackbar("Sync has been enabled.", {
+          variant: "success",
+        });
+      } else {
+        setPasswordError(true);
+      }
+    });
+  }
+
   return (
     <>
       <Dialog
@@ -205,27 +220,16 @@ export function SyncPrompt({ showConfirmSync, setShowConfirmSync }) {
               onChange={(e) => {
                 setPasswordInput(e.target.value);
               }}
+              onKeyUp={(e) => {
+                if (e.key == "Enter") {
+                  checkPassword();
+                }
+              }}
             />
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button
-            onClick={() => {
-              digestMessage(passwordInput).then((digestHex) => {
-                if (digestHex == process.env.REACT_APP_ROBOCON_CATCHPHRASE) {
-                  setShowPwPrompt(false);
-                  setOptions({ sync: true });
-
-                  enqueueSnackbar("Sync has been enabled.", {
-                    variant: "success",
-                  });
-                } else {
-                  setPasswordError(true);
-                }
-              });
-            }}
-            autoFocus
-          >
+          <Button onClick={() => {checkPassword()}} autoFocus>
             {"SUBMIT"}
           </Button>
         </DialogActions>
