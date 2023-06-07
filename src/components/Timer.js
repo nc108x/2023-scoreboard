@@ -18,7 +18,7 @@ function msToTime(og_ms) {
 }
 
 export default function Timer({ setApi, onComplete, fallthrough }) {
-  const { gameState, elapsedTime } = useGameStates();
+  const { gameState, timeInfo } = useGameStates();
 
   const [playCountdown] = useSound(countdownSFX, { volume: 0.25 });
   const playingCountdown = useRef(false);
@@ -28,20 +28,20 @@ export default function Timer({ setApi, onComplete, fallthrough }) {
     const sec = time.seconds;
     const ms = time.milliseconds;
 
-    const remainingTime = msToTime(min * 60000 + sec * 1000 + ms);
-    elapsedTime.current = msToTime(
+    timeInfo.current.remainingTime = msToTime(min * 60000 + sec * 1000 + ms);
+    timeInfo.current.elapsedTime = msToTime(
       gameState.countdownAmt - (min * 60000 + sec * 1000 + ms)
     );
 
     if (
-      remainingTime.sec == 3 &&
-      remainingTime.ms == 10 &&
+      timeInfo.current.remainingTime.sec == 3 &&
+      timeInfo.current.remainingTime.ms == 10 &&
       !playingCountdown.current &&
       gameState.stage == "PREP"
     ) {
       playCountdown();
       playingCountdown.current = true;
-    } else if (remainingTime.sec == 2) {
+    } else if (timeInfo.current.remainingTime.sec == 2) {
       playingCountdown.current = false;
     }
   }
@@ -59,8 +59,8 @@ export default function Timer({ setApi, onComplete, fallthrough }) {
   return (
     <>
       <Countdown
-        key={gameState.startTime}
-        date={gameState.startTime + gameState.countdownAmt}
+        key={timeInfo.current.startTime}
+        date={timeInfo.current.startTime + gameState.countdownAmt}
         precision={3}
         intervalDelay={0}
         renderer={renderer}

@@ -17,7 +17,7 @@ const THREE_MINS = 180000;
 const emptyPoles = Array(11).fill(["empty"]);
 
 export default function ControlPanel({}) {
-  const { gameState, setGameState, gameResult } = useGameStates();
+  const { gameState, setGameState, gameResult, timeInfo } = useGameStates();
 
   const [showConfirmReset, setShowConfirmReset] = useState(false);
   const [showExport, setShowExport] = useState(false);
@@ -44,30 +44,31 @@ export default function ControlPanel({}) {
       case "PREP":
         setGameState({
           stage: "PREP",
-          startTime: Date.now(),
           countdownAmt: ONE_MIN,
           timerRunning: running,
           timerFallthrough: fallthrough,
         });
-
+        timeInfo.current.startTime = Date.now();
         break;
+
       case "GAME":
         setGameState({
           stage: "GAME",
-          startTime: Date.now(),
           countdownAmt: THREE_MINS,
           timerRunning: running,
           timerFallthrough: fallthrough,
         });
+        timeInfo.current.startTime = Date.now();
         break;
+
       case "END":
         setGameState({
           stage: "END",
-          startTime: Date.now(),
           countdownAmt: 0,
           timerRunning: running,
           timerFallthrough: fallthrough,
         });
+        timeInfo.current.startTime = Date.now();
         break;
     }
   }
@@ -198,7 +199,6 @@ export default function ControlPanel({}) {
   function resetHandler() {
     setGameState({
       stage: "PREP",
-      startTime: Date.now(),
       countdownAmt: 60000,
       timerRunning: false,
       history: [emptyPoles],
@@ -206,6 +206,12 @@ export default function ControlPanel({}) {
       pointInTime: -1,
       currPoles: emptyPoles,
     });
+
+    timeInfo.current = {
+      startTime: Date.now(),
+      elapsedTime: { min: 0, sec: 0, ms: 0 },
+      remainingTime: { min: 0, sec: 0, ms: 0 },
+    };
 
     enqueueSnackbar("Scoreboard has been reset.", {
       variant: "success",
@@ -309,8 +315,6 @@ export default function ControlPanel({}) {
       document.removeEventListener("keydown", redoShortcut);
     };
   }, [redoShortcut]);
-
-
 
   function exportData(type) {
     let exportStr = "";

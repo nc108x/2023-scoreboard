@@ -6,13 +6,8 @@ import Zoom from "@mui/material/Zoom";
 
 import { enqueueSnackbar } from "notistack";
 
-export default function Pole({
-  x,
-  y,
-  index,
-  rings,
-}) {
-  const { gameState, setGameState, options, elapsedTime } = useGameStates();
+export default function Pole({ x, y, index, rings }) {
+  const { gameState, setGameState, options, timeInfo } = useGameStates();
 
   function scoreHandler(e, pole_no, color) {
     /* to prevent right click menu from showing up */
@@ -57,7 +52,11 @@ export default function Pole({
             [
               color,
               pole_no,
-              elapsedTime.current.min + ":" + elapsedTime.current.sec + ":" + elapsedTime.current.ms,
+              timeInfo.current.elapsedTime.min +
+                ":" +
+                timeInfo.current.elapsedTime.sec +
+                ":" +
+                timeInfo.current.elapsedTime.ms,
             ],
           ],
           pointInTime: -1,

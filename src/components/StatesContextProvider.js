@@ -11,7 +11,6 @@ const emptyPoles = Array(11).fill(["empty"]);
 /* currPoles: 2d array representing all the poles */
 const initialState = {
   stage: "PREP",
-  startTime: Date.now(),
   countdownAmt: 60000,
   timerRunning: false,
   timerFallthrough: false,
@@ -36,6 +35,12 @@ const defaultOptions = {
   sync: false,
 };
 
+const defaultTimeInfo = {
+  startTime: Date.now(),
+  elapsedTime: { min: 0, sec: 0, ms: 0 },
+  remainingTime: { min: 0, sec: 0, ms: 0 },
+};
+
 const StatesContext = createContext({});
 
 export default function StatesContextProvider({ children }) {
@@ -46,7 +51,8 @@ export default function StatesContextProvider({ children }) {
   /* don't think ref is supposed to be used this way */
   const gameResult = useRef(initialResult);
   const [options, _setOptions] = useState(defaultOptions);
-  const elapsedTime = useRef({ min: 0, sec: 0, ms: 0 });
+  /* const elapsedTime = useRef({ min: 0, sec: 0, ms: 0 }); */
+  const timeInfo = useRef(defaultTimeInfo);
 
   function setGameState(newState) {
     if (options.sync) {
@@ -63,6 +69,7 @@ export default function StatesContextProvider({ children }) {
   }
 
   const [dbState, loading, error] = useObjectVal(dbRef);
+
   useEffect(() => {
     if (options.sync) {
       if (typeof dbState == "undefined") {
@@ -74,6 +81,10 @@ export default function StatesContextProvider({ children }) {
     }
   }, [dbState]);
 
+  useEffect(() => {
+    if (true) timeInfo.current.startTime = Date.now();
+  }, [dbState?.stage]);
+
   return (
     <StatesContext.Provider
       value={{
@@ -82,7 +93,7 @@ export default function StatesContextProvider({ children }) {
         gameResult,
         options,
         setOptions,
-        elapsedTime,
+        timeInfo,
       }}
     >
       {children}
