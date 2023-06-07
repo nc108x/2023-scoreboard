@@ -11,6 +11,7 @@ const emptyPoles = Array(11).fill(["empty"]);
 /* currPoles: 2d array representing all the poles */
 const initialState = {
   stage: "PREP",
+  startTime: Date.now(),
   countdownAmt: 60000,
   timerRunning: false,
   timerFallthrough: false,
@@ -83,7 +84,7 @@ export default function StatesContextProvider({ children }) {
 
   useEffect(() => {
     if (true) timeInfo.current.startTime = Date.now();
-  }, [dbState?.stage]);
+  }, [dbState?.startTime]);
 
   return (
     <StatesContext.Provider

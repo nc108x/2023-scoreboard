@@ -217,6 +217,7 @@ export function SyncPrompt({ showConfirmSync, setShowConfirmSync }) {
               type="password"
               error={passwordError}
               helperText={passwordError ? "Bad grade for you (σﾟ∀ﾟ)σ" : ""}
+              autoFocus={true}
               onChange={(e) => {
                 setPasswordInput(e.target.value);
               }}

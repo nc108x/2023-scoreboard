@@ -44,6 +44,7 @@ export default function ControlPanel({}) {
       case "PREP":
         setGameState({
           stage: "PREP",
+          startTime: Date.now(),
           countdownAmt: ONE_MIN,
           timerRunning: running,
           timerFallthrough: fallthrough,
@@ -54,6 +55,7 @@ export default function ControlPanel({}) {
       case "GAME":
         setGameState({
           stage: "GAME",
+          startTime: Date.now(),
           countdownAmt: THREE_MINS,
           timerRunning: running,
           timerFallthrough: fallthrough,
@@ -64,6 +66,7 @@ export default function ControlPanel({}) {
       case "END":
         setGameState({
           stage: "END",
+          startTime: Date.now(),
           countdownAmt: 0,
           timerRunning: running,
           timerFallthrough: fallthrough,
@@ -199,6 +202,7 @@ export default function ControlPanel({}) {
   function resetHandler() {
     setGameState({
       stage: "PREP",
+      startTime: Date.now(),
       countdownAmt: 60000,
       timerRunning: false,
       history: [emptyPoles],
