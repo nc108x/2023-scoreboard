@@ -121,7 +121,7 @@ export default function Pole({ x, y, index, rings }) {
           fontSize: 28,
         }}
       >
-        {options.orientation == "SOUTH" ? index + 1 : 11 - index}
+        {!options.labels ? "" : (options.orientation == "SOUTH" ? index + 1 : 11 - index)}
       </Fab>
     </Tooltip>
   );

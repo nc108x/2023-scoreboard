@@ -34,6 +34,7 @@ const initialResult = {
 const defaultOptions = {
   orientation: "SOUTH",
   sync: false,
+  labels: true,
 };
 
 const defaultTimeInfo = {
@@ -86,6 +87,7 @@ export default function StatesContextProvider({ children }) {
     if (true) timeInfo.current.startTime = Date.now();
   }, [dbState?.startTime]);
 
+  console.log(options)
   return (
     <StatesContext.Provider
       value={{

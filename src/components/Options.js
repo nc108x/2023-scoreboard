@@ -14,7 +14,7 @@ import Link from "@mui/material/Link";
 
 import { enqueueSnackbar } from "notistack";
 
-export default function Options({ toggleOrientation }) {
+export default function Options({}) {
   const { options, setOptions } = useGameStates();
 
   const [showOptions, setShowOptions] = useState(false);
@@ -51,6 +51,12 @@ export default function Options({ toggleOrientation }) {
             </Link>
           </Box>
           <Box>{"Options:"}</Box>
+          <Box>
+            <FormControlLabel
+              control={<Switch defaultChecked={true} onChange={() => setOptions({labels: !options.labels})} />}
+              label="Toggle pole labels"
+            />
+          </Box>
           <Box>
             <FormControlLabel
               control={<Switch onChange={toggleOrientation} />}
