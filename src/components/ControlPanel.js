@@ -386,10 +386,11 @@ export default function ControlPanel({}) {
       );
       exportStr = exportStr.concat(";");
 
+      
       exportStr = exportStr.concat(
         gameResult.current.winner != false
           ? gameState.historyDelta.at(-1)[2]
-          : "03:00:00"
+          : "03:00.00"
       );
       exportStr = exportStr.concat(";");
     } else {

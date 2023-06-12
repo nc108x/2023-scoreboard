@@ -55,7 +55,7 @@ export default function Pole({ x, y, index, rings }) {
               timeInfo.current.elapsedTime.min +
                 ":" +
                 timeInfo.current.elapsedTime.sec +
-                ":" +
+                "." +
                 timeInfo.current.elapsedTime.ms,
             ],
           ],
