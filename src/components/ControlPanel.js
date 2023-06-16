@@ -190,11 +190,11 @@ export default function ControlPanel({}) {
 
   function swapDragons() {
     setGameState({
-      redDragon: gameState.redDragon == "FIERY" ? "WAR" : "FIERY",
-      blueDragon: gameState.blueDragon == "FIERY" ? "WAR" : "FIERY",
+      redDragon: gameState.blueDragon,
+      blueDragon: gameState.redDragon,
     });
 
-    enqueueSnackbar("Dragons have been swapped.", {
+    enqueueSnackbar("Teams have been swapped.", {
       variant: "success",
     });
   }
@@ -330,30 +330,30 @@ export default function ControlPanel({}) {
       exportStr = exportStr.concat(";");
 
       exportStr = exportStr.concat(
-        gameState.redDragon == "FIERY" ? "RED" : "BLUE"
+        gameState.redDragon == "FIERY DRAGON" ? "RED" : "BLUE"
       );
       exportStr = exportStr.concat(";");
 
       exportStr = exportStr.concat(
-        gameState.redDragon == "FIERY" ? "BLUE" : "RED"
+        gameState.redDragon == "FIERY DRAGON" ? "BLUE" : "RED"
       );
       exportStr = exportStr.concat(";");
 
       exportStr = exportStr.concat(
-        gameState.redDragon == "FIERY"
+        gameState.redDragon == "FIERY DRAGON"
           ? gameResult.current.redScore
           : gameResult.current.blueScore
       );
       exportStr = exportStr.concat(";");
 
       exportStr = exportStr.concat(
-        gameState.redDragon == "FIERY"
+        gameState.redDragon == "FIERY DRAGON"
           ? gameResult.current.blueScore
           : gameResult.current.redScore
       );
       exportStr = exportStr.concat(";");
 
-      const fieryColor = gameState.redDragon == "FIERY" ? "RED" : "BLUE";
+      const fieryColor = gameState.redDragon == "FIERY DRAGON" ? "RED" : "BLUE";
 
       exportStr = exportStr.concat(
         gameState.historyDelta.filter((element) => element[0] == fieryColor)
@@ -386,7 +386,6 @@ export default function ControlPanel({}) {
       );
       exportStr = exportStr.concat(";");
 
-      
       exportStr = exportStr.concat(
         gameResult.current.winner != false
           ? gameState.historyDelta.at(-1)[2]

@@ -33,7 +33,7 @@ export default function Info({ color }) {
           textAlign: "center",
         }}
       >
-        <Typography variant="h4">{name + "\nDRAGON"}</Typography>
+        <Typography variant="h4">{name}</Typography>
         <Typography variant="h4">{color == "RED" ? gameResult.current.redScore : gameResult.current.blueScore}</Typography>
         <Typography variant="h6">{"Rings scored: " + ringsScored}</Typography>
         <Typography variant="h6">

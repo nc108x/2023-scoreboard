@@ -19,8 +19,8 @@ const initialState = {
   historyDelta: ["empty"],
   pointInTime: -1,
   currPoles: emptyPoles,
-  redDragon: "WAR",
-  blueDragon: "FIERY",
+  redDragon: "WAR DRAGON",
+  blueDragon: "FIERY DRAGON",
 };
 
 const initialResult = {

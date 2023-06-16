@@ -26,7 +26,7 @@ function App() {
     const blueWinCon = topRings.slice(3, 11);
 
     if (redWinCon.every((currVal) => currVal == "RED")) {
-      enqueueSnackbar(gameState.redDragon + " Dragon has ended the game!", {
+      enqueueSnackbar(gameState.redDragon + " has ended the game!", {
         variant: "success",
         preventDuplicate: true,
       });
@@ -36,7 +36,7 @@ function App() {
         gameResult.current.winTime = gameState.historyDelta.length;
       }
     } else if (blueWinCon.every((currVal) => currVal == "BLUE")) {
-      enqueueSnackbar(gameState.blueDragon + " Dragon has ended the game!", {
+      enqueueSnackbar(gameState.blueDragon + " has ended the game!", {
         variant: "success",
         preventDuplicate: true,
       });
@@ -125,7 +125,11 @@ function App() {
     <>
       <ThemeProvider theme={theme}>
         <CssBaseline />
-        <SnackbarProvider maxSnack={3} autoHideDuration={1500} disableWindowBlurListener={true}>
+        <SnackbarProvider
+          maxSnack={3}
+          autoHideDuration={1500}
+          disableWindowBlurListener={true}
+        >
           <Options />
           <SyncIndicator />
           <Grid
