@@ -209,6 +209,7 @@ export default function ControlPanel({}) {
       historyDelta: ["empty"],
       pointInTime: -1,
       currPoles: emptyPoles,
+      firstScorer: "NA",
     });
 
     timeInfo.current = {
@@ -325,46 +326,29 @@ export default function ControlPanel({}) {
 
     if (type == 0) {
       let timestamp = new Date();
-      timestamp.toISOString();
       exportStr = exportStr.concat(timestamp);
+      exportStr = exportStr.slice(0, exportStr.indexOf("G"));
+      exportStr = exportStr.concat(";");
+
+      exportStr = exportStr.concat(gameState.redDragon);
+      exportStr = exportStr.concat(";");
+
+      exportStr = exportStr.concat(gameState.blueDragon);
+      exportStr = exportStr.concat(";");
+
+      exportStr = exportStr.concat(gameResult.current.redScore);
+      exportStr = exportStr.concat(";");
+
+      exportStr = exportStr.concat(gameResult.current.blueScore);
       exportStr = exportStr.concat(";");
 
       exportStr = exportStr.concat(
-        gameState.redDragon == "FIERY DRAGON" ? "RED" : "BLUE"
+        gameState.historyDelta.filter((element) => element[0] == "RED").length
       );
       exportStr = exportStr.concat(";");
 
       exportStr = exportStr.concat(
-        gameState.redDragon == "FIERY DRAGON" ? "BLUE" : "RED"
-      );
-      exportStr = exportStr.concat(";");
-
-      exportStr = exportStr.concat(
-        gameState.redDragon == "FIERY DRAGON"
-          ? gameResult.current.redScore
-          : gameResult.current.blueScore
-      );
-      exportStr = exportStr.concat(";");
-
-      exportStr = exportStr.concat(
-        gameState.redDragon == "FIERY DRAGON"
-          ? gameResult.current.blueScore
-          : gameResult.current.redScore
-      );
-      exportStr = exportStr.concat(";");
-
-      const fieryColor = gameState.redDragon == "FIERY DRAGON" ? "RED" : "BLUE";
-
-      exportStr = exportStr.concat(
-        gameState.historyDelta.filter((element) => element[0] == fieryColor)
-          .length
-      );
-      exportStr = exportStr.concat(";");
-
-      exportStr = exportStr.concat(
-        gameState.historyDelta.filter(
-          (element) => element[0] != fieryColor && element != "empty"
-        ).length
+        gameState.historyDelta.filter((element) => element[0] == "BLUE").length
       );
       exportStr = exportStr.concat(";");
 
@@ -386,12 +370,15 @@ export default function ControlPanel({}) {
       );
       exportStr = exportStr.concat(";");
 
+      exportStr = exportStr.concat(gameState.firstScorer);
+      exportStr = exportStr.concat(";");
+
       exportStr = exportStr.concat(
         gameResult.current.winner != false
           ? gameState.historyDelta.at(-1)[2]
           : "03:00.00"
       );
-      exportStr = exportStr.concat(";");
+
     } else {
       for (let i = 0; i < gameState.currPoles.length; i++) {
         switch (gameState.currPoles[i].at(-1)) {
@@ -408,7 +395,7 @@ export default function ControlPanel({}) {
       }
     }
 
-    return exportStr.slice(0, -1);
+    return exportStr;
   }
 
   return (

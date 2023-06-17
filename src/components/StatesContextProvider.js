@@ -21,6 +21,7 @@ const initialState = {
   currPoles: emptyPoles,
   redDragon: "WAR DRAGON",
   blueDragon: "FIERY DRAGON",
+  firstScorer: "NA",
 };
 
 const initialResult = {
@@ -87,7 +88,6 @@ export default function StatesContextProvider({ children }) {
     if (true) timeInfo.current.startTime = Date.now();
   }, [dbState?.startTime]);
 
-  console.log(options)
   return (
     <StatesContext.Provider
       value={{

@@ -29,6 +29,11 @@ export default function Pole({ x, y, index, rings }) {
     }
 
     if (gameState.stage == "GAME" || gameState.stage == "END") {
+      let firstScorer = gameState.firstScorer; 
+      if (firstScorer == "NA") {
+        firstScorer =
+          color == "RED" ? gameState.redDragon : gameState.blueDragon;
+      }
       let temp = [...gameState.currPoles];
       temp[pole_no] = [...gameState.currPoles[pole_no], color];
 
@@ -61,6 +66,7 @@ export default function Pole({ x, y, index, rings }) {
           ],
           pointInTime: -1,
           currPoles: temp,
+          firstScorer: firstScorer,
         });
       } else {
         /* game has ended */
@@ -86,6 +92,7 @@ export default function Pole({ x, y, index, rings }) {
           ],
           pointInTime: -1,
           currPoles: temp,
+          firstScorer: firstScorer,
         });
       }
     } else {
@@ -121,7 +128,11 @@ export default function Pole({ x, y, index, rings }) {
           fontSize: 28,
         }}
       >
-        {!options.labels ? "" : (options.orientation == "SOUTH" ? index + 1 : 11 - index)}
+        {!options.labels
+          ? ""
+          : options.orientation == "SOUTH"
+          ? index + 1
+          : 11 - index}
       </Fab>
     </Tooltip>
   );
