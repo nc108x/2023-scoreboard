@@ -116,8 +116,8 @@ export default function Options({}) {
                 label="redteam"
                 onChange={updateRedDragon}
               >
-                <MenuItem value={"FIERY DRAGON"}>{"FIERY DRAGON"}</MenuItem>
-                <MenuItem value={"WAR DRAGON"}>{"WAR DRAGON"}</MenuItem>
+                <MenuItem value={"火之龍FIERY DRAGON"}>{"火之龍FIERY DRAGON"}</MenuItem>
+                <MenuItem value={"征龍WAR DRAGON"}>{"征龍WAR DRAGON"}</MenuItem>
                 <MenuItem value={"環掃千軍CUHK"}>{"環掃千軍CUHK"}</MenuItem>
                 <MenuItem value={"一發入環CUHK"}>{"一發入環CUHK"}</MenuItem>
                 <MenuItem value={"明德HKU"}>{"明德HKU"}</MenuItem>
@@ -146,8 +146,8 @@ export default function Options({}) {
                 label="blueteam"
                 onChange={updateBlueDragon}
               >
-                <MenuItem value={"FIERY DRAGON"}>{"FIERY DRAGON"}</MenuItem>
-                <MenuItem value={"WAR DRAGON"}>{"WAR DRAGON"}</MenuItem>
+                <MenuItem value={"火之龍FIERY DRAGON"}>{"火之龍FIERY DRAGON"}</MenuItem>
+                <MenuItem value={"征龍WAR DRAGON"}>{"征龍WAR DRAGON"}</MenuItem>
                 <MenuItem value={"環掃千軍CUHK"}>{"環掃千軍CUHK"}</MenuItem>
                 <MenuItem value={"一發入環CUHK"}>{"一發入環CUHK"}</MenuItem>
                 <MenuItem value={"明德HKU"}>{"明德HKU"}</MenuItem>

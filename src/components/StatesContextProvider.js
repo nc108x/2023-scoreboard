@@ -19,8 +19,8 @@ const initialState = {
   historyDelta: ["empty"],
   pointInTime: -1,
   currPoles: emptyPoles,
-  redDragon: "WAR DRAGON",
-  blueDragon: "FIERY DRAGON",
+  redDragon: "征龍WAR DRAGON",
+  blueDragon: "火之龍FIERY DRAGON",
   firstScorer: "NA",
 };
 
