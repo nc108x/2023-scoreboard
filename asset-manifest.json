@@ -1,0 +1,21 @@
+{
+  "files": {
+    "main.css": "/2023-scoreboard/static/css/main.8bd658d8.css",
+    "main.js": "/2023-scoreboard/static/js/main.c8e5b791.js",
+    "static/js/845.86fa0be0.chunk.js": "/2023-scoreboard/static/js/845.86fa0be0.chunk.js",
+    "static/media/cascadia-code-latin-ext-400-normal.woff": "/2023-scoreboard/static/media/cascadia-code-latin-ext-400-normal.191778324a1fd09c6d52.woff",
+    "static/media/countdown.mp3": "/2023-scoreboard/static/media/countdown.6c45af9b88ae712c5229.mp3",
+    "static/media/cascadia-code-latin-ext-400-normal.woff2": "/2023-scoreboard/static/media/cascadia-code-latin-ext-400-normal.eb194ea96b42bdd6b047.woff2",
+    "static/media/gamefield_clean_blue.png": "/2023-scoreboard/static/media/gamefield_clean_blue.2ff96df6ca04c69c4bc2.png",
+    "static/media/gamefield_clean_red.png": "/2023-scoreboard/static/media/gamefield_clean_red.a5e0cf40b8242516ee5e.png",
+    "static/media/results_blank.xlsx": "/2023-scoreboard/static/media/results_blank.9845f78e1f3b886c5695.xlsx",
+    "index.html": "/2023-scoreboard/index.html",
+    "main.8bd658d8.css.map": "/2023-scoreboard/static/css/main.8bd658d8.css.map",
+    "main.c8e5b791.js.map": "/2023-scoreboard/static/js/main.c8e5b791.js.map",
+    "845.86fa0be0.chunk.js.map": "/2023-scoreboard/static/js/845.86fa0be0.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.8bd658d8.css",
+    "static/js/main.c8e5b791.js"
+  ]
+}
