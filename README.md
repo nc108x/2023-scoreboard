@@ -4,13 +4,13 @@
 <img src="./img/preview2.png" width="800"/>
 
 [Link](https://nc108x.github.io/2023-scoreboard/) \
-Designed for the internal use of the HKUST Robotics Team.
+Designed for the internal use of the HKUST Robotics Team. \
+Project is now archived because we got owned by CUHK and HKU feelsbadman
 
 Thanks to [@LeoLYW12138](https://github.com/LeoLYW12138) for helping debug my dumb issues and setting up the backend, and [@kkdlau](https://www.github.com/kkdlau), [@TrebledJ](https://github.com/TrebledJ), and everyone else in the HKUST Robocon team for their suggestions and help.
 
 First time using Javascript and ReactJS so code is very bad I am trying my best orz \
-Go check out [Known Issues](https://github.com/nc108x/2023-scoreboard/tree/react#known-issues) before pinging me with issues.\
-Stuff may be broken so use at your own risk.
+Stuff may be broken so use at your own risk. (go check out [Known Issues](https://github.com/nc108x/2023-scoreboard/tree/react#known-issues))
 
 ### Disclaimer
 
