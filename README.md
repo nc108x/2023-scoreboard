@@ -9,7 +9,7 @@ Project is now archived because we got owned by CUHK and HKU feelsbadman
 
 Thanks to [@LeoLYW12138](https://github.com/LeoLYW12138) for helping debug my dumb issues and setting up the backend, and [@kkdlau](https://www.github.com/kkdlau), [@TrebledJ](https://github.com/TrebledJ), and everyone else in the HKUST Robocon team for their suggestions and help.
 
-First time using Javascript and ReactJS so code is very bad I am trying my best orz \
+First time using Javascript and ReactJS so code is very bad I tried my best orz \
 Stuff may be broken so use at your own risk. (go check out [Known Issues](https://github.com/nc108x/2023-scoreboard/tree/react#known-issues))
 
 ### Disclaimer
